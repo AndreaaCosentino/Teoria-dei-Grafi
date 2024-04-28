@@ -1,0 +1,83 @@
+\usepackage{graphicx} % Required for inserting images
+\usepackage{tikz} 
+\usepackage[italian]{babel}
+\usepackage{tcolorbox}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{pifont}
+\usepackage{amsthm}
+\usepackage{xcolor}
+\usepackage{worldflags}
+\usepackage{enumitem}
+\usepackage{tkz-euclide} 
+\usepackage{tcolorbox}
+\usepackage{pgfplots} % plot functions
+\setlist[itemize,1]{label= \ding{112}}
+\usetikzlibrary{fit}
+\usetikzlibrary{arrows,decorations.pathmorphing}
+\usepackage{adjustbox} % trimbox
+\usepackage{multirow} % per usare tabular (incolonnare roba)
+\usetikzlibrary{positioning,matrix, arrows.meta} % incolonnare roba in modo carino :3
+
+\usepackage[markcase=noupper]{scrlayer-scrpage}
+\xdefinecolor{background}{RGB}{32,32,32}
+
+\pagecolor{background}
+\color{white}
+
+\tikzset{nodo/.style ={draw, shape = circle, fill = white, minimum size = 0.15cm, inner sep=0pt]}}
+
+% PER INDICE CLICCABILE %
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=white,
+    filecolor=white,
+    linkcolor=white,
+    urlcolor=white
+}
+
+\theoremstyle{definition}
+\newtheorem{exmp}{Esempio}
+\newtheorem{dimo}{Dimostrazione}
+\newtheorem{defi}{Definzione}
+\newtheorem{fatto}{Fatto}
+\newtheorem{es}{Esercizio}
+
+\xdefinecolor{color}{RGB}{51,0,102}
+\xdefinecolor{greenie}{RGB}{59,243,115}
+
+\clearpairofpagestyles
+\automark[chapter]{chapter}
+\renewcommand\chaptermarkformat{\chaptername\ \thechapter:\enskip}
+
+\lehead*{%
+  \makebox[0pt][r]{
+    \colorbox{color}{\makebox[\textwidth][r]{\pagemark\enskip}}\hspace*{1em}}%
+  \headmark\hspace*{1em}\headrulefill%
+}
+\rohead*{%
+  \headrulefill\hspace*{1em}\headmark%
+  \makebox[0pt][l]{%
+    \hspace*{1em}\colorbox{color}{\makebox[\textwidth][l]{\enskip\pagemark}}}%
+}
+
+\addtokomafont{pagenumber}{\bfseries\color{white}}
+\newcommand\headrulefill{\leaders\hrule width 0pt height 3pt depth -2.8pt \hfill}
+
+\newcommand{\somma}[1]{\sum_{i=1}^{#1}}
+\def\lc{\left\lceil}   
+\def\rc{\right\rceil}
+
+\newcommand{\va}{\mathbb{E}}
+\newcommand{\values}{\sum_{x \in \mathbb{X}}}
+
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=1.5pt] (char) {#1};}}
+
+\newcommand{\disegna}[1]{\begin{center}
+    \begin{tikzpicture}
+        #1
+    \end{tikzpicture}
+\end{center}}

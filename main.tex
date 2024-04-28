@@ -1,0 +1,288 @@
+\documentclass[12pt]{report}
+\usepackage{mioStile}
+
+\pgfplotsset{compat = 1.18}
+
+\title{Teoria dei grafi}
+\author{Andrea Cosentino}
+\date{\today}
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\setlength{\columnsep}{0.8cm}
+\setlength{\columnseprule}{0.2pt}
+\twocolumn
+\chapter{Lezione I}
+\noindent
+Un grafo $G = (V,E)$ è una struttura algebrica dove $V$ è l'insieme finito di vertici e $E$ è l'insieme finito di archi. Inoltre, vale che $E = [V]^2$. Dato un insieme $S$ e un qualunque intero $k \in \{2,\dots,|S|\}$, diciamo che $[S]^k$ è la collezione di tutti i sottoinsieme di $S$ formati da $k$ elementi. Per esempio, dato l'insieme $S = \{1,2,3\}$ l'insieme $[S]^2$ contiene $\{\{1,2\}, \{1,3\},\{2,3\}\}$. 
+
+\begin{exmp}
+    Un esempio di grafo $G = (V,E)$ è $V = \{1,2,3\}$ e $E = \{\{1,2\},\{1,3\}\}$.
+    
+\vspace{10px}
+\begin{center}
+\begin{tikzpicture}{}
+    \node[] (A) {$1$};
+    \node[below left= 2cm and 1cm of A] (B){$2$};
+    \node[below right= 2cm and 1cm of A] (C){$3$};
+
+    \draw[] (A) -- (B);
+    \draw[] (A) -- (C);
+\end{tikzpicture}
+\end{center}
+\end{exmp}
+
+\noindent
+Notare che ci concentriamo su grafi con archi non orientati.
+
+La nomenclatura che utilizzeremo per indicare dei vertici generici è $i,j,u,v$, mentre per indicare degli archi generici è $(i,j)$. Dire $(i,j)$ implicherebbe un ordine, per evitare di scrivere $\{i,j\}$ useremo $(i,j)$ senza implicare che l'arco sia orientato.
+
+Il numero di nodi del grafo è detto \textbf{ordine}, e corrisponde a $|V|$. Un grafo di ordine $0$ è detto grafo \textbf{vuoto}, mentre un grafo di ordine $\leq 1$ è detto grafo \textbf{banale}. Esistono solamente due grafi di ordine $2$:
+
+\disegna{ 
+    \node[]  (A1) at (-3.5,0) {$A)$};
+    \node[nodo] (A) at (-3,0){};
+    \node[nodo] (B) at (-1,0){};
+
+    \node[]  (A2) at (-3.5,-2) {$B)$};
+    \node[nodo] (C) at (-3,-2){};
+    \node[nodo] (D) at (-1,-2){};
+    \draw[] (C) -- (D);
+}
+
+\noindent
+Dato un arco $e = (i,j) \in E$ diciamo che $i,j$ sono vertici incidenti all'arco $e$. Due vertici $i,j$ con $i \neq j$ tali che $(i,j) \in E$ sono detti vertici \textbf{adiacenti} in $G(V,E)$.  Se $E \equiv [V]^2$ diciamo che il grafo è \textbf{completo} oppure che è una \textbf{clique} (o cricca in italiano). Un grafo completo su $n$ vertici è chiamato $K_n$. Alcuni esempi di grafi completi sono
+
+\disegna{
+
+    \node[]  (A) at (2,0) {$K_2$};
+    \node[nodo] (A1) at (-2,0){};
+    \node[nodo] (A2) at (0,0){};
+    \draw[] (A1) -- (A2);
+
+    \node[]  (B) at (2,-3) {$K_3$};
+    \node[nodo] (B1) at (-1,-2){};
+    \node[nodo] (B2) at (-2,-4){};
+    \node[nodo] (B3) at (0,-4){};
+    \draw[] (B1) -- (B2);
+    \draw[] (B2) -- (B3);
+    \draw[] (B1) -- (B3);
+
+    \node[]  (C) at (2,-7) {$K_4$};
+    \node[nodo] (C1) at (-2.5,-6){};
+    \node[nodo] (C2) at (-2.5,-8){};
+    \node[nodo] (C3) at (0.5,-6){};
+    \node[nodo] (C4) at (0.5,-8){};
+    \draw[] (C1) -- (C2);
+    \draw[] (C2) -- (C3);
+    \draw[] (C1) -- (C3);
+    \draw[] (C1) -- (C4);
+    \draw[] (C3) -- (C4);
+    \draw[] (C2) -- (C4);
+}
+
+\noindent 
+Un grafo completo su $n$ vertici ha un numero di archi pari a 
+$$\binom{n}{2} = \frac{(n)(n-1)}{2}$$
+I grafi che consideriamo sono non orientati e \textbf{semplici}. Un grafo è semplice  se non ha loops (o cappi)
+
+\disegna{
+ \node[nodo](A){};
+ \node at (1,0) (here){};
+ \draw[->,>= stealth]  (A) edge [out=90,in=30,distance=10mm]   (A);
+}
+
+\noindent 
+e non ha archi multipli, ovvero tra due nodi o c'è un arco non ce n'è neanche io. Quindi la situazione in figura non è ammessa.
+
+\disegna{
+ \node[nodo](A){};
+ \node[nodo, right =of A] (B){};
+ \draw[>= stealth]  (A) edge [out=60,in=150,distance=3.5mm]   (B);
+ \draw[>= stealth]  (B) edge [out=-150,in=-60,distance=5mm]   (A);
+}
+
+\noindent 
+Il sotto-grafo di un grafo $G = (V,E)$ è $G' =(V',E')$ tale che $V' \subseteq V$ e $E' \subseteq E \and [V']^2$. Nella seconda condizione imponiamo che se vogliamo avere l'arco $(i,j)$ nel grafo, allora $i,j \in V'$. Senza questa condizione non otterremmo un grafo. 
+
+\begin{exmp}
+    Dato il grafo 
+    \disegna{
+    \node[nodo] (C1) at (-2.5,-6){};
+    \node[left=0.15cm] at (C1.east) {$1$}; 
+    \node[nodo] (C2) at (-2.5,-8){};
+    \node[left=0.15cm] at (C2.east) {$3$}; 
+    \node[nodo] (C3) at (0.5,-6){};
+    \node[right=0.15cm] at (C3.west) {$2$}; 
+    \node[nodo] (C4) at (0.5,-8){};
+    \node[right=0.15cm] at (C4.west) {$4$}; 
+    \draw[] (C1) -- (C2);
+    \draw[] (C1) -- (C3);
+    \draw[] (C3) -- (C4);
+    \draw[] (C2) -- (C4);
+    }
+    Se la seconda condizione fosse solamente $E' \subseteq E$ potremmo scegliere $V' = \{1,2\}$ ed $E' = \{(1,2), (2,3)\}$, ma siccome $3$ non è un nodo, il risultato non è un grafo.
+    Un esempio di sotto-grafo è $V' = \{1,2,3,4\}$, $E' = \{(3,4)\}$
+
+    \disegna{
+    \node[nodo] (C1) at (-2.5,-6){};
+    \node[left=0.15cm] at (C1.east) {$1$}; 
+    \node[nodo] (C2) at (-2.5,-8){};
+    \node[left=0.15cm] at (C2.east) {$3$}; 
+    \node[nodo] (C3) at (0.5,-6){};
+    \node[right=0.15cm] at (C3.west) {$2$}; 
+    \node[nodo] (C4) at (0.5,-8){};
+    \node[right=0.15cm] at (C4.west) {$4$}; 
+    \draw[] (C2) -- (C4);
+    }
+
+    \noindent 
+\end{exmp}
+
+\noindent
+Dato $V' \subseteq V$ il sotto-grafo $G'$ \textbf{indotto} da $V'$ è $G'(V',E')$ con $E' = E \and [V']^2$. Ovvero, se seleziono i vertici seleziono anche gli archi su cui sono incidenti. Dato l'insieme di vertici $V'$ c'è solo un sotto-grafo indotto.
+
+
+Dato il grafo $G(V,E)$ il vicinato di $N(v)$ di $v \in v$ in $G$ è 
+
+$$N(v) = \{j \in V: (v,j) \in E\}$$
+Cioè tutti i nodi connessi a $v$ con un arco.
+
+\begin{exmp}
+Dato il grafo 
+    \disegna{
+    \node[nodo] (C1) at (-2.5,-6){};
+    \node[left=0.15cm] at (C1.east) {$u$}; 
+    \node[nodo] (C2) at (-2.5,-8){};
+    \node[left=0.15cm] at (C2.east) {$v'$}; 
+    \node[nodo] (C3) at (0.5,-6){};
+    \node[above right=0.075cm] at (C3.north east) {$v$}; 
+    \node[nodo] (C5) at (2.5,-6){};
+    \node[nodo] (C4) at (0.5,-8){};
+    \node[right=0.15cm] at (C4.west) {$\omega$}; 
+    \draw[] (C1) -- (C2);
+    \draw[] (C1) -- (C3);
+    \draw[] (C3) -- (C4);
+    \draw[] (C2) -- (C4);
+    \draw[] (C5) -- (C3);
+    \draw[] (C4) -- (C5);
+    }
+    Il vicinato di $v$ è $N(v) = V \backslash \{v\}$ mentre il vicinato di $v'$ è $N(v') = \{u,v,\omega\}$.
+\end{exmp}
+
+\noindent
+Il grado di $v$ in $G$ è $d(v) = |N(v)|$. Se $v$ ha $d(v) = 0$ in $G$ allora si dice \textbf{isolato}.
+
+\disegna{
+   \node[]  (B) at (2,-4) {$ISOLATO$};
+   \node[nodo] (I) at (2,-3){};
+    \node[nodo] (B1) at (-1,-2){};
+    \node[nodo] (B2) at (-2,-4){};
+    \node[nodo] (B3) at (0,-4){};
+    \draw[] (B1) -- (B2);
+    \draw[] (B2) -- (B3);
+    \draw[] (B1) -- (B3);
+    \draw[->,>= stealth]  (B) edge [out=60,in=-60,distance=10mm]   (I);
+}
+
+\noindent 
+Definiamo il grado minimo come $$\delta(G) = \min {d(v): v \in V}$$ e il grado massimo $$\Delta(G) = \max \{d(v) : v \in V\}$$ Se $\Delta(G) = \delta(G) = k$ allora $G$ è $k$-regolare.
+
+\begin{exmp}
+    Il seguente grafo è $2$-regolare
+    \disegna{
+    \node[nodo] (C1) at (-2.5,-6){};
+    \node[nodo] (C2) at (-2.5,-8){};
+    \node[nodo] (C3) at (0.5,-6){}; 
+    \node[nodo] (C4) at (0.5,-8){};
+    \node[nodo] (C5) at (-1,-5){};
+    \node[nodo] (C6) at (-1.75,-9){};
+    \draw[] (C1) -- (C2);
+    \draw[] (C1) -- (C5);
+    \draw[] (C5) -- (C3);
+    \draw[] (C3) -- (C4);
+    \draw[] (C2) -- (C6);
+    \draw[] (C4) -- (C6);
+    }
+\end{exmp}
+
+\noindent 
+Il grado medio è
+$$D(G) = \frac{1}{|V|} \sum_{v \in V} d(v)$$
+Vale che $\delta(G) \leq D(G) \leq \Delta(G)$. La \textbf{densità} è invece definita come 
+
+$$\varepsilon(G) = \frac{|E|}{|V|}$$
+La densità ci dice quanti archi ha ,in media, ciascun vertice. Assomiglia al grado medio ma in quest'ultimo contiamo due volte ogni arco. Infatti vale che 
+
+$$|E| = \frac{1}{2} \sum_{v \in V} d(v)$$
+$$= \frac{1}{2} D(G) |V|$$
+e quindi
+
+$$\varepsilon(G) = \frac{|E|}{|V|}  = \frac{1}{2} D(G) $$
+
+\begin{fatto}
+In ogni grafo il numero di vertici di grado dispari è pari.
+\end{fatto}
+
+\begin{dimo}
+    Cominciamo con l'osservare che $|E|$  è un numero intero, e siccome vale che  $|E| = \frac{1}{2} \sum_{v \in V}$ $d(v)$ allora anche $\frac{1}{2} \sum_{v \in V} d(v)$ è intero. Il valore $\sum_{v \in V} d(v)$ deve essere per forza pari, dato che la sua metà è intera. Dividiamo la sommatoria in due sommatorie:
+\begin{align*}
+\sum_{v \in V:\, d(v) \; \text{è pari}} d(v)  \\ + \sum_{v \in V:\, d(v) \; \text{è dispari}} d(v)
+    \end{align*}
+    La sommatoria pari ha come risultato sicuramente un numero pari. Questo vuol dire che, se come risultato finale vogliamo un numero pari, anche la sommatoria dispari deve risultare pari. Ciò è possibile se e solo se il numero di elementi è pari. Infatti, sommando un numero pari di numero dispari otteniamo un numero pari. Quindi il numero di vertici di grado dispari è pari.
+\end{dimo}
+
+\noindent 
+Ci poniamo adesso la domanda se la densità può scendere sotto il grado minimo. Vediamolo prima con un esempio
+
+\begin{exmp}
+    Il seguente grafo 
+    \disegna{
+    \node[nodo] (C) at (-3,-2){};
+    \node[nodo] (D) at (-1,-2){};
+    \draw[] (C) -- (D);
+    }
+
+    \noindent 
+    Ha $\delta(G) = 1$ e $\varepsilon(G) = \frac{1}{2}$, quindi $\delta(G) > \varepsilon(G)$
+\end{exmp}
+
+\begin{fatto}
+    $\forall G$ con almeno un arco, ha un sotto-grafo indotto $H$ tale che 
+    $$\delta(H) > \varepsilon(H) \geq \varepsilon(G) $$
+\end{fatto}
+
+\begin{dimo}
+    Consideriamo una sequenza di grafi
+
+    $$G = G_0, G_1, G_2, \dots$$
+    Dove $G_i = (V_i,E_i)$ e $V_0 \supseteq V_1 \supseteq V_2$, con $G_i$ grafo indotto da $V_i$. Se $V_0(=V)$ ha $v_0$ tale che $d(v_0) \leq \varepsilon(G_0)$ creiamo $V_1 = V_0 \backslash \{v_0\}$. Notiamo che se non esiste $v_0$ che rispetta la condizione, allora 
+
+    $$\forall v \in V d(v) > \varepsilon(G_0)$$
+    e quindi $d(G_0) > \varepsilon(G_0)$. In questo caso avremmo già dimostrato il teorema con $H = G$.
+    
+    Consideriamo adesso $G_1$ indotto da $V_1$ (ricordiamo che $V_1 = V_0 \backslash v$). Iteriamo svolgendo la stessa operazione di prima fino a quando $V_i$ è tale che $\forall v \in V_i \, d(v) > \varepsilon(G_i)$. Notiamo che ci fermeremo prima di svuotare il grafo, infatti arriveremo al caso base 
+
+        \disegna{
+    \node[nodo] (C) at (-3,-2){};
+    \node[nodo] (D) at (-1,-2){};
+    \draw[] (C) -- (D);
+    }
+
+    \noindent
+    dove sappiamo che vale $\delta(G) > \varepsilon(G)$. Se $G_{i+1}$ viene creato, allora
+
+    $$\varepsilon(G_{i+1}) = \frac{|E_{i+1}|}{|V_{i+1}}$$
+    $$=  \frac{|E_i - d(v_i)|}{|V_i - 1} \geq  \frac{|E_i - \varepsilon(G_i)|}{|V_i - 1} $$
+    Dove la disuguaglianza vale per la condizione con cui costruiamo il sotto-grafo. 
+    $$= \frac{|E_i| - \frac{|E_i|}{|V_i|}}{|V_i - 1} =  \frac{|E_i| |V_i| - |E_i|}{|V_i|(|V_i - 1)}$$
+    dove abbiamo portato a fattore comune il numeratore.
+    $$= \frac{|E_i| (|V_i| - 1)}{|V_i|(|V_i - 1)} = \varepsilon(G_i)$$
+    Quindi quando ci fermiamo avremo $G_k$ tale che $$\delta(G_k) > \varepsilon (G_k) \geq \varepsilon(G_0) $$
+
+    
+\end{dimo}
+
+\end{document}
