@@ -5,6 +5,7 @@
 
 \title{Teoria dei grafi}
 \author{Andrea Cosentino}
+\sectionfont{\fontsize{12}{15}\selectfont}
 \date{\today}
 \begin{document}
 
@@ -274,15 +275,272 @@ Ci poniamo adesso la domanda se la densità può scendere sotto il grado minimo.
     \noindent
     dove sappiamo che vale $\delta(G) > \varepsilon(G)$. Se $G_{i+1}$ viene creato, allora
 
-    $$\varepsilon(G_{i+1}) = \frac{|E_{i+1}|}{|V_{i+1}}$$
-    $$=  \frac{|E_i - d(v_i)|}{|V_i - 1} \geq  \frac{|E_i - \varepsilon(G_i)|}{|V_i - 1} $$
+    $$\varepsilon(G_{i+1}) = \frac{|E_{i+1}|}{|V_{i+1}|}$$
+    $$=  \frac{|E_i - d(v_i)|}{|V_i - 1|} \geq  \frac{|E_i - \varepsilon(G_i)|}{|V_i - 1|} $$
     Dove la disuguaglianza vale per la condizione con cui costruiamo il sotto-grafo. 
-    $$= \frac{|E_i| - \frac{|E_i|}{|V_i|}}{|V_i - 1} =  \frac{|E_i| |V_i| - |E_i|}{|V_i|(|V_i - 1)}$$
+    $$= \frac{|E_i| - \frac{|E_i|}{|V_i|}}{|V_i - 1} =  \frac{|E_i| |V_i| - |E_i|}{|V_i|(|V_i - 1|)}$$
     dove abbiamo portato a fattore comune il numeratore.
-    $$= \frac{|E_i| (|V_i| - 1)}{|V_i|(|V_i - 1)} = \varepsilon(G_i)$$
+    $$= \frac{|E_i| (|V_i| - 1)}{|V_i|(|V_i - 1|)} = \varepsilon(G_i)$$
     Quindi quando ci fermiamo avremo $G_k$ tale che $$\delta(G_k) > \varepsilon (G_k) \geq \varepsilon(G_0) $$
 
     
+\end{dimo}
+
+\chapter{Lezione II}
+
+\noindent
+Un \textbf{cammino} di lunghezza $k \geq 0$ in $G = (V,E)$ è un sotto-grafo $P_k$ con $k$ archi e $k+1$ vertici distinti tale che $e_i = (v_{i-1},v_i)$. Indichiamo gli archi con $e_1 \dots e_k$ e i nodi con $v_0,\dots,v_k$.
+
+\disegna{
+    \node[cloud,draw,minimum width = 5cm,
+    minimum height = 4cm] {};
+    \node[nodo] (A) at (1,1){}; 
+    \node[] at(1,1.3) {$v_0$};
+    \node[nodo] (B) at (1.5,0){}; 
+    \node[nodo] (C) at (0.8,-1){}; 
+    \node[nodo] (D) at (0,-0.6){}; 
+    \node[nodo] (E) at (-2,-0.3){};
+    \node[] at(-2,0) {$v_k$};
+    \draw[] (A) -- (B) node[above,midway,sloped]{$e_1$};
+    \draw[] (B) -- (C)  node[below right,midway]{$e_2$};;
+    \draw[] (C) -- (D);
+    \draw[] (D) -- (E) node[above,midway]{$e_k$};
+}
+
+\noindent 
+Usiamo la nuvoletta quando non ci interessa la struttura del grafo. Evidenziamo solo una certa parte.
+Nel caso in cui $P_0$ non abbiamo archi nel cammino ma un singolo vertice.
+
+Un \textbf{ciclo} $C_k$ di lunghezza $k \geq 3$ è formato da un cammino $P_{k-1}$ che può essere esteso in $G$ includendo l'arco $(v_{k-1},v_0)$.
+
+
+\disegna{
+    \node[cloud,draw,minimum width = 5cm,
+    minimum height = 4cm] {};
+    \node[nodo] (A) at (1,1){}; 
+    \node[] at(1,1.3) {$v_0$};
+    \node[nodo] (B) at (1.5,0){}; 
+    \node[nodo] (C) at (0.8,-1){}; 
+    \node[nodo] (D) at (0,-0.6){}; 
+    \node[nodo] (E) at (-2,-0.3){};
+    \node[] at(-2,-0.6) {$v_{k-1}$};
+    \draw[] (A) -- (B) node[above,midway,sloped]{$e_1$};
+    \draw[] (B) -- (C)  node[below right,midway]{$e_2$};;
+    \draw[] (C) -- (D);
+    \draw[] (D) -- (E) node[above,near start]{$e_{k-1}$};
+    \draw[color= red] (E) -- (A) node[above,midway,sloped,color = white] {$(v_{k-1},v_0)$};
+}
+
+\noindent 
+In un grafo $G$, il \textbf{calibro} $g(G)$ è la lunghezza del ciclo più breve. La \textbf{circonferenza} è la lunghezza del ciclo più lungo. 
+
+\begin{fatto}
+    $\forall \; G$ con $\delta(G) > 2$ contiene un cammino di lunghezza $\delta(G)$ e un ciclo di lunghezza almeno $\delta(G) + 1$.
+\end{fatto}
+
+\begin{dimo}
+    Prendiamo il cammino più lungo del grafo, $P_k$. Allora tutti i vicini di $P_k$ fanno parte del cammino, altrimenti potrei aggiungerli e allungarlo, $P_k$ non sarebbe il più lungo. Quindi il cammino $P_k$ è almeno lungo $|N(v_k)|$, dove $v_k$ è l'ultimo nodo del cammino. Siccome per ipotesi $|N(v_k)| \geq \delta(G)$ allora esiste un cammino di lunghezza  $\delta(G)$.
+    Consideriamo ora il primo vertice che è un vicino di $v_k$.
+
+    \disegna{
+    \node[cloud,draw,minimum width = 5cm,
+    minimum height = 4cm] {};
+    \node[nodo] (A) at (1,1){}; 
+    \node[] at(1,1.3) {$v_0$};
+    \node[nodo, color = blue] (B) at (1.5,0){}; 
+    \node[nodo] (C) at (0.8,-1){}; 
+    \node[] at(1.8,0) {$v_i$};
+    \node[nodo] (D) at (0,-0.6){}; 
+    \node[nodo] (E) at (-2,-0.3){};
+    \node[] at(-2,-0.6) {$v_{k}$};
+    \draw[color = red] (A) -- (B);
+    \draw[color = red] (B) -- (C);
+    \draw[color = red] (C) -- (D);
+    \draw[color = red] (D) -- (E);
+    \draw[] (E) -- (B);
+    \draw[] (E) edge [out=-60,in=-1200,distance=5mm] (C);
+}
+In rosso è evidenziato il cammino $P_k$ e in blu il primo vertice che è vicino di $v_k$. Se consideriamo il cammino in rosso da $v_i$ fino a $v_K$ e aggiungiamo $(v_k,v_i)$ troviamo un ciclo, ciò vale sempre per il fatto $\delta(G) \geq 2$. Il ciclo $C$ è lungo almeno $N(v_k) + 1 \geq \delta(G) + 1$.
+    
+\end{dimo}
+
+\noindent
+Dato $G = (V,E)$ $\forall i,j \in V \exists d(i,j)$ se $i,j$ sono connessi in $G$ da almeno $1$ cammino allora $d(i,j)$ è la lunghezza del cammino più breve, altrimenti è $\infty$. 
+
+\begin{exmp}
+Dato il grafo
+\disegna{
+     \node[cloud,draw,minimum width = 2.5cm,
+    minimum height = 4cm] at(-2,0) {};
+    \node[cloud,draw,minimum width = 2.8cm,
+    minimum height = 4cm] at(2,0) {};
+
+    \node[nodo] at(-1.8,0.3){};
+    \node[nodo] at(2.3,-0.5){};
+    \node[] at(-1.8,0.7) {$i$};
+    \node[] at(2.3,-0.1) {$j$};
+ }
+ La distanza tra $i,j$ è $d(i,j) = \infty$.
+\end{exmp}
+
+\noindent
+Il \textbf{diametro} è definito come
+
+$$diam(G) = \max_{i,j \in V} d(i,j) =  \max_{i \in V}  \max_{j \in V} d(i,j) $$
+e il raggio 
+
+$$rad(G) = \min_{i\in V} \max_{j \in V} d(i,j)$$
+Il raggio lo possiamo vedere come il punto "più centrale". Sia $x$ questo punto centrale, vale che $\forall v \in V d(x,v) \leq rad(G)$. Inoltre  $rad(G) \leq diam(G)$ e questo è ovvio dato che il diametro è una massimizzazione del massimo, mentre il raggio è una minimizzazione del massimo.
+Possiamo anche dire che $diam(G) \leq 2 rad(g)$, dato che 
+$$\forall u,v \in V d(u,v) \leq d(u,x) + d(x,v)$$
+$$\leq rad(G) + rad(G) = 2 rad(G)$$
+
+\begin{fatto}
+    $\forall G$ che ha almeno un ciclo soddisfa
+
+    $$g(G) \leq 2 diam(G) + 1$$
+\end{fatto}
+
+\noindent
+\begin{dimo}
+    Consideriamo il grafo
+    \disegna{
+    \node[cloud,draw,minimum width = 5cm,
+    minimum height = 4cm] {};
+    \node[nodo] (A) at (1,1){}; 
+    \node[] at(1,1.3) {$x$};
+    \node[nodo] (B) at (1.5,0){}; 
+    \node[nodo] (C) at (0.8,-1){}; 
+    \node[nodo] (D) at (0,-0.6){}; 
+    \node[nodo] (E) at (-2,-0.3){};
+    \node[nodo] (F) at (-1.4,0){};
+    \node[nodo] (G) at (0,0.2){};
+    \node[nodo] (H) at (0.2,1.2){};
+    \node[] at(-2,-0.6) {$y$};
+    \draw[color = red] (A) -- (B);
+    \draw[color = red] (B) -- (C);
+    \draw[color = red] (C) -- (D);
+    \draw[color = red] (D) -- (E);
+    \draw[color = blue] (E) -- (F);
+    \draw[color = blue] (F) -- (G);
+    \draw[color = blue] (G) -- (H);
+    \draw[color = blue] (H) -- (A);
+}
+dove il ciclo $C$ è il più corto, con lunghezza $g(G)$. I due vertici $x,y$ sono vertici opposti, cioè tagliano il ciclo in due parti il più possibile uguali. Chiamiamo il percorso in rosso $p_1$ e il percorso in blu $p_2$. Assumiamo per assurdo che $g(G) \geq 2 diam(G) + 2$. Allora $p_1,p_2$ sono lunghi ciascuno almeno $diam(G) + 1$. Però $d(x,y) \leq diam(G)$ per la definizione stessa di diametro. Non tutti gli archi di $P$ (cioè del percorso più breve) stanno su $C$, altrimenti il ciclo avrebbe lunghezza $2diam(G) + 1$. Quindi, possiamo costruire un ciclo più piccolo, prendendo gli archi che non stanno né su $P_1$ né su $P_2$.
+
+ \disegna{
+    \node[cloud,draw,minimum width = 5cm,
+    minimum height = 4cm] {};
+    \node[nodo] (A) at (1,1){}; 
+    \node[] at(1,1.3) {$x$};
+    \node[nodo] (B) at (1.5,0){}; 
+    \node[nodo] (C) at (0.8,-1){}; 
+    \node[nodo] (D) at (0,-0.6){}; 
+    \node[nodo] (E) at (-2,-0.3){};
+    \node[nodo] (F) at (-1.4,0){};
+    \node[nodo] (G) at (0,0.2){};
+    \node[nodo] (H) at (0.2,1.2){};
+    \node[] at(-2,-0.6) {$y$};
+    \draw[color = red] (A) -- (B);
+    \draw[color = orange] (B) -- (C);
+    \draw[color = orange] (C) -- (D);
+    \draw[color = orange] (D) -- (E);
+    \draw[color = blue] (E) -- (F);
+    \draw[color = blue] (F) -- (G);
+    \draw[color = blue] (G) -- (H);
+    \draw[color = blue] (H) -- (A);
+    \draw[color = orange, dashed] (E) -- (B);
+}
+
+\noindent 
+Il ciclo in arancione è più piccolo di $C$, quindi deve per forza valere che $g(G) \leq 2 diam(G) + 1$.
+\end{dimo}
+
+\section{Connettività di un grafo}
+Un grafo è \textbf{sconnesso} se $\exists i,j \in V$ $|\; d(i,j) = \infty$. Una \textbf{componente} di un grafo è un qualunque insieme massimale di vertici connessi. Se un grafo è connesso il componente è il grafo stesso. $G$ è $k$-connesso se $|V| > k$ e $\forall X \subset V$ con $|X| < k$ il sotto-grafo indotto $V \backslash X$ è connesso.  Se un grafo è $k$-connesso non possiamo sconnettere il grafo rimuovendo al più $k-1$ vertici. Tutti i grafi sono $0$-connessi. Se $G$ è connesso è anche $1$-connesso, tranne il caso $K_1$ (cricca di un elemento) perché non rispetta la condizione $|V| > 1$. Il massimo intero $k$ tale che $G$ è k-connesso è detta \textbf{connettività} di $G$, che denotiamo con $K(G)$. Vale che $K(K_n) = n-1$.
+
+\begin{exmp}
+    Nel caso di $K_4$
+    \disegna{
+        \node[nodo] (C1) at (-2.5,-6){};
+    \node[nodo] (C2) at (-2.5,-8){};
+    \node[nodo] (C3) at (0.5,-6){};
+    \node[nodo] (C4) at (0.5,-8){};
+    \draw[] (C1) -- (C2);
+    \draw[] (C2) -- (C3);
+    \draw[] (C1) -- (C3);
+    \draw[] (C1) -- (C4);
+    \draw[] (C3) -- (C4);
+    \draw[] (C2) -- (C4);
+    }
+    il numero di nodi che possiamo rimuovere è $3$.
+\end{exmp}
+
+\begin{teo}
+    Se $G \notin \{k_0,k_1\}$ (ovvero $G$ non è un grafo banale), allora $K(G) \leq F \leq \delta(G)$ dove $k$ è qualsiasi insieme minimo di archi la cui rimozione sconnette il grafo.
+\end{teo}
+
+\begin{dimo}
+    La disequazione $F \leq \delta(G)$ è banale. Infatti se sconnetto tutti gli archi attorno a un nodo ho sconnesso il grafo. Concentriamoci su $K(G) \leq F$ e distinguiamo due casi:
+
+    \begin{itemize}
+        \item $G$ ha un vertice $v$ che non è incidente a $F$.
+    \end{itemize}
+                    \disegna{
+     \node[cloud,draw,minimum width = 2.5cm,
+    minimum height = 4cm] at(-2,0) {};
+    \node[cloud,draw,minimum width = 2.8cm,
+    minimum height = 4cm] at(2,0) {};
+
+    \node[nodo] (A) at(-1.6,0.9){};
+    \node[nodo] (A1) at(-1.55,0.3){};
+    \node[nodo] (A2) at(-1.65,-0.3){};
+    \node[nodo] (A3) at(-1.6,-0.9){};
+    \node[nodo] (v) at(-2.5,0){};
+    \node[] at (-2.5,0.3){$v$};
+    \node[nodo] (B) at(1.6,0.9){};
+    \node[nodo] (B1) at(1.65,0.3){};
+    \node[nodo] (B3) at(1.60,-0.9){};
+    \draw[] (A)--(B1);
+    \draw[] (A1)--(B);
+    \draw[] (A2) -- (B3);
+    \draw[] (A3) -- (B3);
+    \draw (-1.5,0) ellipse (0.5cm and 2cm);
+    \draw (0,0) ellipse (0.5cm and 1.5cm);
+    \node[] (VC) at (-0.5,-2){$V_c$};
+    \node[] (F) at (0,0){$F$};
+    \node[] (C) at (-3,-2){$C$};
+    \draw[->,>= stealth]  (VC) edge [out=-140,in=-60,distance=7mm]   (-1,-1.85);
+     \draw[->,>= stealth]  (C) edge [out=80,in=--150,distance=7mm]   (-2.8,-1.5);
+    }
+
+    \noindent 
+
+    dove $C$ è la componente del grafo che ottengo quando rimuovo $F$ e $V_c$ è l'insieme dei nodi connessi agli archi in $F$. Siccome rimuovendo $V_c$ sconnetto il grafo allora $K(G) \leq |V_c| \leq |F|$ 
+    \begin{itemize}
+        \item $G$ è tale che tutti i vertici sono incidenti con qualche arco in $F$.
+    \end{itemize}
+    \disegna{
+     \node[nodo] (A1) at(-1.55,0.3){};
+     \node[] at (-1.55,0.6){$v$};
+    \node[nodo] (A2) at(-1.65,-0.3){};
+    \node[nodo] (A3) at(-1.6,-0.9){};
+    \node[nodo] (B) at(1.6,0.9){};
+    \node[nodo] (B1) at(1.65,0.3){};
+    \node[nodo] (B3) at(1.60,-0.9){};
+    \draw[] (A1) -- (B1);
+    \draw[] (A2) -- (B);
+    \draw[] (A3) -- (B3);
+    \draw[>= stealth]  (A1) edge [out=120,in=-120,distance=7mm]   (A3);
+    \draw[>= stealth]  (B3) edge [out=60,in=-60,distance=7mm]   (B);
+    \draw[] (A1) -- (A2);
+    \draw[] (A3) -- (A2);
+    \draw[] (B) -- (B1);
+    \draw[] (B1) -- (B3);
+    \draw (0,0) ellipse (0.5cm and 1.5cm);
+    \node[] (F) at (0,0){$F$};
+    }
+    Il grafo $G$ ha connettività $K(G) \leq d(v)$. Siccome $d(v) = |F| = \delta(G)$ vale che $K(G) \leq |F|$.
 \end{dimo}
 
 \end{document}
