@@ -26,7 +26,7 @@ jobs:
           name: Appunti
           path: out/Appunti.pdf
       - name: Deploy
-        uses: AndreaaCosentino/Teoria-dei-Grafi
+        uses: AndreaaCosentino/Teoria-dei-Grafi@main
         with:
           GITHUB_TOKEN: ${{ secrets.KEY }}
           BRANCH: gh-pages
