@@ -1,35 +1,34 @@
-name: Appunti
+name: Build
 on:
   push:
     branches: [ main ]
   pull_request:
-    branches: [ main ]
-
+    branches: [ main ]    
   workflow_dispatch:
-
 jobs:
-  build:
+  build_latex:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Build
-        uses: xu-cheng/latex-action@v2 
+      - name: Set up Git repository
+        uses: actions/checkout@v4
+      - name: Compile LaTeX document (English)
+        uses: xu-cheng/texlive-action@v2
         with:
-          root_file: main.tex
-      - name: Copy
-        run: |
-          mkdir out
-          cp ./Appuunti.pdf ./out/Appunti.pdf
-      - uses: actions/upload-artifact@v2
+          run: |
+            ./compile.sh en
+      - name: Upload english PDF as Artifact
+        uses: actions/upload-artifact@v4
         with:
-          name: Appunti
-          path: out/Appunti.pdf
-      - name: Deploy
-        uses: AndreaaCosentino/Teoria-dei-Grafi@main
-        with:
+          name: appunti.pdf
+          path:
+             appunti.pdf
+      - name: Upload PDF Files to Release
+        uses: xresloader/upload-to-github-release@v1
+        env:
           GITHUB_TOKEN: ${{ secrets.KEY }}
-          BRANCH: gh-pages
-          CLEAN: true
-          SINGLE_COMMIT: true
-          FOLDER: out
+        with:
+          file: "*.pdf"
+          tags: false
+          overwrite: true
+          draft: true
+          update_latest_release: true
