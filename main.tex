@@ -543,4 +543,75 @@ Un grafo è \textbf{sconnesso} se $\exists i,j \in V$ $|\; d(i,j) = \infty$. Una
     Il grafo $G$ ha connettività $K(G) \leq d(v)$. Siccome $d(v) = |F| = \delta(G)$ vale che $K(G) \leq |F|$.
 \end{dimo}
 
+\chapter{Terza lezione}
+
+
+\noindent
+Un cammino \textbf{chiuso} (in inglese closed walk) è un ciclo in cui i vertici non sono distinti. Un cammino chiuso si dice \textbf{euleriano} se attraversa tutti gli archi del grafo esattaemente una volta. Un grafo è euleriano se ammette un cammino euleriano.
+
+\begin{teo} \textbf{Teorema di Eulero (1746)}
+
+\noindent 
+Un grafo connesso è euleriano se e solo se ogni vertice ha grado pari.
+\end{teo}
+
+\begin{dimo}
+    Cominciamo con dimostrare il lato $=>$ del teorema. Quindi, dato un grafo connesso euleriano questo ogni vertice ha grado pari. Prendiamo un vertice che si trova sul cammino euleriano.
+    \disegna{
+        \node[nodo] (X) {};
+        \node[nodo] (A) at (1,1.5) {};
+        \node[nodo] (B) at (1,-1.5) {};
+        \node[nodo] (C) at (-1,1.5) {};
+        \node[nodo] (D) at (-1,-1.5) {};
+        \node[nodo] (E) at (-2,0.75) {};
+        \draw[>= stealth]  (X) edge [out=60,in=-60,distance=7mm]   (A);
+        \draw[>= stealth]  (X) edge [out=-30,in=110,distance=7mm]   (B);
+        \draw[>= stealth]  (X) edge [out=110,in=-30,distance=7mm]   (C);
+        \draw[>= stealth]  (X) edge [out=-100,in=60,distance=7mm]   (D);
+        \draw[>= stealth, dotted]  (X) edge [out=120,in=60,distance=7mm]   (E);
+    }
+    \noindent
+    Se il cammino passa per il vertice, allora deve sia entrare che uscire. Non può esserci un arco che collega un vicino che non sia nel cammino. Quindi o un vertice è isolato oppure il cammino esce ed entra. Allora devono avere grado pari.
+    
+    L'altro verso necessita un po' più di lavoro per essere dimostrato. Quello che vogliamo dimostrare è che se ogni vertice ha grado pari allora il grafo è euleriano.  Facciamo una dimostrazione per induzione su $|E|$.
+
+    \noindent 
+    \textbf{Caso base} $|E| = 0$, banale. Implica che $|V| = 1$ perché parliamo di grafi connessi.
+
+    \noindent 
+    \textbf{Ipotesi induttiva} $|E| \geq  1$. Enunciamo un fatto utile.
+
+    \begin{fatto}
+        Se $G$ ha tutti i vertici con grado pari con $E \leq 1$, posso trovare in $G$ un cammino chiuso che non contiene un arco \textbf{più} di una volta. 
+    \end{fatto}
+
+    \noindent
+    Sia $\omega$ un tale cammino di lunghezza massima. Ne rappresentiamo uno da esempio in figura.
+    
+    \disegna{
+        \node[nodo] (A) at (0,0) {};
+        \node[nodo] (B) at (1,1) {};
+        \node[nodo] (C) at (2,0) {};
+        \node[nodo] (D) at (1,-1) {};
+        \node[nodo] (E) at (-1,1) {};
+        \node[nodo] (F) at (-1,-1) {};
+        \node[nodo] (G) at (-2,0) {};
+
+        \draw[] (A) -- (B);
+        \draw[] (A) -- (E);
+        \draw[] (A) -- (D);
+        \draw[] (A) -- (F);
+        \draw[] (B) -- (C);
+        \draw[] (C) -- (D);
+        \draw[] (G) -- (E);
+        \draw[] (G) -- (F);
+    }
+
+    \noindent 
+    Definiamo come $F$ l'insieme degli archi di $\omega$. Se $F \equiv E$ allora abbiamo finito, dato che tutti gli archi di $G$ fanno parte del cammino $\omega$. Assumiamo per assurdo che non sia così. Allora deve valere $$E' \equiv E \backslash F \neq \varnothing$$ Quindi 
+\end{dimo}
+
+\noindent 
+Se un grafo è euleriano possiamo trovare un cammino euleriano in tempo $O(|E|)$, i.e. in tempo lineare nella descrizione del grafo (algoritmo di Hierholzer).
+
 \end{document}
