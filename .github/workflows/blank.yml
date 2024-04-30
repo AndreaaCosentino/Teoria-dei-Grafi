@@ -1,0 +1,35 @@
+name: Appunti
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build
+        uses: xu-cheng/latex-action@v2 
+        with:
+          root_file: main.tex
+      - name: Copy
+        run: |
+          mkdir out
+          cp ./Appuunti.pdf ./out/Appunti.pdf
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Appunti
+          path: out/Appunti.pdf
+      - name: Deploy
+        uses: AndreaaCosentino/github-pages-deploy-action@3.6.2
+        with:
+          GITHUB_TOKEN: ${{ secrets.KEY }}
+          BRANCH: gh-pages
+          CLEAN: true
+          SINGLE_COMMIT: true
+          FOLDER: out
