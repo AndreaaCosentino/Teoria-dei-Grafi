@@ -545,6 +545,7 @@ Un grafo è \textbf{sconnesso} se $\exists i,j \in V$ $|\; d(i,j) = \infty$. Una
 
 \chapter{Terza lezione}
 
+\section{Cammino euleriano}
 
 \noindent
 Un cammino \textbf{chiuso} (in inglese closed walk) è un ciclo in cui i vertici non sono distinti. Un cammino chiuso si dice \textbf{euleriano} se attraversa tutti gli archi del grafo esattaemente una volta. Un grafo è euleriano se ammette un cammino euleriano.
@@ -608,10 +609,177 @@ Un grafo connesso è euleriano se e solo se ogni vertice ha grado pari.
     }
 
     \noindent 
-    Definiamo come $F$ l'insieme degli archi di $\omega$. Se $F \equiv E$ allora abbiamo finito, dato che tutti gli archi di $G$ fanno parte del cammino $\omega$. Assumiamo per assurdo che non sia così. Allora deve valere $$E' \equiv E \backslash F \neq \varnothing$$ Quindi 
+    Definiamo come $F$ l'insieme degli archi di $\omega$. Se $F \equiv E$ allora abbiamo finito, dato che tutti gli archi di $G$ fanno parte del cammino $\omega$. Assumiamo per assurdo che non sia così. Allora deve valere $$E' \equiv E \backslash F \neq \varnothing$$ 
+    Notiamo che $\forall v \in V$ un numero pari di $u \in N(v)$ appartiene a $F$.  Allora il sotto-grafo $G' = (V,E')$ ha tutti i vertici di grado pari (ricordiamo che $0$ è pari). E' evidente che ci debba essere almeno n nodo $e$ attaccato al cammino, altrimenti il grafo non sarebbe connesso.
+
+        
+    \disegna{
+        \node[nodo] (A) at (0,0) {};
+        \node[nodo] (B) at (1,1) {};
+        \node[nodo] (C) at (2,0) {};
+        \node[nodo] (D) at (1,-1) {};
+        \node[nodo] (E) at (-1,1) {};
+        \node[nodo] (F) at (-1,-1) {};
+        \node[nodo] (G) at (-2,0) {};
+        \node[nodo] (H) at(2,2){};
+        \node[] at (2,2.3){$e$}; 
+        
+        \draw[] (A) -- (B);
+        \draw[] (A) -- (E);
+        \draw[] (A) -- (D);
+        \draw[] (A) -- (F);
+        \draw[] (B) -- (C);
+        \draw[] (C) -- (D);
+        \draw[] (G) -- (E);
+        \draw[] (G) -- (F);
+        \draw[dashed] (B) -- (H);
+    }
+    Sia $C$ la componente di $G'$ che contiene $e$. $C$ ha un numero di archi $< |E|$, dato che almeno un arco l'abbiamo rimosso. Per ipotesi induttiva $C$ contiene un cammino euleriano. Ma allora possiamo costruire un cammino euleriano per $G$ unendo $\omega$ e il cammino trovato in $C$. Quindi abbiamo costruito un cammino più lungo di $\omega$, contraddicendo l'ipotesi che sia massimo. Allora $F \equiv E$ e così abbiamo dimostrato il teorema. 
 \end{dimo}
 
 \noindent 
-Se un grafo è euleriano possiamo trovare un cammino euleriano in tempo $O(|E|)$, i.e. in tempo lineare nella descrizione del grafo (algoritmo di Hierholzer)
+Se un grafo è euleriano possiamo trovare un cammino euleriano in tempo $O(|E|)$, i.e. in tempo lineare nella descrizione del grafo (algoritmo di Hierholzer). 
+
+\section{Ciclo hamiltoniano}
+Un \textbf{ciclo hamiltoniano} è un ciclo che contiene tutti i vertici.  Un grafo si dice hamiltoniano se contiene un ciclo hamiltoniano. Non è nota alcuna condizione necessarie e sufficiente affinché un grafo sia hamiltoniano. Sono note solamente condizioni sufficienti.
+
+\begin{teo}
+    Teorema di Dirac (1952).
+
+    \noindent
+    Un grafo $G = (V,E)$ con $|V| \geq 3$ e $\delta(G) \geq \frac{|V|}{2}$ è hamiltoniano. 
+\end{teo}
+
+\begin{dimo}
+    Cominciamo con dimostrare che $G$ deve essere connesso. Se per assurdo non lo fosse allora ha almeno due componenti. 
+
+    \disegna{
+     \node[cloud,draw,minimum width = 2.5cm,
+    minimum height = 3cm] at(-2,0) {};
+    \node[cloud,draw,minimum width = 2.8cm,
+    minimum height = 3cm] at(2,0) {};
+ }
+    Ogni componente è tale che $|C| \leq \frac{|V|}{2}$. Questo è ovvio, perché se una componente ne avesse più di $\frac{|V|}{2}$, un'altra dovrebbe averne di meno, e quindi non varrebbe la condizione $\delta(G) \geq \frac{|V|}{2}$. Notiamo ora che $$\forall v \in C \; d(v) \leq |C| - 1 $$ poiché al massimo un nodo può avere un arco con tutti gli altri nodi nella componente. Questa affermazione ci porta a poter dire che 
+    $$d(v) \leq |C| - 1 < \frac{|V|}{2}$$
+    ovvero
+    $$d(v) < \frac{|V|}{2}$$
+    che viola le ipotesi. 
+    Sappiamo che $G$ è connesso. Sia ora $p$ un cammino di lunghezza massima in $G$ con nodi $v_0,v_1,\dots,v_k$, con archi $(v_i,v_{i+1})$, dove $v_i$ viene detto \textbf{vertice sinistro} e $v_{i+1}$ \textbf{vertice destro}.
+
+    \disegna{
+        \node[nodo] (A) at (-2,0){};
+        \node[] at (-2,0.3){$v_0$};
+        \node[nodo] (B) at (-1,0){};
+        \node[] at (-1,0.3) {$v_1$};
+        \node[nodo] (C) at (0,0){};
+        \node[] at (0,0.3) {$v_i$};
+        \node[nodo] (D) at (1,0){};
+        \node[] at (1,0.3) {$v_{1+1}$};
+        \node[nodo] (E) at (2,0){};
+        \node[] at (2,0.3) {$v_{k-1}$};
+        \node[nodo] (F) at (3,0){};
+        \node[] at (3,0.3) {$v_{k}$};
+
+        \draw[] (A) -- (B);
+        \draw[dashed] (B) -- (C);
+        \draw[] (C) -- (D);
+        \draw[dashed] (D) -- (E);
+        \draw[] (E) -- (F);
+    }
+
+    \noindent 
+    Tutti i vicini di $v_0$ e $v_k$ sono nel cammino, altrimenti posso allungarlo aggiungendoli. Ricordiamo che vale anche $d(v_i) \geq \frac{n}{2}$ dove $n = |V|$. $p$ non può avere più di $n$ archi, quindi la sua lunghezza $k$ è tale che
+        $$k \leq n-1$$
+    dove non può essere $k \geq n$ sennò ripeterei dei nodi (e quindi non sarebbe un cammino). Ora associamo a ogni vicino di $v_0$ l'arco a sinistra (per esempio a $v_i$ associamo $(v_{i-1},v_i)$) e a ogni vicino di $v_k$ l'arco a destra. Per il principio della piccionaia c'è almeno un arco che è preso sia da un vicino di $v_0$ che da un vicino i $v_k$
+
+    \disegna{
+        \node[nodo] (A) at (-2,0){};
+        \node[] at (-2,0.3){$v_0$};
+        \node[nodo] (B) at (-1,0){};
+        \node[] at (-1,0.3) {$v_1$};
+        \node[nodo] (C) at (0,0){};
+        \node[] at (0,0.3) {$v_i$};
+        \node[nodo] (D) at (1,0){};
+        \node[] at (1,0.3) {$v_{1+1}$};
+        \node[nodo] (E) at (2,0){};
+        \node[] at (2,0.3) {$v_{k-1}$};
+        \node[nodo] (F) at (3,0){};
+        \node[] at (3,0.3) {$v_{k}$};
+
+        \draw[color= blue] (A) -- (B);
+        \draw[dashed] (B) -- (C);
+        \draw[color = orange] (C) -- (D);
+        \draw[dashed] (D) -- (E);
+        \draw[color = red] (E) -- (F);
+        \draw[>= stealth, dashed]  (A) edge [out=-60,in=-120,distance=7mm]   (D);
+        \draw[>= stealth, dashed]  (F) edge [out=120,in=60,distance=8mm]   (C);
+    }
+
+    \noindent 
+    Possiamo costruire un ciclo che va da $v_0$ a $v_i$, poi da $v_i$ raggiunge $v_k$, da $v_k$ a $v_{i+1}$ e poi $v_0$.
+
+    \disegna{
+        \node[nodo] (A) at (-2,0){};
+        \node[] at (-2,0.3){$v_0$};
+        \node[nodo] (B) at (-1,0){};
+        \node[] at (-1,0.3) {$v_1$};
+        \node[nodo] (C) at (0,0){};
+        \node[] at (0,0.3) {$v_i$};
+        \node[nodo] (D) at (1,0){};
+        \node[] at (1,0.3) {$v_{1+1}$};
+        \node[nodo] (E) at (2,0){};
+        \node[] at (2,0.3) {$v_{k-1}$};
+        \node[nodo] (F) at (3,0){};
+        \node[] at (3,0.3) {$v_{k}$};
+
+        \draw[color= blue] (A) -- (B);
+        \draw[dashed, color = blue] (B) -- (C);
+        \draw[] (C) -- (D);
+        \draw[dashed, color = red] (D) -- (E);
+        \draw[color = red] (E) -- (F);
+        \draw[>= stealth, color = red]  (A) edge [out=-60,in=-120,distance=7mm]   (D);
+        \draw[>= stealth, color = blue]  (F) edge [out=120,in=60,distance=8mm]   (C);
+    }
+
+    \noindent 
+    Se esistesse un vertice che non facesse parte di questo ciclo, sarebbe sicuramente un vicino, dato che il grafo è connesso. Ma allora potrei usarlo per allungare il percorso $p$ violando l'ipotesi di massimalità. Quindi il ciclo passa per tutti i nodi, i.e. è hamiltoniano.
+    
+\end{dimo}
+
+\noindent
+Il problema di determinare se un grafo $G$ contenga un cammino hamiltoniano è  NP-completo, questo spiega  il motivo per cui non c siano delle condizioni necessarie e sufficienti. 
+
+\section{Grafo bipartito}
+Un grafo $G = (V,E)$ è detto \textbf{bipartito} se $\exists $ una partizione $V_1,V_2$ di $V$ tali che $\forall (i,j) \in E \; i \in V_1 \land j \in V_2$ o viceversa.
+Ricordiamo che $V_1$ e $V_2$ in quanto partizione di $V$ sono tali che $V_1 \cap V_2 \equiv  $ $V_1 \cup V_2 = \varnothing$.
+
+\begin{exmp}
+    I grafi bipartiti sono usati per esempio su Tinder, Amazon e Netflix.
+
+    \disegna{
+    \node[nodo] (A) at(-1.6,0.9){};
+    \node[nodo] (A1) at(-1.6,0.3){};
+    \node[nodo] (A2) at(-1.6,-0.3){};
+    \node[nodo] (A3) at(-1.6,-0.9){};
+    \node[nodo] (B2) at(1.6,0.9){};
+    \node[nodo] (B) at(1.6,0.3){};
+    \node[nodo] (B1) at(1.6,-0.3){};
+    \node[nodo] (B3) at(1.60,-0.9){};
+    \draw[] (A)--(B1);
+    \draw[] (A1)--(B);
+    \draw[] (A2) -- (B3);
+    \draw[] (A3) -- (B3);
+    \draw[] (A3) -- (B2);
+    \draw (-1.5,0) ellipse (0.5cm and 2cm);
+    \draw (1.5,0) ellipse (0.5cm and 2cm);
+    \node[] (V1) at (-0.5,-2){$V_1$};
+    \draw[->,>= stealth]  (V1) edge [out=-140,in=-60,distance=7mm]   (-1,-1.85);
+    \node[] (V2) at (0.5,-2){$V_2$};
+    \draw[->,>= stealth]  (V2) edge [out=-60,in=-140,distance=7mm]   (1,-1.85);
+    }
+
+    \noindent 
+    Possono contenere cicli, che sono sempre pari! Vale anche il viceversa, ovvero un grafo che contiene solo cicli di lunghezza pari è bipartito.
+\end{exmp}
 
 \end{document}
