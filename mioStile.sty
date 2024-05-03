@@ -25,16 +25,20 @@
 \usetikzlibrary{shapes.symbols} % cloud
 \usepackage{sectsty}
 \xdefinecolor{background}{RGB}{32,32,32}
+\usepackage{hyperref}
+\usepackage{mathrsfs}  % Corsivo
 
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
 
 
 \pagecolor{background}
 \color{white}
-
-\tikzset{nodo/.style ={draw, shape = circle, fill = white, minimum size = 0.15cm, inner sep=0pt]}}
-
-% PER INDICE CLICCABILE %
-\usepackage{hyperref}
 \hypersetup{
     colorlinks,
     citecolor=white,
@@ -42,6 +46,10 @@
     linkcolor=white,
     urlcolor=white
 }
+\tikzset{nodo/.style ={draw, shape = circle, fill = white, minimum size = 0.15cm, inner sep=0pt]}}
+
+% PER INDICE CLICCABILE %
+
 
 \theoremstyle{definition}
 \newtheorem{exmp}{Esempio}

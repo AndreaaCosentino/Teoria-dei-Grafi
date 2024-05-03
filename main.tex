@@ -7,6 +7,7 @@
 \author{Andrea Cosentino}
 \sectionfont{\fontsize{12}{15}\selectfont}
 \date{\today}
+
 \begin{document}
 
 \maketitle
@@ -15,7 +16,8 @@
 \setlength{\columnsep}{0.8cm}
 \setlength{\columnseprule}{0.2pt}
 \twocolumn
-\chapter{Lezione I}
+
+\chapter{Prima lezione}
 \noindent
 Un grafo $G = (V,E)$ è una struttura algebrica dove $V$ è l'insieme finito di vertici e $E$ è l'insieme finito di archi. Inoltre, vale che $E = [V]^2$. Dato un insieme $S$ e un qualunque intero $k \in \{2,\dots,|S|\}$, diciamo che $[S]^k$ è la collezione di tutti i sottoinsieme di $S$ formati da $k$ elementi. Per esempio, dato l'insieme $S = \{1,2,3\}$ l'insieme $[S]^2$ contiene $\{\{1,2\}, \{1,3\},\{2,3\}\}$. 
 
@@ -286,7 +288,7 @@ Ci poniamo adesso la domanda se la densità può scendere sotto il grado minimo.
     
 \end{dimo}
 
-\chapter{Lezione II}
+\chapter{Seconda lezione}
 
 \noindent
 Un \textbf{cammino} di lunghezza $k \geq 0$ in $G = (V,E)$ è un sotto-grafo $P_k$ con $k$ archi e $k+1$ vertici distinti tale che $e_i = (v_{i-1},v_i)$. Indichiamo gli archi con $e_1 \dots e_k$ e i nodi con $v_0,\dots,v_k$.
@@ -781,5 +783,316 @@ Ricordiamo che $V_1$ e $V_2$ in quanto partizione di $V$ sono tali che $V_1 \cap
     \noindent 
     Possono contenere cicli, che sono sempre pari! Vale anche il viceversa, ovvero un grafo che contiene solo cicli di lunghezza pari è bipartito.
 \end{exmp}
+
+
+\chapter{Capitolo}
+\section{Parametri dei grafi}
+
+Possiamo definire informalmente un \textbf{parametro} come una proprietà. Ne abbiamo già viste alcune: 
+
+\begin{itemize}
+    \item Taglia
+    \item Numero di lati
+    \item Diametro
+    \item Calibro
+\end{itemize}
+Formalmente un parametro è una funzione 
+
+$$\phi: \mathscr{G} \rightarrow \mathbf{R}$$
+dove $\mathscr{G}$ è la classe dei grafi non orientati e semplici. Altre possibili proprietà possono essere:
+
+\begin{itemize}
+    \item $G$ è euclideo?
+    \item $K_3 \subseteq G$?
+\end{itemize}
+I parametri sono detti \textbf{invarianti}, ovvero mantengono lo stesso valore tra \textbf{isomorfismi} di grafi. 
+\begin{defi}
+    Dati due grafi $G,H \in \mathscr{G}$ sono isomorfismi se $\exists f: V(G) \rightarrow V(H)$ con $f$ biettiva tale che  $$\{(x,y)\} \in E(G) \Longleftrightarrow \{f(x),f(y)\} \in E(H)$$
+    $f$ è detto isomorfismo tra $G$ e $H$.
+\end{defi}
+
+\noindent
+Tutti i $\phi$ sono isomorfismi.
+
+\subsection{Numero di indipendenza}
+
+\begin{defi}
+    $U \subseteq V$ è indipendente in $G = (V,E)$ se $$\forall x,y \in U \{x,y\} \notin E$$
+    In altre parole $G[U] = (V,\varnothing)$ è un grafo privo di lati.
+\end{defi}
+
+\begin{defi}
+    $\alpha(G)$ è detto \textbf{numero di indipendenza} ed è tale che
+    \begin{multline*}
+    \alpha(G) := \max\{k \in \mathbb{N} | \exists U \subseteq V \; \\ \text{indipendente in }\;  G  \land |U|= k \}
+    \end{multline*}
+
+\end{defi}
+
+\noindent
+Il problema di trovare il numero di indipendenza maggiore è NP-completo.  Notiamo che $\alpha(G)$ sommato alla dimensione più piccola di vertex cover in $G$ è uguale a $|V|$.
+
+\disegna{
+
+\node[cloud,draw,minimum width = 2.5cm,
+    minimum height = 3cm] at (-2,0) {};
+
+\node[cloud,draw,minimum width = 2.5cm,
+    minimum height = 3cm] at (2,0) {};
+\node[] at (-2,2) {$U$};
+\node[] at (2,2) {$V \backslash U$};
+\node[nodo] (A) at (1.8,-0.4) {};
+\node[nodo] (B) at (2.2,0.2) {};
+\node[nodo] (C) at (1.5,0.5) {};
+\draw (A) -- (B);
+\draw (B) -- (C);
+\node[nodo] (D) at (-1.8,0.1){};
+\node[nodo] (E) at (-2.4,0.8){};
+\draw (A) -- (D);
+\draw (C) -- (D);
+\draw (E) -- (B);
+}
+
+\noindent 
+Notiamo infatti che i nodi in $U$ hanno almeno un arco con un nodo in $V\backslash U$, altrimenti il grafo sarebbe sconnesso. Notiamo anche che, per definizione, i nodi in $U$ non sono collegati tra loro. Inoltre, ogni nodo in $V\backslash U$ è collegato ad almeno un nodo in $U$, altrimenti $U$ non sarebbe massimale. E' quindi evidente che per coprire tutti gli archi ho bisogno  di tutti i nodi di $V\backslash U$. Assumiamo per assurdo che non sia così, e ci sia un nodo $\omega$ di $V \backslash U$ che non usiamo. Allora gli archi tra $\omega$ e $U$ non sono coperti. Per metterci in un caso favorevole assumiamo anche che gli archi $(j,\omega) \in E$ tali che $j \in V \backslash U $ siano già coperti da $j$ (se così non fosse avremmo bisogno di $\omega$ per coprirli e quindi avremmo dimostrato la sua necessità). I nodi in $i \in U$ tali che $(i,\omega) \in E$ devono essere parte della vertex cover, altrimenti non copriamo degli archi. Tuttavia, se invece di scegliere $\omega$ scegliamo $i$, la cardinalità resterebbe la stessa. Ma se $i$ coprisse due archi, $(i,\omega)$ e $(i,\omega_1)$ tale che $\omega_1 \in V \backslash U$, allora potremmo scegliere $i$ per coprirli entrambi, ottenendo una cardinalità minore. Ma se $\omega,\omega_1$ hanno altri archi con nodi in $U$, allora questi sarebbero scoperti, e andrebbero coperti aggiungendo dei nodi, vanificando il vantaggio ottenuto. Se però non ne hanno altri allora $\omega,\omega_1$ formano, insieme a $U \backslash i$ un insieme indipendente più grande, e ciò non è possibile.
+
+\subsection{Numero di clique}
+
+\begin{defi}
+    Il \textbf{numero di clique} è definito come 
+    \begin{multline*}
+        \omega(G) := \max\{k \in \mathbb{N} | \exists U \subseteq V,\\ G[U] \; \text{completo con} \; |U| = k\}
+    \end{multline*}
+\end{defi}
+
+\noindent 
+Il problema di trovare il numero di cricca massimo è NP-completo. Una cricca in $G =(V,E)$ è un insieme indipendente in $\bar G$ ($G$ \textbf{complemento}), dove $\bar G$ è definito come 
+
+$$\bar G = (V , [V]^2 \backslash E)$$
+
+\begin{exmp} In figura $G$ e il suo complemento.
+    \disegna{
+        \node[nodo] (A) at (-3,1) {};
+        \node[nodo] (B) at (-3,-1) {};
+        \node[nodo] (C) at (-1,1) {};
+        \node[nodo] (D) at (-1,-1) {};
+        \draw[] (C) -- (B);
+        \draw[] (A) -- (C);
+        \draw[] (B) -- (D);
+        \draw[] (D) -- (C);
+        \node[nodo] (A1) at (1,1) {};
+        \node[nodo] (B1) at (1,-1) {};
+        \node[nodo] (C1) at (3,1) {};
+        \node[nodo] (D1) at (3,-1) {};
+        \draw[] (A1) -- (B1);
+        \draw[] (A1) -- (D1);
+    }
+\end{exmp}
+
+\subsection{Numero cromatico}
+
+\begin{defi}
+    Una \textbf{coloratura} dei vertici $G=(V,E)$ è una funzione
+    $$c\;:\; V \rightarrow \{1,\dots,k\}$$
+    tale che $\{x,y\} \in E \Rightarrow c(x) \neq c(y)$.
+\end{defi}
+ La funzione $c$ associa a ogni nodo un colore (indicato con un numero). Una coloratura con $k$ colori è detta \textbf{k-coloratura}. Un grafo si dice \textbf{k-colorabile} se $\exists $ k-coloratura $c$. Il \textbf{numero cromatico} è definito come $$\chi(G) = \min{\{k \in \mathbb{N} | G \; \text{è k-colorabile}\}}$$
+Anche il problema di trovare $\chi(G)$ è NP-completo.
+
+\begin{exmp}
+    Il caso in $k = 2$ è possibile se e solo se il grafo è bipartito.
+
+    
+    \disegna{
+    \node[nodo,color = red] (A) at(-1.6,0.9){};
+    \node[nodo,color = red] (A1) at(-1.6,0.3){};
+    \node[nodo,color = red] (A2) at(-1.6,-0.3){};
+    \node[nodo,color = red] (A3) at(-1.6,-0.9){};
+    \node[nodo,color = blue] (B2) at(1.6,0.9){};
+    \node[nodo,color = blue] (B) at(1.6,0.3){};
+    \node[nodo,color = blue] (B1) at(1.6,-0.3){};
+    \node[nodo, color = blue] (B3) at(1.60,-0.9){};
+    \draw[] (A)--(B1);
+    \draw[] (A1)--(B);
+    \draw[] (A2) -- (B3);
+    \draw[] (A3) -- (B3);
+    \draw[] (A3) -- (B2);
+    \draw (-1.5,0) ellipse (0.5cm and 2cm);
+    \draw (1.5,0) ellipse (0.5cm and 2cm);
+    }
+\end{exmp}
+
+\begin{exmp}
+    Quanti colori ci servono per una cricca di $n$ elementi?
+
+    \disegna{
+        \node[nodo, color = blue] (A) at (0,1){};
+        \node[nodo, color = orange] (B) at (-1,-1){};
+        \node[nodo, color = red] (C) at (1,-1){};
+        \node[] (T1) at (3,0){$K_3$}; 
+        \draw[] (A) -- (B);
+        \draw[] (B) -- (C);
+        \draw[] (A) -- (C);
+
+        \node[nodo, color = blue] (D) at (-1,-3){};
+        \node[nodo, color = purple] (E) at (1,-3){};
+        \node[nodo, color = green] (F) at (-1,-5){};
+        \node[nodo, color = orange] (G) at (1,-5){};
+        \node[] (T1) at (3,-4){$K_4$}; 
+        \draw[] (D) -- (E);
+        \draw[] (E) -- (F);
+        \draw[] (F) -- (G);
+        \draw[] (G) -- (D);
+        \draw[] (G) -- (E);
+        \draw[] (D) -- (F);
+    }
+
+    \noindent 
+    In generale per una cricca di $n$ elementi ci servono $n$ colori.
+\end{exmp}
+
+\begin{exmp}
+    Quanti colori ci servono per un ciclo?
+    Se il ciclo è pari, $C_{2n}$
+        \disegna{
+        \node[nodo, color = blue] (A) at (-4,0){};
+        \node[nodo, color = red] (B) at (-2,1){};
+        \node[nodo, color = blue] (C) at (0,1.5){};
+        \node[nodo, color = red] (D) at (2,1){};
+        \node[nodo, color = blue] (E) at (1,-0.3){};
+        \node[nodo, color = red] (F) at (-2,0){};
+        \node[nodo, color = blue] (G) at (0,-1){};
+        \node[nodo, color = red] (H) at (-3,-0.5){};
+        \draw[] (A) -- (B);
+        \draw[] (B) -- (C);
+        \draw[] (C) -- (D);
+        \draw[] (D) -- (E);
+        \draw[] (E) -- (F);
+        \draw[] (F) -- (G);
+        \draw[] (G) -- (H);
+        \draw[] (H) -- (A);
+    }
+    \noindent 
+    Ci servono $2$ colori, se invece il ciclo è dispari, $C_{2n + 1}$
+      \disegna{
+        \node[nodo, color = blue] (A) at (-4,0){};
+        \node[nodo, color = red] (B) at (-2,1){};
+        \node[nodo, color = blue] (C) at (0,1.5){};
+        \node[nodo, color = red] (D) at (2,1){};
+        \node[nodo, color = blue] (E) at (1,-0.3){};
+        \node[nodo, color = red] (F) at (-2,0){};
+        \node[nodo, color = blue] (G) at (0,-1){};
+        \node[nodo, color = red] (H) at (-2,-3){};
+        \node[nodo, color = orange] (I) at (-3,-1){};
+        \draw[] (A) -- (B);
+        \draw[] (B) -- (C);
+        \draw[] (C) -- (D);
+        \draw[] (D) -- (E);
+        \draw[] (E) -- (F);
+        \draw[] (F) -- (G);
+        \draw[] (G) -- (H);
+        \draw[] (H) -- (I);
+        \draw[] (I) -- (A);
+    }
+    \noindent 
+    Ci servono $3$ colori.
+\end{exmp}
+
+\begin{teo}
+    Teorema dei quattro colori.
+    $$\chi(G) \leq 4 \; \forall G \; \text{planare}$$
+    dove con \textbf{planare} intendiamo uno grafo tale per cui esiste una rappresentazione grafica in cui gli archi non si intersecano.
+\end{teo}
+
+\begin{fatto} Diamo un upper-bound per $\chi(G)$
+
+$$\chi(G) \leq \frac{1}{2}  + \sqrt{2 |E| + \frac{1}{4}}$$
+
+\end{fatto}
+
+\begin{dimo}
+    Poniamo $x = \chi(G)$.
+    Se $G$ è $k$-colorabile allora $\exists$ partizione $V_1,\dots,V_k$ tale che $V_i$ è indipendente e $\forall i \; V_i= \{v \in V | c(v) = i\} = C^{-1}(i)$, dove $C^{-1}(i)$ è la preimmagine. $c$ è la funzione che assegna a ogni partizione un colore,
+
+    $$c\;:\; V \rightarrow \{1,\dots,k\}$$
+    Non è possibile che esistano due partizioni non collegate tra loro, altrimenti avremmo un numero di insiemi indipendenti minore e $k$ non sarebbe massimo.
+
+    \disegna{
+        \node[cloud,draw,minimum width = 2.5cm,
+    minimum height = 3cm] (A) at (-2,0) {};
+        \node[] at (-2,0){$V_1$};
+        \node[cloud,draw,minimum width = 2.5cm,
+    minimum height = 3cm] (B) at (2,0) {};
+         \node[] at (2,0){$V_2$};
+        \node[cloud,draw,minimum width = 2.5cm,
+    minimum height = 3cm] (C) at (-2,-4) {};
+        \node[] at (-2,-4){$V_4$};
+        \node[cloud,draw,minimum width = 2.5cm,
+    minimum height = 3cm] (D) at (2,-4) {};
+        \node[] at (2,-4){$V_3$};
+        \draw[] (A)--(B);
+        \draw[] (A)--(C);
+        \draw[] (A)--(D);
+        \draw[] (B)--(C);
+        \draw[] (B)--(D);
+        \draw[] (C)--(D);
+    }
+
+    \noindent 
+    Ovvero $\forall i \neq j \; \exists \geq 1$ lato tra $V_i,V_j$. E' ovvio che il numero di lati nel grafo è maggiore uguale del numero di coppie di partizioni presenti
+    $$|E| \geq \text{\#coppie}(V_i,V_j)$$
+    dove il numero di coppie è $$\binom{k}{2} = \frac{k(k-1)}{2}$$
+    Quindi....
+
+    $$|E| \geq \frac{k(k-1)}{2}$$
+    $$2|E| \geq k(k-1)$$
+    $$k^2 -k -2|E| \geq 0$$
+    prendiamo l'equazione associata $k^2 -k -2|E| = 0$ e la risolviamo
+
+    $$k_{1,2} = \frac{1 \pm \sqrt{1 + 8|E|}}{2}$$
+    $$= \frac{1}{2} \pm \frac{\sqrt{1 + 8|E|}}{2} = \frac{1}{2} \pm \frac{\sqrt{4(\frac{1}{4} + 2|E|)}}{2} $$
+    $$\frac{1}{2} \pm \frac{2\sqrt{(\frac{1}{4} + 2|E|)}}{2} =  \frac{1}{2} \pm \sqrt{(\frac{1}{4} + 2|E|)}$$
+    Quindi 
+
+    \begin{multline*}
+            \frac{1}{2} - \sqrt{(\frac{1}{4} + 2|E|)} \leq \chi(G) \\ \leq \frac{1}{2} + \sqrt{(\frac{1}{4} + 2|E|)}
+    \end{multline*}
+    Abbiamo dimostrato il teorema.
+\end{dimo}
+
+\noindent 
+Notiamo grafi con gradi alti richiedono più colori rispetto a grafi con gradi più bassi. 
+
+\begin{fatto} Vale quanto segue 
+
+$$\forall G \; \chi(G) \leq \Delta(G) + 1$$
+Se $G$ è una cricca o un ciclo di lunghezza dispari allora è un'uguaglianza.
+\end{fatto}
+
+\begin{dimo}
+    Supponiamo \\ $v_1,\dots,v_n$ arbitrario. Allora procediamo in questo modo:
+
+    \begin{enumerate}
+        \item Assegniamo $1$ a $v_1$
+        \item Se $v_2$ è vicino di $v_1$ assegniamo $2$, altrimenti $1$.
+    \end{enumerate}
+    e così via, fino ad assegnare tutti gli $n$ nodi. Siccome sappiamo che vale $\forall i \delta(v_i) \leq \Delta(G)$ per definizione, allora se arriviamo all'$i$-esimo nodo, avendo assegnato già $\Delta(G) + 1$ colori diversi, allora non ne abbiamo bisogno di uno nuovo per $v_i$ dato che al massimo $\Delta(G)$ vicini e ci sono $\Delta(G) + 1$ colori disponibili.
+\end{dimo}
+
+\begin{fatto}
+    Vale che 
+
+    $\forall G  \; \chi(G) \cdot \alpha(G) \geq |V|$
+\end{fatto}
+
+\begin{dimo}
+    Poniamo \\ $k = \chi(G)$. Sia $V_1,\dots,V_k$ una partizione indotta da una $k$-colorazione di $G$. Allora
+
+    $$\sum_{i = 1}^k |V_i|  = |V|$$
+    Sapendo che $|V_i| \leq \alpha(G)$ possiamo scrivere
+
+    $$|V| \leq \sum_i \alpha(G)  = k \alpha(G) = \chi(G) \alpha(G)$$ Abbiamo dimostrato il fatto.
+\end{dimo}
+
 
 \end{document}
