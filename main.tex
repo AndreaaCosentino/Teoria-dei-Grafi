@@ -1095,4 +1095,191 @@ Se $G$ è una cricca o un ciclo di lunghezza dispari allora è un'uguaglianza.
 \end{dimo}
 
 
+\chapter{Quinta lezione}
+
+\noindent
+Terminiamo la lezione precedente enu\\nciando un fatto:
+
+\begin{fatto}
+    Vale quanto segue 
+
+    $$\chi(G) \geq \omega(G)$$
+\end{fatto}
+Proseguiamo presentando il teorema di \textbf{Turán}.
+
+\begin{teo}
+    Teorema di Turán. $\forall G = (V,E)$ vale che  $$\alpha(G) (d(G) + 1) \geq |V|$$
+\end{teo}
+
+\noindent 
+Dividendo per $d(G) + 1 $ ambo i membri otteniamo un minorante per $\alpha(G)$. Prima di dimostrare il teorema introduciamo la \textbf{disuguaglianza di Jensen}. Data una variabile aleatoria $X \in \mathbb{R}$ tale che $X \sim P$ (dove $P$ possiamo pensarla come una distribuzione empirica. Diamo probabilità uniforme agli elementi. Il valore atteso diventa la media). Sia $f : \mathbb{R} \rightarrow \mathbb{R}$ una funzione convessa. Allora vale che 
+$$f(\va[X]) \leq \va[f(x)]$$
+Intuitivamente possiamo pensare 
+
+\vspace{5px}
+
+\trimbox{1cm 0cm 0cm 0cm}{
+\begin{tikzpicture}[domain=0:2]
+           \begin{axis} [xlabel = x, ylabel = y, axis lines=center, ymin = -1,  yticklabel=\empty, xticklabel = \empty, clip = false]            \addplot[color=white,samples=100,smooth,ultra thick] {(2*x-1)^2 + 1 };
+           \addplot[color = white] coordinates {(0.5,0)} node[below] (A) {$x$};
+           \addplot[color = white] coordinates {(1.5,0)} node[below] (B) {$y$};
+           \addplot[color = white,dashed] coordinates{(0.5,0) (0.5,1)};
+           \addplot[color = white,dashed] coordinates{(1.5,0) (1.5,5)};
+           \addplot[color = white] coordinates {(1,0)} node[below] (C) {$\frac{x+y}{2}$};
+           \addplot[color = white,dashed] coordinates{(1,0) (1,2)};
+           \addplot[color = white] coordinates {(0,1)} node[left] {$f(x)$};
+            \addplot[color = white,dashed] coordinates{(0,1) (0.5,1)};
+            \addplot[color = white] coordinates {(0,2)} node[above left] {$f(\frac{x+y}{2})$};
+            \addplot[color = white,dashed] coordinates{(0,2) (1,2)};
+             \addplot[color = white] coordinates {(0,5)} node[ left] {$f(y)$};
+            \addplot[color = white,dashed] coordinates{(0,5) (1.5,5)};
+
+            \addplot[color = red] coordinates {(0,3)} node[above right] {$\frac{f(x) + f(y)}{2}$};
+            \addplot[color = red] coordinates{(0.5,1) (1.5,5)};
+            \addplot[color = red] coordinates{(0,3) (1,3)};
+            \end{axis}
+\end{tikzpicture}
+}
+
+\vspace{5px}
+\noindent 
+Notiamo che, visivamente, la disuguaglianza di Jensen ha senso, dato che $$\frac{f(x) + f(y)}{2} \geq f(\frac{x+2}{2})$$
+
+\begin{dimo}
+    Possiamo ora dimostrare il teorema di Turán. Facciamo una dimostrazione costruttiva, ovvero dimostriamo l'esistenza di un oggetto matematico creando un metodo per costruire tale oggetto. Nel nostro caso costruiremo una serie di grafi, $G = G_1 = G_2 = \dots = G_i$ dove ogni grafo è tale che $G_i = (V_i,E_i)$.
+
+\begin{algorithm}
+\caption{}\label{euclid}
+\begin{algorithmic}[1]
+\State $i \gets 1$
+\While {$G_i \neq 0$}
+\State $\text{Sia} \; v_i \in argmin_{\;v \in V_i} d_i(v) \;$ $\text{ovvero un vertice di grado}$ $\text{minimo}$
+\State $G_{i+1} \gets G_i - C_i(v_i)$
+\State $i \gets i + 1$
+\EndWhile
+\State \Return $\{v_1,\dots,v_i\}$
+\end{algorithmic}
+\end{algorithm}
+
+\noindent 
+$C_i(v) = N_i(v) \cup \{v\}$ è definito come il \textbf{vicinato esteso} di $v$ in $G_i$. Quello che fa l'algoritmo sopra descritto è prendere, a ogni iterazione, uno dei nodi con grado minimo e rimuoverlo, insieme a tutti i nodi vicini.
+I nodi $v_i$ che scegliamo formano un insieme indipendente. Infatti non può esistere una situazione del tipo
+
+\vspace{5px}
+
+\begin{tikzpicture}
+    \node[squarednode,minimum width=5cm](A3)[]{};
+    \node[nodo, color = red] (v) at (-1,0){};
+    \node[] at (-1,0.25){$v_i$};
+    \node[nodo, color = red] (vj) at (1,0.50){};
+    \node[] at (1,0.80){$v_j$};
+    \node[nodo] (A) at (-1.75,0.5){};
+    \node[nodo] (B) at (-1.5,-0.5){};
+    \node[nodo] (C) at (-0.4,-0.90){};
+    \node[nodo] (D) at (2,0.50){};
+    \draw[] (v) -- (A);
+    \draw[] (v) -- (B);
+    \draw[] (v) -- (C);
+    \draw[] (vj) -- (C);
+    \draw[] (vj) -- (D);
+    \draw[dashed] (v) -- (vj);
+
+    \node[] (X1) at (-0.35,0.45){};
+    \node[] (X2) at (0.5,0.05){};
+    \node[] (Y1) at (0.35,0.65){};
+    \node[] (Y2) at (-0.25,-0.15){};
+
+    \draw[color = red, very thick] (X1) -- (X2);
+    \draw[color = red, very thick] (Y1) -- (Y2);
+\end{tikzpicture}
+
+\noindent 
+Se tra $v_i$ e $v_j$ esistesse un arco, allora scegliendo $v_i$ avremmo eliminato $v_j$ (o viceversa), e quindi non avremmo potuto sceglierlo successivamente. 
+
+Sia $m$ l'iterazione dell'algoritmo. Sappiamo che $m \leq |V|$ e che $m \leq \alpha(G)$, dato che $\{v_1,\dots,v_m\}$ formano un insieme indipendente. Definiamo 
+
+$$Q(G) = \sum_{v \in V_g} \frac{1}{1 + D_G(V)}$$
+A ogni passo $G_i$ decresce, quindi
+
+$$Q(G_1) - Q(G_2) \geq 0$$
+Cerchiamo un upper-bound per questa sottrazione.
+Per definizione scriviamo
+
+$$G(G_1) - Q(G_2) = \sum_{u \in G_1(v_1)} \frac{1}{1 + d(u)}$$
+Sappiamo che a ogni iterazione il numero di vicini di un grafo può solo diminuire, quindi 
+
+$$\sum_{u \in G_1(v_1)} \frac{1}{1 + d(u)} \leq \sum_{u \in G_1(v_1)} \frac{1}{1 + d_1(u)}$$
+dove abbiamo utilizzato $d_1$ al posto di $d$. Sappiamo inoltre che, per ogni scelta di $v_i$, vale $d_i(u) \geq d_i(v_i) \; \forall u \in V $ per la definizione stessa di $v_i$. 
+
+$$\sum_{u \in G_1(v_1)} \frac{1}{1 + d_1(u)} \leq \sum_{u \in G_1(v_1)} \frac{1}{1 + d_1(v_1)}  $$
+
+$$= \frac{|C_1(v_1)|}{1 + d_1(v_1)} = \frac{1 + d_1(v_1)}{1 + d_1(v_1)}  = 1$$
+Riprendiamo la definizione di $Q(G)$
+
+$$Q(G) = \sum_{v \in V_g} \frac{1}{1 + d_G(V)}$$
+e riscriviamola come
+
+$$= \sum_{i = 1}^m \sum_{u \in C(v_i)} \frac{1}{1 + d(u)}$$
+
+$$\leq \sum_{i = 1}^m 1 = m \leq \alpha(G)$$
+Se dividiamo l'equazione originale per $|V|$ otteniamo
+
+$$\frac{Q(G)}{|V|} = \frac{\sum_{v \in V_g} \frac{1}{1 + d(V)}}{|V|}$$
+Se poniamo $f(x) = \frac{1}{1+x}$
+
+$$\frac{Q(G)}{|V|} = \frac{\sum_{v \in V_g} f(d(v))}{|V|}$$
+Siccome $\frac{1}{1+x}$ è convessa per $x > -1$ possiamo applicare la disuguaglianza di Jensen. Poniamo $X \sim Unif(V)$ e $Y = d(X)$, quindi
+
+$$\va[Y] = \sum_{v \in V} d(v) \cdot \frac{1}{|V|} = \frac{1}{|V|} \sum_{v \in V} d(v)$$
+e
+$$\va[f(Y)] = \sum_{v \in V} \frac{1}{|V|} \cdot f(d(v))$$
+$$= \frac{1}{|V|} \sum_{v \in V} \frac{1}{1 + d(v)} \geq f(\va[Y])$$
+
+$$= \frac{1}{1 + \frac{1}{|V|} \sum_{v \in V} d(v)} = \frac{1}{1 + d(G)}$$
+Mettendo tutto assieme
+
+$$\alpha(G) \geq Q(G) \geq \frac{|V|}{1 + d(G)}$$
+quindi
+
+$$\alpha(G) (d(G) + 1) \geq |V|$$
+Inoltre possiamo dire che $d(G)$ è approssimabile in tempo polinomiale con fattore $O(\log{n})$
+\end{dimo}
+
+\noindent 
+Presentiamo il seguente fatto:
+
+\begin{fatto}
+    La seguente disuguaglianza vale $\forall G = (V,E)$
+
+    $$ \omega(G) (|V| - d(G)) \geq |V|$$
+\end{fatto}
+
+\begin{dimo}
+    Poniamo $n = |V|$ e $\bar G = (V,\bar E)$. Sappiamo che 
+
+    $$d_{\bar G} (v) = n - 1 - d_G(v)$$
+    Quindi
+    $$d(\bar G) = \frac{1}{n} \sum_{v \in V} d_{\bar G}(v) = \frac{1}{n} \sum_{v \in V} (n - 1 - d(G))$$
+    Siccome un insieme indipendente  in $\bar G$ corrisponde a una clique in $G$, possiamo applicare il teorema di Turan 
+    $$\omega(G) = \alpha(\bar G) \geq \frac{n}{1 + d(\bar G)} = \frac{n}{n - d(G)} $$
+    E a questo punto abbiamo concluso la dimostrazione, infatti muovendo il denominatore
+    $$\omega(G) (|V| - d(G)) \geq |V|$$
+\end{dimo}
+
+\section{Numero di dominazione}
+
+\begin{defi}
+    Il \textbf{numero di dominazione} è 
+
+    \begin{multline*}
+    \gamma(G):= \min\{k \in \mathbb{N} | \exists U \subseteq V\\ \; \text{dominante}, |V| = k\} 
+    \end{multline*}
+\end{defi}
+\noindent 
+Dove un \textbf{insieme di dominazione} è $U \subseteq V$ tale che ogni vertice in $V \backslash U$ ha un unico vicino in $U$. Un vertice domina se stesso.
+
+Il problema di trovare $\gamma(G)$ è NP-completo.
+
+Notiamo, inoltre, che se un insieme indipendente è dominante allora non domina alcun vertice dell'insieme indipendente.
+
 \end{document}
