@@ -785,7 +785,7 @@ Ricordiamo che $V_1$ e $V_2$ in quanto partizione di $V$ sono tali che $V_1 \cap
 \end{exmp}
 
 
-\chapter{Capitolo}
+\chapter{Quarta lezione}
 \section{Parametri dei grafi}
 
 Possiamo definire informalmente un \textbf{parametro} come una proprietà. Ne abbiamo già viste alcune: 
@@ -1281,5 +1281,266 @@ Dove un \textbf{insieme di dominazione} è $U \subseteq V$ tale che ogni vertice
 Il problema di trovare $\gamma(G)$ è NP-completo.
 
 Notiamo, inoltre, che se un insieme indipendente è dominante allora non domina alcun vertice dell'insieme indipendente.
+
+\chapter{Sesta lezione}
+
+\section{Proprietà numero di dominazione}
+
+Continuiamo la trattazione del numero di dominazione, iniziata nella scorsa lezione.
+
+\begin{fatto}
+    $\forall  \; G = (V,E)$ vale che 
+    $$\gamma(G) \leq \alpha(G)$$
+\end{fatto}
+
+\begin{dimo}
+    Sia $U \subseteq V$ indipendente e $|U| = \alpha(G)$. Per assurdo, supponiamo che $U$ non sia dominante.  Allora $\exists \;x \in V\backslash U$ tale che non ha vicini in $U$. Questo implica che $x$ non è dominato da $U$. Allora $U \cup \{x\}$ è indipendente e ha cardinalità $\alpha(G) + 1$, ma questo è assurdo, perché $U$ non sarebbe l'insieme indipendente massimo. Allora $U$ deve essere dominante. Per definizione stessa di $\gamma(G)$ vale che 
+    
+    $$|U| = \alpha(G) \leq \gamma(G)$$
+    Infatti, l'insieme dominante minimo al massimo ha come cardinalità $U$, dato che questo è dominante, e il minimo può essere solo uguale o più piccolo.
+\end{dimo}
+
+\noindent 
+Il prossimo teorema mostra che se tutti i vertici di un grafo hanno un grado alto, allora il numero di dominazione deve essere piccolo.
+
+\begin{teo}
+    (Armautov, 1974; Payan, 1975; Lovász 1966)
+    Vale la seguente disequazione
+
+    $$\gamma(G) \frac{1 + \delta(G)}{1 + \ln{(1 + \delta(G))}} \leq |V|$$
+\end{teo}
+
+\begin{dimo}
+    Facciamo una dimostrazione per costruzione. Cominciamo con il porre $n = |V|$ e $\delta = \delta(G)$.
+
+\begin{algorithm}[H]
+\caption{}\label{euclid}
+\begin{algorithmic}[1]
+\State $S \gets \varnothing$
+\State $U \gets V$
+\While {$U \neq \varnothing$}
+\State $v' \in argmax_{v \in V} |U \cap C(v) \|$ 
+\State $S \gets S \cup \{v'\}$
+\State $U \gets U \backslash C(v')$
+\EndWhile
+\State \Return $S$
+\end{algorithmic}
+\end{algorithm}
+
+\noindent 
+Consideriamo un'iterazione qualsiasi dell'algoritmo. Sia $U$ l'insieme dei vertici non ancora dominati all'inizio di tale iterazione e poniamo $r = |U|$. Allora 
+
+$$|U \cap C(v')|  = \sum_{u \in U} \mathds{I}\{u \in C(v')\}$$Esplicitiamo $v'$ come il nodo che massimizza la sommatoria
+$$\max_{v \in V} \sum_{u \in U} \mathds{I}\{u \in C(v)\}$$ Definiamo la variabile aleatoria $X \sim Unif(V)$, dove la distribuzione è uniforme su $V$. Sappiamo che il massimo è sempre maggiore o uguale della media. Allora possiamo scrivere
+
+$$\geq \va[\sum_{v \in U} \mathds{I}\{u \in C(X)\}]$$Per la linearità del valore atteso scriviamo
+$$= \sum_{v \in U}  \va[\mathds{I}\{u \in C(X)\}]$$
+Il valore atteso di una funzione indicatrice è la probabilità che avenga l'evento. 
+
+$$= \sum_{v \in U} P(u \in C(X))$$
+Notiamo ora che se $u$ fa parte del vicinato esteso di $X$, allora vale anche l'opposto, ovvero $X$ fa parte del vicinato esteso di $u$.
+
+$$= \sum_{v \in U} P(X \in C(u))$$
+La probabilità che $X$ faccia parte del vicinato esteso di $u$ è semplicemente il numero di elementi in $C(u)$ fratto il numero totale di nodi.
+
+$$= \sum_{v \in U} \frac{|C(u)|}{n} = \sum_{v \in U} \frac{1 + d(u)}{n} $$
+Siccome $d(u) \geq \delta(G)$ per definizione
+
+$$\geq \sum_{v \in U} \frac{1 + \delta(G)}{n}$$ Ci siamo liberati di $v$ all'interno della sommatoria, quindi
+
+$$= r \frac{1 + \delta(G)}{n}$$
+Possiamo concludere che al termine dell'iterazione rimangono al massimo $$r - r\frac{1+\delta(G)}{n} = r(1- \frac{1 + \delta(G)}{n})$$ nodi. Notiamo che, partendo dall'inizio, dopo $m$ iterazioni rimarranno
+
+$$n(1-\frac{1 +\delta(G)}{n}) \dots (1-\frac{1 +\delta(G)}{n})$$
+
+$$= n(1-\frac{1 +\delta(G)}{n})^m$$
+nodi. Ci chiediamo ora quando $m$ è sufficiente affinché rimangano $\leq \frac{n}{1 + \delta(G)}$ vertici ancora da dominare. Ovvero
+
+$$n(1-\frac{1 +\delta(G)}{n})^m \leq \frac{n}{1 + \delta(G)}$$
+Applichiamo la nota disequazione 
+
+$$1-x \leq e^{-x} \; \forall x \in \mathbb{R}$$
+
+
+\trimbox{1.75cm 0cm 0cm -0.5cm}{
+\begin{tikzpicture}[domain=-1:2]
+           \begin{axis} [xlabel = x, ylabel = y, axis lines=center, ymin = -1,xmax = 2.5, ymax = 3,  yticklabel=\empty, xticklabel = \empty, clip = false]           
+           \addplot[color=yellow,samples=100,smooth, thick] {1-x}node[below left, pos = 0.1]{$1-x$};
+           \addplot[color=purple,samples=100,smooth, thick] {e^(-x)}node[above right, pos = 0.1]{$e^{-x}$};
+
+            \end{axis}
+\end{tikzpicture}
+}
+
+
+$$n(1-\frac{1 +\delta(G)}{n})^m $$
+
+$$\leq n \cdot exp(-\frac{1 + \delta(G)}{n}m)$$ Usiamo $exp$ per evitare di avere $e$ con esponente una frazione, ma è la stessa cosa.
+
+$$n \cdot exp(-\frac{1 + \delta(G)}{n}m)\leq \frac{1}{1 + \delta(G)}$$ Applichiamo la funzione logaritmo su ambo i lati
+
+$$- \frac{1 + \delta(G)}{n} m \leq -\ln(1+ \delta(G)) $$
+
+$$m \geq  n \frac{\ln(1 + \delta(G))}{1 + \delta(G)}$$
+Assumiamo di essere arrivati all'iterazione $m = n \frac{\ln(1 + \delta(G))}{1 + \delta(G)}$. Sia $s$ il numero di vertici ancora da dominare dopo $m$ passi.  Siccome $m$ è la risposta alla domanda che ci siamo posti prima, vale che
+
+$$s \leq \frac{n}{1 + \delta(G)}$$ 
+Nel caso peggiore l'algoritmo sceglierà altri $s$ vertici per completare la costruzione dell'insieme dominante. Ma allora la cardinalità dell'insieme finale sarà 
+
+$$\gamma(G) \leq |S| \leq m + s$$
+
+$$\leq n \frac{\ln(1 + \delta(G))}{1 + \delta(G)} +  \frac{n}{1 + \delta(G)}$$ Sapendo che $n = |V|$ e rigirando l'equazione
+
+$$\gamma(G) \frac{1 + \delta(G)}{1 + \ln{(1 + \delta(G))}} \leq |V|$$
+
+\end{dimo}
+
+\section{Grafi casuali}
+Un \textbf{modello generativo} per grafi è una distribuzione di probabilità su tutti i grafi di un certo ordine. Il più famoso è il modello di \textbf{Erd\"{o}s-Rényi}. Indichiamo con $\mathscr{G}(n,p) $ la distribuzione di probabilità su grafi di ordine $n$. Dato il grafo $G = (V,E)$, l'arco $\{i,j\} \in [V ]^2$ è tale che $\{i,j\} \in E$ con probabilità $p$. L'estrazione è indipendente  $\forall i \neq j$. Quindi 
+
+$$\mathds{I}\{\{i,j\} \in E\} \sim Bern(p)$$
+\begin{itemize}
+    \item Se $p = 0$ allora il grafo ottenuto ha sempre $0$ lati.
+    \item Se $p = 1$ allora il grafo ottenuto ha sempre tutti i lati in $[V]^2$.
+    \item Se $0 < p < 1$ allora ogni grafo di ordine $n$ ha probabilità $> 0$ di essere estratto da $\mathscr{G}(n,p)$
+\end{itemize}
+
+\noindent
+Notiamo che $p$ regola la densità del grafo.
+La distribuzione $\mathscr{G}(n,\frac{1}{2})$ è uniforme su tutti i grafi di ordine $n$. 
+Sia $H = (V,E)$ un grafo di ordine $n$. La probabilità di estrarre $H$ è 
+
+$$ P(H) = p^{|E|} (1-p)^{\binom{n}{2} - |E|}$$ 
+Invece la probabilità di estrarre un grafo con $k$ lati è 
+
+$$P(|E| = k) = \sum_{\substack{ E' \in [V]^2 \\ \land |E'| = k}} p^k (1-p)^{\binom{n}{2} - k}$$
+
+$$= \binom{|[V]^2|}{k}p^k (1-p)^{\binom{n}{2} - k}$$
+
+$$= \binom{\binom{n}{2}}{k}p^k (1-p)^{\binom{n}{2} - k}$$
+ed è una binomiale di parametri $\binom{n}{2}$ e $p$. Il valore atteso è $$\va[|E|] = \binom{n}{2}p$$ ovvero il prodotto tra i parametri della distribuzione.
+Siccome a volte la dimostrazione costruttiva , usiamo il modello di Erd\"{o}s-Rényi per dimostrare delle proprietà attraverso il \textbf{metodo probabilistico}. Ovvero, dato lo spazio di probabilità definito dalla tripla
+
+ $$(\Omega,F,P)$$
+dove $\Omega$ è lo spazio campione (contiene gli eventi elementari), $F$ lo spazio degli eventi ($F \subseteq \Omega$) e $P$ la misura (distribuzione) di probabilità. Per esempio, sia $\Omega$ l'insieme dei grafi di ordine $n$. Ci chiediamo se ci siano dei grafi bipartiti.  Sia $A$ l'insieme dei grafi bipartiti di ordine $n$ ($A \subseteq \Omega $) ci chiediamo
+
+$$\exists \; \omega \in \Omega \;t.c.\; \omega \in A?$$
+
+\noindent
+Se $A \neq \varnothing$  allora esiste. Questo equivale a chiedersi $P(A) > 0$, che implica $\exists \omega \in \Omega$ che soddisfa la proprietà (notare che non è una 
+co-implicazio-ne!).
+
+
+\chapter{Settima lezione}
+
+\section{Strumenti di probabilità}
+Introduciamo due importanti disequazioni che saranno utili per diverse dimostrazioni usando il metodo probabilistico. Sia $(\Omega,P)$ uno spazio di probabilità e siano $E_1,\dots,E_n$ degli eventi qualsiasi. Per la \textbf{regola dell'unione} vale la disuguaglianza
+
+$$P(E_1 \cup \dots \cup E_n) \leq \sum_{i = 1}^n P(E_i) $$
+Graficamente possiamo convincerci della correttezza della disequazione.
+
+\disegna{
+         \node[squarednode,minimum width=5cm,minimum height = 4cm
+        ](A3) at (0,2)[]{};
+       \node[] at (-2.2, 3.75) {$\Omega$};
+       \node[] at (0, 0.5) {$E_1$};
+       \node[] at (-1.55,2.70) {$E_2$};
+       \node[] at (1.55,2.70) {$E_3$};
+        
+      \draw (90:1.75cm) circle (1.5cm) node[text=black,below, pos =0.8] {};
+
+      \draw (110:2.5cm) circle (1.5cm);
+      \draw (70:2.5cm) circle (1.5cm);
+
+}
+
+\noindent 
+Le zone che sono in comune, sommando le probabilità dei singoli $E_i$, vengono contate più volte, quindi è ovvio che la sommatoria sia maggiore (o al massimo uguale) alla probabilità dell'unione.
+Data una variabile aleatoria $X$ non negativa, $\forall a > 0$ vale
+$$P(X \geq a ) \leq \frac{\va[X]}{a}$$
+Questa disuguaglianza è detta \textbf{disuguaglianza di Markov}. La dimostrazione è omessa.
+
+\section{Proprietà grafi}
+
+\begin{fatto}
+    $\forall n \geq 4$ e $\forall K \geq 2\log{n}$ $\; \exists G$ di ordine $n$ tale che $\alpha(G) < k$ e $\omega(G) < k$.
+\end{fatto}
+
+\noindent
+   Notiamo che le due proprietà sembrano quasi contrastanti. Un insieme di indipendenza grande preclude una grande clique, e viceversa.
+
+\begin{dimo}
+    Consideriamo $G \sim \mathscr{G}(n,\frac{1}{2})$. Qual è la probabilità che $U \subset V$, con $|U| = k$, sia indipendente in $G$? $(1 - \frac{1}{2})^{\binom{k}{2}}$. Quindi,
+
+        
+        $$P(\alpha(G) > k )$$
+        \begin{multline*}
+            = P(\exists U \subseteq V \; \text{t.c.} \;  |U| = k,\\\; \text{indipendente in }\; G)
+        \end{multline*}
+
+        $$= P(\bigcup_{\substack{U \subseteq V \\ |U| = k}} \{\text{U è indipendente in G}\}) $$
+
+        $$\leq \sum_{\substack{U \in V \\ |V| = k}} P(\text{U è indipendente in G})$$
+        $$= \sum_{\substack{U \in V \\ |V| = k}} 2^{-\binom{k}{2}} =  \binom{n}{k} 2^{-\binom{k}{2}}$$
+        Usiamo ora il fatto che 
+
+        $$\binom{n}{k} \leq (\frac{n}{2})^k$$
+        per $4 \leq k \leq n$. Quindi:
+
+        $$\binom{n}{k} 2^{-\binom{k}{2}} \leq (\frac{n}{2})^k \; 2^{-\frac{k(k-1)}{2}} $$
+        Sfruttando le proprietà dei logaritmi scriviamo
+
+        $$2^{\log_2{(\frac{n}{2})^k}}  2^{-\frac{k(k-1)}{2}} = 2^{\log_2{(\frac{n}{2})^k} - \frac{k(k-1)}{2} }$$
+
+        $$= 2^{k(\log_2{n} - 1) - \frac{k(k-1)}{2}}$$
+        Con la condizione che $k \geq 2\log_2{n}$
+        $$\geq 2^{\frac{k^2}{2} - k - \frac{k(k-1)}{2}} = 2^{-\frac{k}{2}}$$
+        Siccome $k \geq 4$, allora 
+
+        $$2^{-\frac{k}{2}} < \frac{1}{2}$$
+        Dato $U \subseteq V$ con $|U| = k$ la probabilità che $U$ formi una clique in $G$ è $2^{-\frac{k}{2}}$. Rifacendo la stessa derivazione di prima arriviamo a dire che $P(\omega(G) \geq k) < \frac{1}{2}$. Quindi possiamo affermare
+
+        $$P(\alpha(G) < k, \omega(G) < k) $$
+        $$= 1 - P(\alpha(G) \geq k \; \lor \; \omega(G) \geq k )$$
+
+        $$\geq 1 - P(\alpha(G) \geq k) - P(\omega(G) \geq k)$$
+
+        $$> 1 - \frac{1}{2} - \frac{1}{2} = 0$$
+        Abbiamo dimostrato che  $P(\alpha(G) < k, \omega(G) < k) > 0$, questo implica che debba esistere un grafo $G$ di ordine $n$ tale che $\alpha(G) < k$ e $\omega(G) < k$.
+\end{dimo}
+
+\noindent 
+Discutiamo un'altra proprietà che, similmente alla precedente, sembra essere contrastante.
+
+\begin{teo} \textbf{Teorema di Erdos}. $\forall \; k \; \exists  \; G$ tale che 
+
+$$g(G) > k \land \chi(G) > k$$
+    
+\end{teo}
+
+\noindent
+Prima di dimostrare il teorema introduciamo un lemma utile alla sua dimostrazione.
+
+\begin{lemma}
+    Il valore atteso del numero di cicli di lunghezza $k$ in $G \sim \mathscr{G}(k,n)$ è $$\frac{n(n-1)\dots(n-k+1)}{2k} p^k$$
+\end{lemma}
+\begin{dimo}
+    Dimostriamo il lemma precedente.
+    Sia $C_k$ l'insieme con tutti i cicli possibili di lunghezza $k$ su $n$ vertici. Ci chiediamo quanti siano. Un ciclo è determinato dai vertici che ne fanno parte. Il numero di modi per scegliere $k$ vertici è 
+    $$n (n-1) \dots (n-k+1)$$
+    Dobbiamo però considerare che in questo modo contiamo $k$ volte ogni ciclo per il fatto che cambiamo solamente l'ordine dei nodi, e un addizionale $2$ volte per ogni verso. Quindi 
+
+    $$|C_k| = \frac{n (n-1) \dots (n-k+1)}{2k}$$
+    Dove dividiamo per $2k$ perché ci sono esattamente $2k$ sequenze che corrispondono allo stesso ciclo.
+    Sia $C \in C_k$, ci chiediamo  qual è la probabilità che $G$ contenga $C$ ? $p^k$, perché ogni arco tra i $k$ nodi deve essere estratto, gli altri non ci interessa cosa succede.  Indichiamo con $N_k(G)$ il numero di cicli di lunghezza $k$ in G, allora
+
+    $$\va[N_k(G)] = \sum_{C \in C_k} P(\text{G contiene C})$$
+    $$= \sum_{C \in C_k} p^k$$
+    La sommatoria diventa indipendente da $C$
+
+    $$= |C_k| \cdot p^k$$
+    $$= \frac{n (n-1) \dots (n-k+1)}{2k} p^k$$
+\end{dimo}
+
 
 \end{document}

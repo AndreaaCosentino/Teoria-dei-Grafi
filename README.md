@@ -6,4 +6,4 @@ Gli appunti fanno riferimento all'edizione 2021-2022 dell'insegnamento.
 L'insegnamento si propone di analizzare i grafi e alcuni problemi interessanti. Questo, insieme a quello di complementi di algoritmi, è un must-have nella propria carriera universitaria. 
 
 --- 
-Se volete cambiare il colore dello sfondo e del testo, nel file mioStile.sty rimuovete le opzioni **pagecolor** e **color**, poi nell'opzione **hypersetup** cambiare il colore da **white**  a **black**. In futuro aggiungerò comando per modificarlo più facilmente.
+Ci sono due stili disponibili: Il primo (file  Appunti_StileNormale) è su una colonna con sfondo bianco e testo nero, il secondo (file Appunti_StileSpeciale) è su due colonne con sfondo nero e testo bianco. Il primo stile è più adatto se si vogliono stampare gli appunti.
