@@ -7,3 +7,13 @@ L'insegnamento si propone di analizzare i grafi e alcuni problemi interessanti. 
 
 --- 
 Ci sono due stili disponibili: Il primo (file  Appunti_StileNormale) è su una colonna con sfondo bianco e testo nero, il secondo (file Appunti_StileSpeciale) è su due colonne con sfondo nero e testo bianco. Il primo stile è più adatto se si vogliono stampare gli appunti.
+
+### Programma completato
+
+Sono fruibili le lezioni dalla **prima** all'**ottava**. Il programma compreso da queste lezioni è il seguente:
+
+- Definizioni di base sui grafi
+- Proprietà dei grafi (numero cromatico, numero d'indipendenza, numero di dominazione)
+- Grafi generati randomicamente
+
+La data prevista per il completamento (della prima versione) è il 30 maggio 2024. Successivamente verranno corrette e migliorate (si spera).
