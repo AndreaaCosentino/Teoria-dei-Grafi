@@ -1396,7 +1396,7 @@ $$\gamma(G) \frac{1 + \delta(G)}{1 + \ln{(1 + \delta(G))}} \leq |V|$$
 \end{dimo}
 
 \section{Grafi casuali}
-Un \textbf{modello generativo} per grafi è una distribuzione di probabilità su tutti i grafi di un certo ordine. Il più famoso è il modello di \textbf{Erd\"{o}s-Rényi}. Indichiamo con $\mathscr{G}(n,p) $ la distribuzione di probabilità su grafi di ordine $n$. Dato il grafo $G = (V,E)$, l'arco $\{i,j\} \in [V ]^2$ è tale che $\{i,j\} \in E$ con probabilità $p$. L'estrazione è indipendente  $\forall i \neq j$. Quindi 
+Un \textbf{modello generativo} per grafi è una distribuzione di probabilità su tutti i grafi di un certo ordine. Il più famoso è il modello di \textbf{Erd\H{o}s-Rényi}. Indichiamo con $\mathscr{G}(n,p) $ la distribuzione di probabilità su grafi di ordine $n$. Dato il grafo $G = (V,E)$, l'arco $\{i,j\} \in [V ]^2$ è tale che $\{i,j\} \in E$ con probabilità $p$. L'estrazione è indipendente  $\forall i \neq j$. Quindi 
 
 $$\mathds{I}\{\{i,j\} \in E\} \sim Bern(p)$$
 \begin{itemize}
@@ -1419,7 +1419,7 @@ $$= \binom{|[V]^2|}{k}p^k (1-p)^{\binom{n}{2} - k}$$
 
 $$= \binom{\binom{n}{2}}{k}p^k (1-p)^{\binom{n}{2} - k}$$
 ed è una binomiale di parametri $\binom{n}{2}$ e $p$. Il valore atteso è $$\va[|E|] = \binom{n}{2}p$$ ovvero il prodotto tra i parametri della distribuzione.
-Siccome a volte la dimostrazione costruttiva , usiamo il modello di Erd\"{o}s-Rényi per dimostrare delle proprietà attraverso il \textbf{metodo probabilistico}. Ovvero, dato lo spazio di probabilità definito dalla tripla
+Siccome a volte la dimostrazione costruttiva , usiamo il modello di Erd\H{o}s-Rényi per dimostrare delle proprietà attraverso il \textbf{metodo probabilistico}. Ovvero, dato lo spazio di probabilità definito dalla tripla
 
  $$(\Omega,F,P)$$
 dove $\Omega$ è lo spazio campione (contiene gli eventi elementari), $F$ lo spazio degli eventi ($F \subseteq \Omega$) e $P$ la misura (distribuzione) di probabilità. Per esempio, sia $\Omega$ l'insieme dei grafi di ordine $n$. Ci chiediamo se ci siano dei grafi bipartiti.  Sia $A$ l'insieme dei grafi bipartiti di ordine $n$ ($A \subseteq \Omega $) ci chiediamo
@@ -1512,7 +1512,7 @@ Questa disuguaglianza è detta \textbf{disuguaglianza di Markov}. La dimostrazio
 \noindent 
 Discutiamo un'altra proprietà che, similmente alla precedente, sembra essere contrastante.
 
-\begin{teo} \textbf{Teorema di Erdos}. $\forall \; k \; \exists  \; G$ tale che 
+\begin{teo} \textbf{Teorema di Erd\H{o}s}. $\forall \; k \; \exists  \; G$ tale che 
 
 $$g(G) > k \land \chi(G) > k$$
     
@@ -1541,6 +1541,198 @@ Prima di dimostrare il teorema introduciamo un lemma utile alla sua dimostrazion
     $$= |C_k| \cdot p^k$$
     $$= \frac{n (n-1) \dots (n-k+1)}{2k} p^k$$
 \end{dimo}
+
+\chapter{Ottava lezione}
+
+\noindent
+Dimostriamo ora il teorema di Erd\H{o}s.
+
+\begin{dimo}
+    Cominciamo con il porre $p_n = n^{\varepsilon - 1}$ dove $0 < \varepsilon < \frac{1}{k}$. Sia $N_{\leq k}(G)$ la variabile casuale che rappresenta il numero di cicli di lunghezza al più $k$ in $G$. Guardiamo il valore atteso di questa variabile casuale.
+    
+    $$\va[N_{\leq k} (G)] = \sum_{i = 3}^{k} \va[N_i(G)]$$
+    Dove la sommatoria parte da $3$ perché non esistono cicli di lunghezza minore, per definizione stessa. $N_i(G)$ è il numero di cicli di lunghezza $i$ in $G$.
+
+    $$= \sum_{i = 3}^k \frac{n(n-1)\dots(n-i + 1)}{2i} p^i$$
+    A denominatore abbiamo $i$ fattori, ciascuno è al più $n$.
+    $$\leq \sum_{i = 3}^k \frac{n^i}{2i} p^i$$
+    per l'indicizzazione stessa della sommatoria, $i > 1$
+
+    $$\leq \frac{1}{2} \sum_{i=3}^k (np)^i$$
+    Non è una disuguaglianza stretta perché ambo i lati potrebbero valere $0$.
+
+    $$\leq \frac{k-2}{2} (np)^k$$
+    dove $k-2$ sono il numero di termini della sommatoria.  Notiamo che la sostituzione di $(np)^k$ con $(np)^i$ vale perché la base è maggiore di $1$. Infatti:
+
+    $$np = n \cdot n^{\varepsilon - 1} = n^{\varepsilon} > n^{\frac{1}{k}} = \sqrt[k]{n} > 1$$
+    Concentriamoci ora sul valore atteso di $N_{\leq k} (G) \geq \frac{n}{2}$. A cosa serve vi chiederete voi? Le strade del Signore sono infinite.
+
+    $$\va[N_{\leq k} (G) \geq \frac{n}{2}] \leq \frac{\va[N_{\leq k}(G)]}{\frac{n}{2}}$$
+    Che è l'applicazione della disuguaglianza di Markov. Usiamo il risultato trovato prima,
+    $$\leq \frac{(k-2)(np)^k}{n} = (k-2) n^{k-1}p^k $$
+    $$= (k-2)n^{k-1} \cdot n^{k\varepsilon - k} = (k-2) n^{k \varepsilon - 1}$$
+    $$= (k-2) n^{-(1-k\varepsilon)} $$
+    Notiamo che $k\varepsilon - 1 < \frac{k}{k} - 1 < 0$. Quindi se $n \rightarrow 0$ possiamo affermare
+
+    $$\va[N_{\leq k} (G) \geq \frac{n}{2}]  < \frac{1}{2}$$
+    Analizziamo ora $P(\alpha(G) \geq \frac{n}{2k})$.
+    Dove ci porteranno questi conti? Lo scopriremo solo vivendo. Notiamo che una probabilità simile l'abbiamo già analizzata nelle precedenti lezioni. E allora risparmiamo inchiostro 
+    $$P(\alpha(G) \geq \frac{n}{2k}) \leq \binom{n}{\frac{n}{2k}} (1-p)^{\binom{\frac{n}{2k}}{2}}$$
+    $$= \binom{n}{r} (1-p)^{\binom{r}{2}}$$
+    dove $r = \frac{n}{2k}$. Introduciamo due importanti disequazioni note
+
+    $$\binom{n}{r} < 2^n$$
+    e
+    $$1-p \leq e^{-p}$$
+    Andiamo a utilizzarle 
+    $$\leq 2^n e^{-p\binom{r}{2}}$$
+    Per $r \geq 2$ sappiamo che $\binom{r}{2} \geq \frac{r^2}{4}$ (infatti $\frac{r(r-1)}{2} \geq \frac{r^2}{4}$).
+
+    $$\leq 2^n e^{-p \frac{r^2}{4}} = 2^n e^{-p \frac{n}{16k^2}} $$
+    Vale che $p\cdot n = n^\varepsilon$. Scegliamo $n$ abbastanza grande, ovvero $n^\varepsilon \geq 16k^2$.
+
+    $$\leq 2^n e^{-n} = (\frac{2}{e})^n$$
+    Sempre per $n$ abbastanza grande possiamo affermare 
+
+    $$(\frac{2}{e})^n < \frac{1}{2}$$
+    Utilizziamo tutto quello che abbiamo appreso.
+
+    $$P(N_{\leq}(G)  < \frac{n}{2} \land \alpha(G) < \frac{n}{2k})$$
+
+    $$= 1 - P(N_{\leq}(G)  \geq \frac{n}{2} \lor \alpha(G) \geq \frac{n}{2k})$$
+    $$\geq 1 - P(N_{\leq}(G)  \geq \frac{n}{2})- P( \alpha(G) \geq \frac{n}{2k}) $$
+    $$> 1  - \frac{1}{2} - \frac{1}{2} \geq 0$$
+    Quindi 
+    $$\exists G \; N_{\leq k} < \frac{n}{2} \land \alpha(G) < \frac{n}{2k}$$
+    G ha al più $\frac{n}{2}$ cicli di lunghezza al più $k$. Togliamo un vertice da ogni ciclo di lunghezza al più $k$ in $G$. Sia $H=(V_H,E_H)$ il grafo ottenuto. Allora $|V_H| \geq \frac{n}{2}$, perché al peggio leviamo un nodo per ogni ciclo. Inoltre,  $g(H) > k$. 
+    Quanto vale $\chi(H)$? Sappiamo che
+    $$\chi(H) \alpha(H) \geq |V_H|$$
+    Quindi
+
+    $$\chi(H) \geq \frac{|V_H|}{\alpha(H)} \geq \frac{\frac{n}{2}}{\alpha(G)}$$
+    Dove l'ultima disequazione deriva dal fatto che $\alpha(G) \geq \alpha(H)$ (non dimostrato).
+
+    $$> \frac{\frac{n}{2}}{\frac{n}{2}} k = k$$
+    Abbiamo così dimostrato il teorema.
+    
+\end{dimo}
+
+\section{Proprietà asintotiche}
+Dati $p_1,p_2,\dots \in (0,1)$, $G_n \sim \mathscr{G}(n,p_n) \;$ per $n = 1,2,\dots$. Consideriamo una qualche proprietà, per esempio
+
+$$\omega(G_n) \leq f(n)$$
+Dove $f$ è una qualsiasi funzione. Ora introduciamo il predicato
+
+$$\pi_n(G_n) \in \{0,1\}$$
+E quindi, nel nostro esempio, potrebbe essere
+
+$$\pi_n^{G_n} = \mathds{I}\{\omega(G_n) \leq f(n)\}$$
+Avremo una sequenza di predicati $\pi_1,\pi_2,\dots$, e ci chiediamo se
+
+$$\lim_{n \rightarrow \infty} P(\pi_n(G_n) = 1)$$
+Cioè se il grafo $G_n$ ha la proprietà $\omega(G_n) \leq f(n)$ con $n$ molto grande. Se $= 1$ allora la proprietà \textbf{vale asintoticamente} per quasi tutti i grafi $G_n$.
+
+\begin{exmp}
+    Dato $p_n = \frac{1}{2}$ e $\pi_n(G_n) = \mathds{I}\{\omega(G_n) = 2\log_2{n}\}$ (stesso discorso può essere fatto per $\pi_n(G_n) = \mathds{I}\{\alpha(G_n) = 2\log_2{n}\}$). Vediamo cosa succedere con il crescere di $n$.
+    
+
+\begin{tikzpicture}[domain=-1:2]
+           \begin{axis} [xlabel = x, ylabel = y, axis lines=center, ymin = -0.1,xmax = 2, ymax = 3,  yticklabel=\empty, xticklabel = \empty, clip = false]           
+           \addplot[color=yellow,samples=100,smooth, thick] {gauss(1,0.3)}node[] at (1,-0.3){$2\log_2{n}$};
+           \addplot[color = white,dashed] coordinates{(1,0) (1,1.3)} node[] at (-0.65,2.5){$n = 1000$};
+
+            \end{axis}   
+            
+\end{tikzpicture}
+
+
+\trimbox{-0.2cm 0cm 0cm 0.75cm}{
+\begin{tikzpicture}[domain=-1:2]
+           \begin{axis} [xlabel = x, ylabel = y, axis lines=center, ymin = -1,xmax = 2.5, ymax = 3,  yticklabel=\empty, xticklabel = \empty, clip = false]           
+           \addplot[color=yellow,samples=100,smooth, thick] {gauss(1,0.18)}node[] at (1,-0.3){$2\log_2{n}$};
+           \addplot[color = white,dashed] coordinates{(1,0) (1,2.2)} node[] at (-0.65,2.5){$n = 10^6$};
+
+            \end{axis}    
+\end{tikzpicture}
+}
+
+\trimbox{1cm 0cm 0cm 0cm}{
+\begin{tikzpicture}[domain=-1:2]
+           \begin{axis} [xlabel = x, ylabel = y, axis lines=center, ymin = -1,xmax = 2.5,xmin = -1, ymax = 3,  yticklabel=\empty, xticklabel = \empty, clip = false]           
+           \addplot[color = yellow,thick] coordinates{(1,0) (1,2.2)} node[color = white] at (-0.65,2.5){$n \rightarrow \infty$} node[] at (1,-0.3){$2\log_2{n}$};
+
+            \end{axis}    
+\end{tikzpicture}
+}
+\end{exmp}
+
+\noindent
+Nella precedente lezione abbiamo dimostrato che 
+$$P(\alpha(G) \geq k) \leq 2^{-\frac{k}{2}}$$
+con $p_n = \frac{1}{2}$ e $k \geq 2\log_2{n}$. Poniamo $k = 2\log_2{n}$, allora
+
+$$P(\alpha(G) \geq k) \leq 2^{-\log_2{n}} = \frac{1}{n}$$
+se $n\rightarrow \infty$ tende a $0$. Similmente possiamo dire che 
+
+$$P(\omega(G_n) \geq 2\log_2{n}) \leq \frac{1}{n} \rightarrow 0$$
+Per un fatto che non dimostriamo vale che
+
+$$P(\omega(G_n) < 2\log_2{n} \leq 2^{-n^2 + o(1)} \rightarrow 0$$
+Quindi la clique massima non è né più grande né più piccola, quindi è esattamente $2\log_2{n}$ se $n \rightarrow \infty$. Lo stesso risultato vale per il numero di indipendenza.
+Concentriamoci ora sul numero cromatico. Sappiamo già che 
+$$\chi(G_n) \geq \frac{n}{\alpha(G_n)}$$
+Sappiamo che con $n$ abbastanza grande il numero di indipendenza è $2\log_2{n}$
+
+$$\geq \frac{n}{2\log_2{n}}$$
+
+\begin{fatto}
+    Vale la seguente disequazione
+    $$\chi(G_n) \leq \frac{n}{2\log_2{n}}$$
+\end{fatto}
+
+\begin{dimo}
+    Prendiamo $G =(V,E)$ e un sottoinsieme dei suoi vertici, $S \subseteq V$. Sia $G[S]$ il grafo indotto con $|S| = m$. Notiamo che $G \sim \mathscr{G}(n,\frac{1}{2})$ implica $G[S] \sim \mathscr{G}(m,\frac{1}{2})$. Infatti basta estrarre gli archi relativi agli $m$ vertici per primi. Concentriamoci sulla probabilità che il grafo $G[S]$ abbia un numero di indipendenza minore di $2\log_2{m}$.
+
+    $$P(\exists S \subseteq V \; |S| = m \; \text{t.c.} \; \alpha(G[S]) \leq 2\log_2{m})$$
+
+    $$\leq \sum_{\substack{S \subseteq V \\ |S| = m}} P(\alpha(G[S]) < 2 \log_2{m})$$
+    $$\leq \binom{n}{m} 2^{-m^{2 + o(1)}} \leq 2^{n-m^{2+o(1)}}$$
+    Dove abbiamo usato il fatto che $\binom{n}{m} \leq 2^n$. Scegliamo $m = \frac{n}{(\log_2{n})^2}$
+
+    $$= 2^{n - (\frac{n}{(\log_2{n})^2})^{2 + o(1)}}$$
+
+    $$= 2^{n - \frac{n^{2 + o(1)}}{(\log_2{n})^{4 + o(1)}}} \rightarrow 0$$
+    Allora $\forall S \subseteq V$ con $|S| = m$ sono tali che $\alpha(G[S]) \geq 2 \log_2{m}$, Finché ci sono sottoinsiemi di taglia $m$, possiamo isolare un insieme indipendente di taglia almeno $2\log_2{m}$
+
+
+\disegna{
+    \node[cloud,draw,minimum width = 6cm,
+    minimum height = 5cm] {};
+    \node[cloud,draw,minimum width = 2cm,
+    minimum height = 1.5cm,pattern=soft crosshatch] (A) at (-1.25,-0.30){};
+    \node[circle,draw, minimum width=3cm]  at(-1,0){};
+    \node[cloud,draw,minimum width = 1.5cm,
+    minimum height = 1.5cm,pattern=soft crosshatch] (B) at (1.50,0.5){};
+    \node[circle,draw, minimum width=2.75cm]  at(1.25,0){};
+
+    \draw[->] (A) -- (-2,-3);
+    \draw[->] (B) -- (1,-3);
+}
+\noindent
+In figura, le nuvolette colorate sono gli insiemi indipendenti rimossi, i cerchi indicano gli insiemi $S$.
+A ogni insieme di vertici indipendenti assegniamo lo stesso colore. Quindi se abbiamo $N$ insiemi indipendenti, avremo $N$ colori diversi. Il numero di insiemi indipendenti trovati è $\frac{n}{k}$, dove $n$ è il numero di vertici totali e $k$ la dimensione degli insiemi indipendenti. A questo punto ci avanzeranno al più $m$ nodi, a cui assegniamo un colore diverso per ognuno. Quindi possiamo affermare che
+
+$$\chi(G_n) \leq \frac{n}{k} + m = \frac{n}{2\log_2{n}} + \frac{n}{(\log_2{n})^2}$$
+$$ = \frac{n}{2\log_2{n}} (1 + \frac{2}{\log_2{n}}) = (1 + o(1))\frac{n}{2\log_2{n}}$$
+In questo modo concludiamo la dimostrazione.
+\end{dimo}
+
+
+\noindent 
+Alla luce del fatto, possiamo affermare  che per $n \rightarrow \infty$  
+$$\chi(G_n) =  \frac{n}{2\log_2{n}}$$
+vale asintoticamente per quasi tutti i $G_n$. 
+
 
 
 \end{document}

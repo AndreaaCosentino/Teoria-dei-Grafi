@@ -21,7 +21,7 @@
 \usetikzlibrary{arrows,decorations.pathmorphing}
 \usepackage{adjustbox} % trimbox
 \usepackage{multirow} % per usare tabular (incolonnare roba)
-\usetikzlibrary{positioning,matrix, arrows.meta}
+\usetikzlibrary{positioning,matrix, arrows.meta,patterns}
 % incolonnare roba in modo carino :3
 
 \usepackage[markcase=noupper]{scrlayer-scrpage}
@@ -31,7 +31,10 @@
 \usepackage{hyperref}
 \usepackage{mathrsfs}  % Corsivo
 
-
+% Gaussiana
+\pgfmathdeclarefunction{gauss}{2}{%
+  \pgfmathparse{1/(#2*sqrt(2*pi))*exp(-((x-#1)^2)/(2*#2^2))}%
+}
 
 % per algoritmi in pseudo-codice
 \usepackage{algorithm}
@@ -98,3 +101,16 @@
         #1
     \end{tikzpicture}
 \end{center}}
+
+% pattern
+\pgfdeclarepatternformonly{soft crosshatch}{\pgfqpoint{-1pt}{-1pt}}{\pgfqpoint{4pt}{4pt}}{\pgfqpoint{3pt}{3pt}}%
+{
+  \pgfsetstrokeopacity{0.3}
+  \pgfsetcolor{white}
+  \pgfsetlinewidth{0.4pt}
+  \pgfpathmoveto{\pgfqpoint{3.1pt}{0pt}}
+  \pgfpathlineto{\pgfqpoint{0pt}{3.1pt}}
+  \pgfpathmoveto{\pgfqpoint{0pt}{0pt}}
+  \pgfpathlineto{\pgfqpoint{3.1pt}{3.1pt}}
+  \pgfusepath{stroke}
+}
