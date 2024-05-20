@@ -10,10 +10,12 @@ Ci sono due stili disponibili: Il primo (file  Appunti_StileNormale) è su una c
 
 ### Programma completato
 
-Sono fruibili le lezioni dalla **prima** all'**ottava**. Il programma compreso da queste lezioni è il seguente:
+Sono fruibili le lezioni dalla **prima** all'**undicesima**. Il programma compreso da queste lezioni è il seguente:
 
 - Definizioni di base sui grafi
 - Proprietà dei grafi (numero cromatico, numero d'indipendenza, numero di dominazione)
 - Grafi generati randomicamente
+- Nozioni di algebra lineare
+- Correlation clustering
 
-La data prevista per il completamento (della prima versione) è il 30 maggio 2024. Successivamente verranno corrette e migliorate (si spera).
+La data prevista per il completamento (della prima versione) è per i primi di giugno. Successivamente verranno corrette e migliorate (si spera).

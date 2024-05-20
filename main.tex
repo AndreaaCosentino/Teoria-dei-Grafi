@@ -1734,5 +1734,737 @@ $$\chi(G_n) =  \frac{n}{2\log_2{n}}$$
 vale asintoticamente per quasi tutti i $G_n$. 
 
 
+\chapter{Nona lezione}
+
+
+\section{Introduzione}
+
+\noindent 
+Iniziamo la seconda parte del corso e ci concentreremo sulla \textbf{clusterizzazione spettrale}. Per clusterizzazione si intende il partizionamento di un insieme di dati in modo che dati simili siano nello stesso elemento della partizione.
+
+\begin{exmp}
+    Dati dei punti possiamo decidere di raggrupparli per vicinanza
+    \disegna{
+        \node[nodo] at (-2,1) {};
+        \node[nodo] at (-1.9,0) {};
+        \node[nodo] at (-3,1.1) {};
+        \node[nodo] at (-1.6,-1) {};
+        \node[nodo] at (-3.3,-0.4) {};
+
+        
+        \node[nodo] at (2,0.5) {};
+        \node[nodo] at (1,0.3) {};
+        \node[nodo] at (1.3,1.3) {};
+        \node[nodo] at (1.1,-1) {};
+        \node[nodo] at (0,-0.4) {};
+        \node[circle,draw,minimum width = 3cm] at (-2.5,0){};
+        \node[circle,draw,minimum width = 3cm] at (1,0){};
+    }
+\end{exmp}
+
+\noindent
+In un grafo i dati sono i vertici e gli archi rappresentano la relazione di similarità. Se abbiamo un grafo con $G = (V,E)$ tale che $|V| = n$ e abbiamo due cricche ciascuna da $\frac{n}{2}$ è facile trovare un modo ottimo per partizionarlo. Ma questo non è sempre il caso.
+
+
+\begin{exmp}
+    Dati dei punti possiamo decidere di raggrupparli per vicinanza
+    \disegna{
+        \node[nodo] (A) at (-2,1) {};
+        \node[nodo] (A1) at (-1.9,0) {};
+        \node[nodo] (A2) at (-3,1.1) {};
+        \node[nodo] (A3) at (-1.6,-1) {};
+        \node[nodo] (A4) at (-3.3,-0.4) {};
+
+        
+        \node[nodo] (B) at (2,0.5) {};
+        \node[nodo] (B1) at (1,0.3) {};
+        \node[nodo] (B2) at (1.3,1.3) {};
+        \node[nodo] (B3) at (1.1,-1) {};
+        \node[nodo] (B4) at (0,-0.4) {};
+
+        \draw[] (A) -- (A1);
+        \draw[] (A) -- (A2);
+        \draw[] (A2) -- (A3);
+        \draw[] (A3) -- (A4);
+        \draw[] (A3) -- (A1);
+        \draw[] (A1) -- (A4);
+
+        \draw[] (B) -- (B1);
+        \draw[] (B) -- (B2);
+        \draw[] (B2) -- (B3);
+        \draw[] (B3) -- (B4);
+        \draw[] (B3) -- (B1);
+        \draw[] (B1) -- (B4);
+
+        \draw[color= red] (B4) -- (A3);
+        \draw[color = red] (B4) -- (A1);
+
+        \node[circle,draw,minimum width = 3cm] at (-2.5,0){};
+        \node[circle,draw,minimum width = 3cm] at (1,0){};
+        
+    }
+
+    \noindent
+    Con questa scelta andiamo a tagliare $2$ archi, ovvero violiamo $2$ similarità.
+\end{exmp}
+
+\noindent 
+Come partizionare i vertici di un grafo in modo da ottenere due o più cluster il più possibile densi e ben separati (con pochi archi tra un cluster e l'altro) ? In altre parole ci stiamo chiedendo se esista, e quale sia, l'algoritmo per partizionare in modo migliore i vertici. 
+Per rispondere a questa domanda utilizzeremo l'algebra lineare applicata ai grafi. Questo approccio non è l'unico ma l'algebra lineare si sposa in modo elegante con la teoria dei grafi. Infatti, possiamo rappresentare un grafo $G=(V,E)$, $|V| = n$, con una \textbf{matrice di adiacenza}  $A \in \{0,1\}^{n \times n}$. Questa è 
+
+\begin{itemize}
+    \item Binaria: $A_{ij} = 1 \longleftrightarrow (i,j) \in E$ altrimenti $A_{ij} = 0$.
+    \item Simmetrica: perché ci troviamo nel contesto di grafi non orientati.
+    \item Diagonale composta da $0$: per-ché non abbiamo self-loop (cappi).
+\end{itemize}
+
+\section{Ripasso di algebra lineare}
+
+\noindent 
+Consideriamo matrici $M \in \mathbb{R}^{n \times n}$, ovvero matrici quadrate a coefficienti lineari. Se 
+
+\begin{multline*}
+\exists \lambda \in \mathbb{R}, u \in R^n\backslash \{0\} \rightarrow \\ u \neq (0,\dots,0) \; \text{t.c.} \; Mu = \lambda u
+\end{multline*}
+$u$ viene chiamato \textbf{autovettore} di $M$ con \textbf{autovalore} $\lambda$. Possiamo assumere che tutti i vettori $u$ abbiano norma $1$. Infatti, se $||u|| \neq 1$ dividiamo ambo i lati per $||u||$
+
+$$M \frac{u}{||u||} = \lambda \frac{u}{||u||}$$
+e consideriamo come vettore $u' = \frac{u}{||u||}$, che ha norma $1$. Quindi ogni autovettore ha lunghezza unitaria.
+Notiamo che $\lambda \in \mathbb{R}$ è un autovalore di $M$ se e solo se 
+$$\exists x \neq (0,\dots,0) \; \text{t.c} \; (M - \lambda I)x = (0,\dots,0)$$
+dove $I$ è la matrice identità di dimensioni $n \times n$
+
+\[
+I = \begin{bmatrix} 
+     1 & \dots & 0 \\
+    \vdots & \ddots & \vdots \\
+    0  &  \dots   & 1 
+    \end{bmatrix}
+\]
+con la proprietà che $I x = x \; \forall x \in R^n$. L'equazione $(M - \lambda I)x = (0,\dots,0)$ vale per $x \neq (0,\dots,0)$ se e solo se $det(M-\lambda I ) = 0$. Non ci interessa in questo momento come si calcola il determinante di una matrice, sottolineiamo soltanto che $det(M-\lambda I )$ è un polinomio di grado $\lambda$. Il \textbf{teorema fondamentale dell'algebra} ci dice che l'equazione $det(M-\lambda I )$ ha $n$ radici, non necessariamente distinte e non tutte necessariamente reali. Quindi ogni $A \in R^{n \times n}$ ha $n$ autovalori.
+
+\begin{fatto}
+    Se $M \in R^{n \times n}$ è simmetrica allora $\exists \lambda \in \mathbb{R}$ e $u \in R^{n} \backslash \{0\}$ tale che $Mu = \lambda u$, ovvero ha almeno un autovalore reale.
+\end{fatto}
+
+\begin{fatto}
+    Se $M \in R^{n \times n}$ è simmetrica allora se $Mu = \lambda u$ e $Mu' = \lambda'u'$ con $\lambda \neq \lambda'$, vale che $u^Tu' = 0$, cioè $u,u'$ sono \textbf{ortogonali}.
+\end{fatto}
+
+\begin{dimo}
+    Siccome $M$ è simmetrica deve valere
+
+    $$(Mu')^T u' = u^T M u'$$
+    infatti $M^T = M$. Ma $M u' =  \lambda' u'$, quindi
+
+    $$(Mu')^T u' =  \lambda u^T  u' = \lambda' u^t u'$$
+    Siccome $\lambda \neq \lambda'$, l'unico modo per cui l'equazione $\lambda u^T  u' = \lambda' u^T u'$ possa valere è che 
+    $$u^Tu' = 0$$
+\end{dimo}
+\noindent
+Introduciamo un teorema importante che utilizzeremo estensivamente.
+
+\begin{teo}
+    \textbf{Teorema spettrale}. Sia $M \in R^{n \times n}$ simmetrica allora esistono $\lambda_1,\dots,\lambda_k \in \mathbb{R}$, non necessariamente distinti, e $u_1,\dots,u_n \in R^n \backslash$ ortonormali (ovvero $||u_i|| = 1$ per $i =1,\dots,n$ e $u_i^T u_j = 0 $ con $i \neq j$) tali che $Mu_i = \lambda_i u_i $ per $i = 1,\dots,n$.
+\end{teo}
+
+\begin{dimo}
+    Dimostrazione \\per induzione.
+
+    \noindent 
+    \textbf{CASO BASE}: Se $n=1$, allora $M \in \mathbb{R}^{1 \times 1} \equiv \mathbb{R}$ e $\forall x \in \mathbb{R} \backslash \{0\}$ è un autovettore con autovalore $M$ perché $Mx = Mx$. % non è chiaro come autovettori di dimensione 1 siano ortogonali tra loro
+
+    \vspace{5px}
+    \noindent
+     \textbf{IPOTESI INDUTTIVA}: Il teorema vale per $n-1$. Per il primo fatto che abbiamo dimostrato in questa lezione vale 
+
+    \begin{multline*}
+            \exists \lambda_n \in \mathbb{R}, \exists x_n \in R^{n}\; \text{t.c.}\; \\ Mx_n = \lambda_n x_n, \; x_n \neq (0,\dots,0)
+    \end{multline*}
+
+    \begin{claim}
+        Per $y \in \mathbb{R}^n \backslash \{0\}$ vale che $y^T x_n = 0 \rightarrow (My)^Tx_n = 0$. Infatti 
+        $$x_n^T(My) = (Mx_n)^T y = \lambda_n x_n^T y = 0$$
+        Il claim ci dice che se $y$ è ortogonale a $x_n$ allora $My$ è ortogonale a $x_n$.
+    \end{claim}
+
+    \noindent 
+    Sia $V \subset \mathbb{R}^n$ un sottospazio che contiene tutti e soli i vettori ortogonali a $x_n$. Quindi $Dim(G) = n-1$ perché togliamo la dimensione della direzione del vettore usato per definire l'ortogonalità. Sia $\{u_1,\dots,u_{n-1}\}$ una base ortonormale di $V$ e sia $B = \{u,\dots,u_{n-1}\} \in R^{n \times (n-1)}$. Quindi,
+
+    $$B: \mathbb{R}^{n} \rightarrow V \subset R^n$$ 
+    B è una matrice che proietta i vettori di dimensione $n$ nello spazio $V$. La matrice $BB^T$ è tale che 
+
+    $$BB^T: \mathbb{R}^n \rightarrow V \subset \mathbb{R}^n \; \forall z \in V$$
+    inoltre $BB^Tz \in V$. Sia $n' = B^TMB \in \mathbb{R}^{(n-1) \times (n-1)}$, simmetrica. Applichiamo l'ipotesi induttiva a $x'$ e troviamo $\lambda_1,\dots,\lambda_{n-1} \in \mathbb{R}$ autovalori e $y_1,\dots,y_{n-1}  \in \mathbb{R}^{n-1}$ autovettori. Per $i = 1,\dots,n-1$  vale
+
+    $$M'y_i = B^TMB y_i= \lambda_i y_i $$
+    Moltiplichiamo per $B$ ambo i lati
+
+    $$B B^TMB y_i =  \lambda_i B y_i  \; \in V$$
+    la posizione di $\lambda_i$ è irrilevante dato che è uno scalare. Siccome $By_i$ è ortogonale a $x_n$ (quindi $x_n^T (MBy_i) = 0$, e dunque $MBy_i \in V$) e per il claim vale che 
+
+    $$\lambda_i By_i = BB^T M B y_i = MBy_i$$
+    con $By_i = x_i$. L'equazione sopra implica
+
+    $$Mx_i = \lambda_i x_i \; \forall i = 1,\dots,n-1$$
+    Notiamo che $BB^T$ proietta vettori in U, ma $MBy_i$ è già in $U$, e quindi lo proietta su stesso.
+    Concludiamo dicendo che, per costruzione, $$x_i^T x_j = 0 \; \forall i \neq j \; 1 \leq i,j \leq n-1$$ 
+    Infatti, 
+
+    $$x_i^t x_j = (By_i)^T By_j = y_i^T B^T B y_j$$
+    Vale che $B^T B = I$, infatti $U_i U_j = 0$ se $i \neq j$, dato che sono ortogonali, altrimenti è $= 1$ se $i = j$.
+
+    $$= y_i^T  I y_j = y_i^T y_j = 0 $$
+    per $i \neq j$.
+\end{dimo}
+
+\begin{corollario}
+    Esponiamo un corollario comodo.  Se $M \in R^{n \times n}$ simmetrice allora 
+
+    $$M = U^T \Lambda U = \sum_{i = 1}^n \lambda_i U_i U_i^T$$
+    Dove $U = [U_1,\dots,U_n]$ e
+    \[
+    \Lambda = \begin{bmatrix} 
+        \lambda_1 & \dots & 0 \\
+        \vdots & \ddots & \vdots \\
+        0 & \dots & \lambda_n
+        \end{bmatrix}
+    \]
+\end{corollario}
+
+\begin{dimo}
+    Dato $M U_i = \lambda_i U_i \; \forall i = 1,\dots,n$  vale che $MU[\lambda_1U_1,\dots,\lambda_nU_n] = U\Lambda$. Siccome $U = [U_1,\dots,U_n]$ è una matrice ortogonale (ovvero $U^{-1} = U^T$) abbiamo 
+
+    $$U U^T = UU^{-1} = I$$
+    Concludiamo che 
+
+    $$M = MUU^T = U \Lambda U^T$$
+\end{dimo}
+
+\chapter{Decima lezione}
+
+
+\noindent
+Riprendiamo il teorema spettrale. \\ Ogni matrice simmetrica $M \in \mathbb{R}^{n \times n}$ può essere scritta come $$M = U \Lambda U^T = \sum_{i = 1}^n \lambda_i U_i U_i^T$$
+dove $U = [U_1,\dots,U_n]$ e $\Lambda = diag(\lambda_1$ $,\dots,\lambda_n)$, con $(u_i,\lambda_i)$ autovettori e corrispondenti autovalori di $M$ per $i = 1,\dots,n$.
+Notiamo che dati $U,V \in \mathbb{R}^n$ vale che 
+
+$$(UV^T)_{ij} = u_i v_j$$
+Enunciamo ora un teorema che ci permette di definire gli autovettori e autovalori in un altro modo.
+
+\begin{teo}
+    \textbf{Caratterizzazione variazionale degli autovalori}. Sia $M\in \mathbb{R}^{n\times n}$ simmetrica e siano $\lambda_1\leq \lambda_2 \leq \dots \leq \lambda_n$ i suoi autovalori. Per $m < n$  $u_1,\dots,u_n$ siano autovettori tali che $Mu_i = \lambda_i u_i$ per $i = 1,\dots,k$. Allora 
+
+    $$\lambda_{k+1} = \min_{\substack{u \in \mathbb{R}^n\backslash\{0\} \\ u \perp \{u_1,\dots,u_k\}}} \frac{u^T M u}{u^Tu}$$
+    dove $u \perp \{u_1,\dots,u_k\}$ indica che $u$ è ortogonale ai vettori $\{u_1,\dots,u_k\}$ 
+\end{teo}
+
+\noindent La dimostrazione del teorema è omessa, ci limitiamo a fare delle osservazioni. Prima di tutto, il coefficiente 
+$$\frac{u^T M u}{u^Tu}$$
+è detto \textbf{quoziente di Rayleigh}.  Sappiamo che $u^T u = ||u||^2$, quindi possiamo riscriverlo come 
+
+$$ \frac{u^T}{||U||} M \frac{u}{||U||}$$
+Senza perdita di generalità possiamo assumere che il vettore $u$ abbia norma $1$ (se così non fosse, possiamo porre $u' =\frac{u}{||U||}$, $u'$ ha norma $1$). Allora 
+
+
+    $$\lambda_{k+1} = \min_{\substack{u \in \mathbb{R}^n\backslash\{0\} \\ u \perp \{u_1,\dots,u_k\}}}  u^T M u$$ 
+    Concentriamoci sul caso $\lambda_1$.
+
+    $$\lambda_1 = \min_{u \in \mathbb{R}^n\backslash\{0\}} \frac{u^T M u}{u^Tu} = \min_{u \in \mathbb{R}^n\backslash\{0\}} u^TMu $$
+    Sia $u_1$ l'autovettore associato a $\lambda_1$
+    
+    $$u_1^TMu_1 = u_1^T \lambda_1 u_1 = \lambda_1 ||u_1||^2 = \lambda_1$$
+    Andiamo a vedere cosa vuol dire a livello geometrico, per ovvi motivi $n = 2$. Inizialmente la situazione è
+
+
+\trimbox{1.25cm 0cm 0cm 0cm}{
+\begin{tikzpicture}[domain=-1:1]
+           \begin{axis} [xlabel = x, ylabel = y, axis lines=center, ymin = -1,xmin = -1, xmax = 1,ymax = 1,yticklabel=\empty, xticklabel = \empty, clip = false]             
+            \addplot[color=yellow,samples=100,smooth,domain=0:0.225] {x} node[ above right, pos = 0.8]{$U: ||U|| = 1$};
+            \node[circle,draw,minimum width = 2cm] at (0,0){};
+            \end{axis}
+\end{tikzpicture}
+}
+Se applichiamo a $u$ la trasformazione $u^TM$ otteniamo
+
+\trimbox{1.25cm 0cm 0cm 0cm}{
+\begin{tikzpicture}[domain=-1:1]
+           \begin{axis} [xlabel = x, ylabel = y, axis lines=center, ymin = -1,xmin = -1, xmax = 1,ymax = 1,yticklabel=\empty, xticklabel = \empty, clip = false]             
+            \addplot[color=yellow,samples=100,smooth,domain=0:-0.25] {x} node[ below right, pos = 1]{$\lambda_1$};
+            \addplot[color=yellow,samples=100,smooth,domain=0:-0.3875] {-x} node[ above right, pos = 1]{$\lambda_2$};
+            \draw[rotate around = {-20:(0,0)}] (0,0) ellipse (2cm and 1cm);
+            \end{axis}
+\end{tikzpicture}
+}
+
+\noindent
+La lunghezza degli assi dell'ellisse corrisponde al valore degli autovalori. L'asse più corto è $\lambda_1$, il più lungo è $\lambda_2$. La rappresentazione geometrica riesce a catturare lo spettro della matrice. Sappiamo che $\lambda_1$ è il minimo degli autovalori, vediamo ora che $\lambda_n$ (nell'esempio a $2$ dimensioni $\lambda_2$) è il maggiore.
+Consideriamo la matrice $-M$ che ha autovalori $-\lambda_n \leq -\lambda_{n-1} \leq \dots \leq -\lambda_1$.
+
+$$-\lambda_n =  \min_{u \in \mathbb{R}^n\backslash\{0\}} -\frac{u^TMu}{u^Tu}= - \max_{u \in \mathbb{R}^n\backslash\{0\}}\frac{u^TMu}{u^Tu} $$
+moltiplichiamo entrambi per $-1$
+
+$$\lambda_n =  \max_{u \in \mathbb{R}^n\backslash\{0\}}\frac{u^TMu}{u^Tu} $$
+Ricapitolando, l'autovalore $1$ corrisponde all'autovettore $u$ che minimizza il coefficiente di Rayleigh, mentre l'autovalore $n$ a quello massimo. Quelli in mezzo (autovalore $1 < i < n$) corrispondono agli autovettori che minimizzano lo stesso coefficiente ma con il vincolo di ortogonalità. Concludiamo questa parte di algebra lineare con la seguente definizione
+
+\begin{defi}
+    Una matrice simmetrica $M$ è \textbf{positiva semidefinita} se $x^TMx > 0 \; \forall x \in \mathbb{R}^n $
+\end{defi}
+
+\noindent 
+Gli autovalori di una matrice positiva semidefinita (se è positiva semidefinita è anche simmetrica)sono tutti non negativi. La dimostrazione è ovvia guardando il coefficiente di Rayleigh.  
+
+\section{Clustering Spettrale}
+
+Sia $G = V,E$ vogliamo riuscire a partizionare il grafo così che il numero archi tra le partizioni sia piccolo.
+
+\disegna{
+     \node[cloud,draw,minimum width = 2.5cm,
+    minimum height = 4cm] at(-2,0) {};
+    \node[cloud,draw,minimum width = 2.8cm,
+    minimum height = 4cm] at(2,0) {};
+
+    \node[] at(-2,0) {$S$};
+    \node[] at(2,0) {$\neg S$};
+
+    \draw[-,color = red, thick] (-1,-0.10) -- (0.655,0.5);
+    \draw[-,color = red, thick] (0.66,-0.5) -- (-0.80,0.5);
+ }
+
+\noindent 
+Sia $\neg S \equiv V \backslash S$. Andiamo a tagliare gli archi 
+$$E(S,\neg S) = \{(i,j) : i \in S, j \in \neg S\}$$
+
+
+\begin{defi}
+    La \textbf{sparsità} di un taglio $(S,\neg S)$ è  definita come
+
+    $$\sigma(S) = \frac{|E(S,\neg S)|}{|S||\neg S|}$$
+    dove $|E(S,\neg S)|$ è il numero di archi tra $S$ e $\neg S$ mentre $|S||\neg S|$ è il numero di archi possibili.
+\end{defi}
+Il denominatore serve per bilanciare. Senza di esso potremmo trovarci con partizioni senza senso che però sono privilegiate dalla sparsità.
+
+\disegna{
+     \node[cloud,draw,minimum width = 2.5cm,
+    minimum height = 4cm] at(-2,0) {};
+    \node[cloud,draw,minimum width = 2.8cm,
+    minimum height = 4cm] at(2,0) {};
+    \node[nodo] (A) at (-4,1){};
+    \node[] at(-2,0) {$V$};
+    \node[] at(2,0) {$U$};
+
+    \draw[-,color = red, thick] (-1,-0.10) -- (0.655,0.5);
+    \draw[-,color = red, thick] (0.66,-0.5) -- (-0.80,0.5);
+    \draw[-, color = red, thick] (A) -- (-3.175,0.70);
+
+    \draw[-,color = orange, very thick] (-3.5,2) -- (-3.5,0);
+    \draw[-,color = green, very thick] (0,1.25) -- (0,-1);
+ }
+
+ \noindent 
+ Senza l'effetto mitigatore del denominatore, la partizione ottenuta usando il taglio arancione sarebbe migliore di quella ottenuta usando il taglio verde, ma è evidente che non sia vero. Nel caso in cui usiamo il taglio arancione abbiamo $|S| = 1$ e $|\neg S| = n - 1$ e quindi $|S| |\neg S | = n-1$. Nel caso in cui $|S| = \frac{n}{2} = |\neg S|$ quindi $|S| |\neg S| = \frac{n^2}{4}$, se $n$ abbastanza grande $\frac{n^2}{4} >> n-1$. Quindi la sparsità privilegia partizioni bilanciate. 
+
+ \begin{defi}
+     La sparsità \textbf{di un grafo} $G = (V,E)$ è
+     $$\sigma(G) = \min_{\substack{S \subset V \\ |S| \neq 0}} \sigma(S)$$
+ \end{defi}
+
+\noindent
+ Da ora in poi facciamo un'assunzione per semplificare i conti (ma non troppo, abbastanza per guadagnare i sei crediti del corso) consideriamo grafi \textbf{d-regolari}.
+
+ \begin{defi}
+     Un grafo $G= (V,E)$ si dice \textbf{d-regolare} se $$d(v) = d \; \; \forall v \in V$$
+ \end{defi}
+
+\noindent
+ Una cricca $K_n$ è $n-1$-regolare. Invece, un ciclo su $n$ vertici $C_n$ è $2$-regolare. Un cubo è $3$-regolare.
+
+\newcommand{\Depth}{2}
+\newcommand{\Height}{2}
+\newcommand{\Width}{2}
+
+\disegna{
+\coordinate (O) at (0,0,0);
+\coordinate (A) at (0,\Width,0);
+\coordinate (B) at (0,\Width,\Height);
+\coordinate (C) at (0,0,\Height);
+\coordinate (D) at (\Depth,0,0);
+\coordinate (E) at (\Depth,\Width,0);
+\coordinate (F) at (\Depth,\Width,\Height);
+\coordinate (G) at (\Depth,0,\Height);
+
+\draw[] (O) -- (C) -- (G) -- (D) -- cycle;% Bottom Face
+\draw[] (O) -- (A) -- (E) -- (D) -- cycle;% Back Face
+\draw[] (O) -- (A) -- (B) -- (C) -- cycle;% Left Face
+\draw[] (D) -- (E) -- (F) -- (G) -- cycle;% Right Face
+\draw[] (C) -- (B) -- (F) -- (G) -- cycle;% Front Face
+\draw[] (A) -- (B) -- (F) -- (E) -- cycle;% Top Face
+
+\foreach \xy in {O, A, B, C, D, E, F, G}{
+    \node[nodo] at (\xy) {};
+}
+}
+
+\noindent 
+In generale un ipercubo (cubo a più di 3 dimensioni) è $\log_2{n}$-regolare, dove $n$ è l'ordine del grafo.
+
+\begin{exmp}
+Un tesseratto (ipercubo a $4$ dimensioni) è $4$-regolare.
+
+\disegna{
+\rotateRPY{20}{-20}{20} % diagonale,avanti-indietro,Destra-sinistra
+
+\begin{scope}[RPY]
+\coordinate (O) at (0,0,0);
+\coordinate (A) at (0,\Width+1,0);
+\coordinate (B) at (0,\Width+1,\Height+1);
+\coordinate (C) at (0,0,\Height+1);
+\coordinate (D) at (\Depth+1,0,0);
+\coordinate (E) at (\Depth+1,\Width+1,0);
+\coordinate (F) at (\Depth+1,\Width+1,\Height+1);
+\coordinate (G) at (\Depth+1,0,\Height+1);
+
+
+\draw[] (O) -- (C) -- (G) -- (D) -- cycle;% Bottom Face
+\draw[] (O) -- (A) -- (E) -- (D) -- cycle;% Back Face
+\draw[] (O) -- (A) -- (B) -- (C) -- cycle;% Left Face
+\draw[] (D) -- (E) -- (F) -- (G) -- cycle;% Right Face
+\draw[] (C) -- (B) -- (F) -- (G) -- cycle;% Front Face
+\draw[] (A) -- (B) -- (F) -- (E) -- cycle;% Top Face
+
+\foreach \xy in {O, A, B, C, D, E, F, G}{
+    \node[nodino] at (\xy) {};
+}
+
+\rotateRPY{0}{-30}{-10} % diagonale,avanti-indietro,Destra-sinistra
+\begin{scope}[RPY]
+\coordinate (O1) at (0,0,0);
+\coordinate (A1) at (0,\Width-1,0);
+\coordinate (B1) at (0,\Width-1,\Height-1);
+\coordinate (C1) at (0,0,\Height-1);
+\coordinate (D1) at (\Depth-1,0,0);
+\coordinate (E1) at (\Depth-1,\Width-1,0);
+\coordinate (F1) at (\Depth-1,\Width-1,\Height-1);
+\coordinate (G1) at (\Depth-1,0,\Height-1);
+
+\draw[] (O1) -- (C1) -- (G1) -- (D1) -- cycle;% Bottom Face
+\draw[] (O1) -- (A1) -- (E1) -- (D1) -- cycle;% Back Face
+\draw[] (O1) -- (A1) -- (B1) -- (C1) -- cycle;% Left Face
+\draw[] (D1) -- (E1) -- (F1) -- (G1) -- cycle;% Right Face
+\draw[] (C1) -- (B1) -- (F1) -- (G1) -- cycle;% Front Face
+\draw[] (A1) -- (B1) -- (F1) -- (E1) -- cycle;% Top Face
+
+\foreach \xy in {O1, A1, B1, C1, D1, E1, F1, G1}{
+    \node[nodino] at (\xy) {};
+}
+
+\draw[] (O1)--(O);
+\draw[] (A1)--(A);
+\draw[] (B1)--(B);
+\draw[] (C1)--(C);
+\draw[] (D1)--(D);
+\draw[] (E1)--(E);
+\draw[] (F1)--(F);
+\draw[] (G1)--(G);
+\end{scope}
+\end{scope}
+
+}
+\end{exmp}
+
+\noindent 
+Definiamo un parente stretto della sparsità. 
+\begin{defi}
+    Sia $G$ un grafo $d$-regolare e $S \subset V \; |S| \neq 0$, definiamo l'espansione come 
+
+    $$xpn(S) = \frac{|E(S,\neg S)}{d \cdot |S|}$$
+    \end{defi}
+
+\noindent 
+Notiamo che la definizione non è simmetrica! Infatti, $xpn(S) \neq xpn(\neg S)$, ovvero scambiando $S$ con $\neg S$ otteniamo due risultati diversi. L'espansione è simile alla sparsità, con la differenza che la prima ha come denominatore il numero di archi massimi che possono uscire da $S$. 
+
+Siccome $xpn$ non è simmetrica definiamo una simmetrizzazione, detta \textbf{conduttanza}.
+
+\begin{defi}
+    La \textbf{conduttanza} è definita come 
+
+    $$\phi(S) = \max{\{xpn(S),xpn(\neg S)\}}$$
+    $$ = \frac{|E(S,\neg S)}{d \cdot \min{ \{|S|, |\neg S| \}}}$$
+\end{defi}
+
+\noindent 
+La conduttanza di un grafo $G$ è 
+$$\phi(G) = \min_{S \subset V} \phi(S)$$
+Ovvero al conduttanza minima possibile per un sottoinsieme del grafo.
+Che relazione c'è tra la conduttanza e la sparsità? Cominciamo con il dire che vale
+
+$$\frac{1}{n} \min{\{|S|,|\neg S|\}} = \min{\{\frac{|S|}{n},\frac{|\neg S|}{n}\}}$$
+Inoltre, data la partizione $S,\neg S$ per definizione sono tali che $|S| + |\neg S| = n$. Poniamo $\frac{|S|}{n} = \alpha$ e $\frac{|\neg S |}{n} = 1 - \alpha$. Sicuramente $\alpha$ è tale che $0 \leq \alpha \leq 1$. Vale la seguente disuguaglianza
+
+$$\color{blue} \alpha(1-\alpha) \color{white} \leq \color{green}  \min{\{\alpha,1-\alpha\}} \color{white} \leq \color{red} 2 \alpha(1- \alpha)$$
+
+
+\trimbox{1.5cm 0cm 0cm 0cm}{
+\begin{tikzpicture}[domain=0:1]
+           \begin{axis} [ axis lines=center, ymin = -0.25,  yticklabel=\empty, xticklabel = \empty, clip = false]
+            
+           \addplot[color=blue,samples=100,smooth,ultra thick] {x - x^2};
+           \addplot[color=red,samples=100,smooth,ultra thick] {2*x - 2*x^2};
+           \addplot[color=green,samples=100,smooth,ultra thick,domain=0:0.5] {x};
+           \addplot[color=green,samples=100,smooth,ultra thick,domain=0.5:1] {-x + 1};
+        
+           \addplot[color = white] coordinates {(1,0)} node[below] {$1$};
+
+            \addplot[color = white] coordinates {(0,0.5)} node[left] {$\frac{1}{2}$};
+            \addplot[color = white,dashed] coordinates{(0,0.5) (0.5,0.5)};
+            \addplot[color = white,dashed] coordinates{(0,0.25) (0.5,0.25)};
+            \addplot[color = white] coordinates {(0,0.25)} node[left] {$\frac{1}{4}$};
+        
+            \end{axis}
+\end{tikzpicture}
+}
+\begin{enumerate}
+\item La parabola più esterna rappresenta $2\alpha(1 - \alpha)$
+\item La parabola più interna rappresenta $\alpha(1-\alpha)$
+\item In mezzo tra le due \\ $\min{\{\alpha,1-\alpha\}}$ 
+\end{enumerate}
+
+\noindent 
+Quindi  
+
+$$\frac{|S| |\neg S|}{n} \leq \min{\{\frac{|S|}{n},\frac{|\neg S|}{n}\}}$$
+
+$$\leq 2 \frac{|S| |\neg S|}{n}$$
+Ricaviamo che 
+
+$$\phi(S) \leq \frac{n}{d} \sigma(S) \leq 2 \phi(S)$$
+per tutti i tagli possibili. Dunque 
+
+$$\phi(G) \leq \frac{n}{d} \sigma(G) \leq 2 \phi(G)$$
+possiamo concludere che minimizzare la sparsità è equivalente a minimizzare la conduttanza.
+
+\section{Matrice laplaciana}
+Definiamo la \textbf{matrice laplaciana} di un grafo $d$-regolare.  Innanzitutto, sia $A$ la matrice di adiacenza di $G = (V,E)$ dove $A_{ij} = \mathds{I}\{(i,j) \in E\} \in \{0,1\}^{n \times n}$.  La matrice laplaciana $L$ è definita come 
+
+$$L= I - \frac{A}{d}$$
+dove
+$$(\frac{A}{d})_{ij} = \frac{1}{d} \mathds{I} \{(i,j) \in E\}$$
+Per ogni $x \in R^n$ vale che
+
+$$x^T L x = x^T I x - \frac{1}{d} x^T A x$$
+sappiamo che $x^t I x = x^T x = ||x||^2 = \sum_{i \in V} x_i^2$
+
+$$\sum_{i \in V} x_i^2 - \frac{1}{d} \sum_{i \in V}\sum_{j \in V} x_i A_{ij} x_j$$ 
+Sappiamo che $A_{ij} = 0$ se $(i,j) \notin E$ e attraverso qualche manipolazione algebrica otteniamo
+
+$$= \frac{1}{d} \sum_{i \in V}\sum_{j: (i,j) \in E} x_i^2 - \frac{1}{d} \sum_{i in V} \sum_{j: (i,j) in E} x_i x_j$$
+
+$$= \frac{1}{d} \sum_{i \in V}\sum_{j: (i,j) \in E} (x_i^2 - x_i x_j)$$
+Notiamo che stiamo prendendo due volte ogni arco $i,j$. La prima volta con $i$ e la seconda con $j$. Quindi eliminiamo la prima sommatoria, aggiungiamo $x_j^2$ (dato che ci spostiamo solo sugli archi adesso) e raddoppiamo $-x_ix_j$ per contarlo due volte come prima:
+
+$$= \frac{1}{d} \sum_{j: (i,j) \in E} (x_i^2 + x_j^2 - 2x_i x_j)$$
+
+$$= \frac{1}{d} \sum_{j: (i,j) \in E} (x_i - x_j)^2$$
+Che è sempre non negativo.  Questo vuol dire che la matrice laplaciana è positiva semidefinita.
+
+\chapter{Undicesima lezione}
+
+\section{Legame matrice laplaciana e autovalori}
+
+\noindent 
+Nella scorsa lezione abbiamo scoperto che la matrice laplaciana $L$ è positiva semidefinita. Questo implica che ha $n$ autovalori tali che $0 \leq \lambda_1 \leq \dots \leq \lambda_n$. Prima di andare a lavorare sulla matrice laplaciana vediamola almeno una volta.
+
+\begin{exmp}
+   Sia $G=(V,E)$ un grafo $2$-regolare:
+    \disegna{
+        \node[nodo] (A) at (-1,0) {};
+        \node[] at (-1,0.3) {$1$};
+        \node[nodo] (B) at (1,0) {};
+        \node[] at (1,0.3) {$2$};
+        \node[nodo] (C) at (-1,-2) {};
+        \node[] at (-1,-2.3) {$3$};
+        \node[nodo] (D) at (1,-2) {};
+        \node[] at (1,-2.3) {$4$};
+
+        \draw[] (A) -- (B);
+        \draw[] (A) -- (C);
+        \draw[] (C) -- (D);
+        \draw[] (D) -- (B);
+    }
+
+    \noindent 
+    La matrice d'adiacenza è $A$ è
+
+    \[\mathbf{A} = 
+    \bordermatrix{ & 1 & 2 & 3 & 4 \cr
+      1 & 0 & 1 & 1 & 0  \cr
+      2 & 1 & 0 & 0 & 1  \cr
+      3 & 1 & 0 & 0 & 1  \cr 
+      4 & 0 & 1 & 1 & 0 } \qquad
+      \]
+      Da questa otteniamo la matrice laplaciana $L$
+
+      \[\mathbf{L} = 
+    \bordermatrix{ & 1 & 2 & 3 & 4 \cr
+      1 & 1 & -\frac{1}{2} & -\frac{1}{2} & 0  \cr
+      2 & -\frac{1}{2} & 1 & 0 & -\frac{1}{2}  \cr
+      3 & -\frac{1}{2} & 0 & 1 & -\frac{1}{2}  \cr 
+      4 & 0 & -\frac{1}{2} & -\frac{1}{2} & 1 } \qquad
+      \]
+\end{exmp}
+
+\noindent 
+In generale, una matrice laplaciana è tale che la somma sulle righe  è $= 0$ e la somma sulle colonne è $= 0$. Prendiamo il primo autovalore
+
+$$\lambda_1 = \min_{U \in \mathbb{R} \backslash 0} \frac{U^T L U}{U^T U}$$
+Sappiamo che $\lambda_1 \geq 0$ perché $L$ è positiva semidefinita. Definiamo il vettore $\mathds{1} = (1,\dots,1) \in \mathbb{R}^n$ ovvero il vettore contenente tutti $1$. Allora 
+
+\[
+L \cdot \mathds{1} = \begin{bmatrix}
+        \sum_{j = 1}^n L_{1j}\\ 
+        \vdots \\
+        \sum_{j = 1}^n L_{nj}
+\end{bmatrix} = \begin{bmatrix}
+        0\\ 
+        \vdots \\
+        0
+        \end{bmatrix}
+\]
+Quindi $\mathds{1}^T L \mathds{1} = 0$. Quindi $\lambda_1 = 0$ dato che $0$ è il minimo valore possibile ottenibile ed esiste un vettore, ovvero $\mathds{1}$ tale per cui il coefficiente di Rayleigh è $0$. Per il teorema spettrale $U_1 = \frac{\mathds{1}}{\sqrt{n}}$ (dove $\sqrt{n}$ serve a normalizzarlo) è un autovettore con autovalore $\lambda_1 = 0$. 
+Ogni altro autovettore $U$ è tale che $$U^T \frac{\mathds{1}}{n} = 0 \leftrightarrow U^T \mathds{1} = 0 \leftrightarrow \sum_{i = 1}^n u_i = 0$$
+Concentriamoci sul secondo autovalore, $\lambda_2$. Vale che 
+
+$$\lambda_2 = \min_{\substack{U \in \mathbf{R}^n \backslash \{0\} \\ U^T \perp \mathds{1} = 0 }} \frac{U^T L U}{U^T U}$$
+
+$$= \min_{\substack{U \in \mathbf{R}^n \backslash \{0\} \\ U^T \perp \mathds{1} = 0 }} \frac{\sum_{(i,j) \in E} (u_i - u_j)^2}{d \sum_{i \in V} u_i^2}$$
+Se $G$ ha due componenti connesse
+
+\disegna{
+    \node[cloud,draw,minimum width = 2.5cm,
+    minimum height = 3cm] at (-1.5,0) {$X$};
+    \node[cloud,draw,minimum width = 2.5cm,
+    minimum height = 3cm] (A) at (1.5,0){$Y$};
+ }
+
+ \noindent 
+ Scegliamo  $U \in \mathbb{R}^n$ tale che 
+
+$$u_i = \begin{cases}
+    \frac{1}{|X|} \hspace{20px} \text{se}\; i \in X \\
+    \frac{1}{|Y|} \hspace{20px} \text{se}\; i \in Y 
+\end{cases}$$
+Vale che $U^T \mathds{1} = 0$. Infatti, per  \\ $\sum_x u_i = 1$ e $\sum_y u_i = -1$, quindi $\sum_x u_i + \sum_y u_1 = 0$. Inoltre $U^T L U = 0$ perché:
+
+\begin{itemize}
+    \item Se $i,j \in X$ allora $u_i - u_j = 0$.
+    \item Se $i,j \in Y$ allora $u_j - u_j = 0$.
+    \item Non può esistere il caso in cui $i \in X, j \in Y$ o viceversa.
+\end{itemize}
+
+\noindent
+Quindi $\frac{U}{||U||}$ è un autovettore di $G$ con autovalore $0$. Più in generale possiamo affermare che che $\lambda_k = 0$ se $G$ ha $k$ componenti connesse. Questo ci permette di ricavare il numero di componenti connesse di $G$ guardano il numero di autovalori pari a $0$.
+Vediamo cosa succede con $\lambda_n$. 
+
+$$\lambda_n = \max_{U \in \mathbb{R}^n \backslash \{0\}} \frac{U^T L U }{U^T U} = \max \frac{\sum_{(i,j) \in E} (u_i - u_j)^2}{d \sum_{i \in V} u_i^2}$$
+
+$$= \max \frac{1}{d \sum u_i^2} \sum_{(i,j) \in E} (u_i^2 + u_j^2 - 2u_iu_j)$$
+Sapendo che ogni nodo appare come estremo in $d$ archi distinti
+
+$$= \max \frac{1}{d \sum u_i^2} (d \sum_i u_i^2 -  \sum_{(i,j) \in E} (2u_iu_j
+)) $$
+sommiamo e sottraiamo $d \sum_i u_i^2$
+
+$$= \max \frac{1}{d \sum u_i^2} (2d \sum_i u_i^2 - (d \sum_i u_i^2 +  \sum_{(i,j) \in E} (2u_iu_j
+)) $$
+
+$$= \max 2  - \frac{\sum_{(i,j) \in E} (u_i + u_j)^2}{d \sum_i u_i^2} $$
+
+$$= 2 - \min \frac{\sum_{(i,j) \in E} (u_i + u_j)^2}{d \sum_i u_i^2} $$
+Quindi $0 \leq \lambda_n \leq 2$. Notiamo che $\lambda_n$ vale $2$ nel caso in cui nel grafo sia presente una componente bipartita. 
+\disegna{
+    \node[cloud,draw,minimum width = 2.5cm,
+    minimum height = 3cm] at (0,-2) {};
+    \node[nodo] (X1) at (-1,2) {};
+    \node[nodo] (X2) at (-1,1) {};
+    \node[nodo] (X3) at (-1,0) {};
+    \node[nodo] (Y1) at (1,2) {};
+    \node[nodo] (Y2) at (1,1) {};
+    \node[nodo] (Y3) at (1,0) {};
+    
+    \draw[-] (X1) -- (Y2);
+    \draw[-] (X1) -- (Y3);
+    \draw[-] (X2) -- (Y1);
+    \draw[-] (X2) -- (Y2);
+    \draw[-] (X3) -- (Y1);
+    \draw[-] (X3) -- (Y3);
+ }
+
+ \noindent 
+Costruiamo l'autovettore $U \in \mathbb{R}^n$
+
+$$u_i = \begin{cases}
+    1  \hfill \text{se}\; i \in X \\
+   -1 \hfill \text{se}\; i \in Y  \\
+   0 \hspace{20px} \text{altrimenti}
+\end{cases}$$
+Quindi $\sum_{(i,j) \in E} (u_i + u_j)^2 = 0$ e allora $\lambda_n = 0$. 
+
+\section{Disuguaglianza di Cheeger}
+
+Come si lega la sparsità, o la conduttanza, allo spettro?
+
+\begin{defi}
+    La disuguaglianza di \textbf{Cheeger} ci dà un'approssimazione di $\phi(G)$:
+
+    $$\frac{\lambda_2}{2} \leq \phi(G) \leq \sqrt{2 \lambda_}$$
+\end{defi}
+La disuguaglianza di Cheeger può essere anche scritta come
+
+$$\frac{2 \lambda_2}{2n} \leq \sigma(G) \leq \frac{2d}{n} \sqrt{2\lambda_2}$$
+
+\begin{dimo}
+Cominciamo a dimostrare la parte sinistra, ovvero $$\frac{\lambda_2}{2} \leq \phi(G)$$
+Consideriamo $U \in \mathbb{R}^d $ tale che $U^T \mathds{1} = 0$.
+
+$$\sum_i \sum_j (u_i - u_j)^2 = \sum_i \sum_j (u_i^2 + u_j^2 - 2u_i u_j)$$
+$$= n \sum_i u_i^2 + n \sum_j u_j^2 - 2 \sum_i \sum_j u_i u_j$$
+Sapendo che $(\sum_i u_i)^2 = (\sum_i u_i) (\sum_j u_j) = \sum_i \sum_j u_i u_j$ scriviamo
+
+$$= 2n \sum_i u_i^2 - 2(\sum_i u_i)^2  = 2n \sum_i u_i^2 - 2(U^T \mathds{1})^2 $$
+dato che $U^T \mathds{1} = 0$
+$$= 2n \sum_i u_i^2$$
+Quindi abbiamo che 
+
+$$\lambda_2 = \min_{\substack{U \in \mathbb{R}^n \backslash \{0\} \\ U^T \mathds{1} = 0}} \frac{\sum_{(i,j) \in E} (u_i - u_j)^2}{d \sum u_i^2} $$
+Se $U \neq 0$ e $U^T \mathds{1} = 0$ allora $U \neq 0$ e $U \neq \mathds{1}$. Inoltre usiamo il fatto che $\sum_i u_i^2 = \frac{1}{2n} \sum_{ij} (u_i-u_j)^2$
+
+$$= \min_{\substack{U \in \mathbb{R}^n \backslash \{0, \mathds{1}\}}} \frac{\sum_{(i,j) \in E} (u_i - u_j)^2}{\frac{d}{2n} \sum_{ij} (u_i-u_j)^2}$$
+Sia $\forall S \subseteq V, \; U \in \{0,1\}^n$ tale che $u_i = 1 \leftrightarrow i \in S$ ( o in altre parole $u_i = \mathds{I}\{i \in S\}$). Allora 
+
+$$|E(S,\neq S)| = \sum_{(i,j) \in E}(u_i-u_j)^2$$
+e sapendo che $u_i = u_i^2$ (dato che $1^2 = 1$ e $0^2 = 0$) possiamo dire
+
+$$|S| |\neg S| = (\sum_i u_i^2) (n-\sum_i u_i^2)$$
+
+$$= n \sum_i u_i^2 - \sum_{i,j} u_i u_j$$
+In una dimostrazione precedente avevamo trovato che 
+$\sum_i \sum_j (u_i - u_j)^2 = 2n \sum_i u_i^2 - 2(\sum_i u_i)^2$. Il lato destro è esattamente quello che abbiamo noi moltiplicato per un fattore $2$, quindi
+
+$$= \frac{1}{2} \sum_{i,j} (u_i - u_j)^2$$
+Allora 
+
+$$\sigma(G) = \min_{(S,\neg S)\; cut} \frac{|E(S,\neg S)|}{|S| |\neg S|}$$
+
+$$= \min_{\substack{U \in \mathbb{R}^n \backslash \{0, \mathds{1}\}}} \frac{\sum_{(i,j) \in E} (u_i - u_j)^2}{\frac{d}{2n} \sum_{ij} (u_i-u_j)^2} \geq \frac{d}{n} \lambda_2$$
+Che implica che 
+
+$$\frac{d}{n} \lambda_2 \leq \sigma(G) \leq \frac{2d}{n} \phi(G)$$
+Quindi abbiamo dimostrato che 
+
+$$\frac{\lambda_2}{2} \leq \phi(G)$$
+
+\end{dimo}
+
+
 
 \end{document}
