@@ -10,6 +10,20 @@
 
 \begin{document}
 
+% background
+ \begin{figure}
+ \centering
+ \begin{tikzpicture}[overlay,scale=2.5]
+% \pgftransformcm{1}{0.1}{0.2}{1}{\pgfpoint{0cm}{0cm}}
+\pgftransformcm{-1}{-0.1}{-0.2}{-1}{\pgfpoint{0cm}{-3cm}}
+ % draw the grid
+ \draw[step=.3cm,black!10,line width=0.01cm] (-3.9,-3.9) grid (3.9,3.9);
+ \foreach \x in {-3.9,-3.6,...,3.9}
+     \foreach \y in {-3.9,-3.6,...,3.9}
+         \filldraw[black!10] (\x,\y) circle (0.4pt);
+ \end{tikzpicture}
+ \end{figure}
+
 \maketitle
 
 \tableofcontents
@@ -2465,6 +2479,630 @@ $$\frac{\lambda_2}{2} \leq \phi(G)$$
 
 \end{dimo}
 
+
+\chapter{Dodicesima lezione}
+
+\noindent 
+Dimostriamo l'altra parte della disequazione di Cheeger.
+
+$$\phi(G) \leq \sqrt{2 \lambda_2}$$
+
+Introduciamo il seguente algoritmo:
+
+\begin{algorithm}
+\caption{(Fiedler)}\label{euclid}
+ \textbf{Input:} $G = (V,E)$, vettore $x \in \mathbb{R}^n \backslash \{0\} $
+\begin{algorithmic}[1]
+\State Ordiniamo le componenti di $x$ dalla più piccola alla più grande, ovvero $(v_1,\dots,v_n)$ tali che $v_1 \leq ... \leq v_n$.
+\State Troviamo $k \in \{1,\dots,n-1\} $ che minimizza la conduttanza $\phi$ del taglio $\phi\{v_1,\dots,v_k\}$
+\end{algorithmic}
+\textbf{Output:} taglio $\{v_1,\dots,v_k\}$
+\end{algorithm}
+
+\noindent 
+L'algoritmo di \textbf{Fiedler} ordina le componenti di $x$ e poi costruisce vari tagli, dividendo in due gruppi le componenti, e trova il migliore tra questi. L'ordinamento ha una complessità di $O(|V| \log |V|)$ mentre trovare il minimo taglio costa $O(|E|)$ perché dobbiamo passare tutta la lista, infatti inizialmente avremo il taglio $\{v_1\}$ e calcoleremo la relativa conduttanza, poi $\{v_1,v_2\}$ fino a $\{v_1,\dots,v_{n-1}\}$. 
+
+Fiedler trova un cut $(S_F,\neg S_F)$ tale che 
+
+$$\phi(S_f) \leq \sqrt{2 \lambda_2}$$
+quando il vettore $x$ in input è autovettore relativo a $\lambda_2$. Il problema di trovare il $\phi(G)$ minimo è NP-completo, questo algoritmo ci permette di trovarne un'approssimazione (abbastanza buona) in tempo lineare. Teniamo a mente che per trovare l'autovettore di $\lambda_2$ serve tempo $n^3$, che comunque è sempre migliore di un tempo esponenziale. Definiamo
+
+$$R_L(x) = \frac{\sum_{(i,j) \in E} (x_i - x_j)^2}{d||x||^2}$$
+ovvero il coefficiente di Rayleigh con argomento $x$ e dove utilizziamo della matrice laplaciana $L$. Vale che 
+$$\lambda_2 = \min_{\substack{x \in \mathbb{R}^n\backslash\{0\} \\ x^T \mathds{1}}} R_L(x)$$
+
+
+\begin{teo}
+    Sia $x \in \mathbb{R}^n \backslash\{0\}$ tale che $x^T \mathds{1} = 0$ e sia $S_f \subset V$ il cut trovato da Fiedler con input x. Allora 
+    $$\phi(S_f) \leq \sqrt{2 R_L(x)}$$
+\end{teo}
+
+\noindent 
+Se $x$ è autovettore di $\lambda_2$ allora 
+$$\phi(G) = \min_{S \subset V} \phi(S) \leq \phi(S_f) $$
+$$\leq \sqrt{2 R_L(x)} \leq \sqrt{2\lambda_2}$$
+Per provare questo teorema abbiamo bisogno del seguente lemma.
+
+\begin{lemma}
+    Sia $x \in \mathbb{R}^n \backslash \{0\}$ tale che $x^T \mathds{1} = 0$, allora $\exists y \in \mathbb{R}^n$ con $y_i \geq 0 \; \forall i = 1,\dots,n$ tale che $R_L(y) \leq R_L(x)$. Inoltre, per ogni $0 < t \leq \max_i y_i$ il taglio $(\{v \in V: y_v \geq t\},\{v \in V: y_v < t\})$ è uno di quelli considerati da Fiedler su input $x$.
+\end{lemma}
+
+\begin{dimo}
+    Proviamo il lemma precedente. Innanzitutto prendiamo $x \in \mathbb{R^n}$, sia $m$ la mediana e costruiamo $x^+,x^- \in \mathbb{R^n}$ definiti, componente per componente, come
+
+    \begin{itemize}
+        \item $x_v^+ = [x_v - m]_+$, cioè se $x_v > m$ allora $x_v^+ = x_v - m$ altrimenti $x_v^+ = 0$.
+        \item $x_v^- = [m - x_v]_+$, cioè se $x_v < m$ allora $x_v^- =  m - x_v$ altrimenti $x_v^- = 0$.
+    \end{itemize}
+    Dove $[z]_+ = z \mathds{I}\{z > 0\}$.
+
+    \begin{exmp}
+        Per capire meglio come sono costruiti $x^+,x^-$ consideriamo un esempio in cui $x = (3,-1,5,2)$, quindi la mediana è $m =2.5$.
+        Costruiamo $x^+$:
+
+        \begin{enumerate}
+            \item $3$ è maggiore di $2.5$, quindi $x_1^+ = 3 -2.5 = 0.5$
+            \item $-1$ è minore di $2.5$, quindi $x_2^+ = 0$
+            \item $5$ è maggiore di $2.5$, quindi $x_3^+ = 5 - 2.5 = 2.5$
+            \item $2$ è minore di $2.5$, quindi $x_4^+ = 0$
+        \end{enumerate}
+        Quindi $x^+ = (0.5,0,2.5,0)$. In modo abbastanza simile possiamo costruire $x^-$:
+        \begin{enumerate}
+            \item $3$ è maggiore di $2.5$, quindi $x_1^- = 0$
+            \item $-1$ è minore di $2.5$, quindi $x_2^- = 2.5 - (-1) = 3.5$
+            \item $5$ è maggiore di $2.5$, quindi $x_3^- = 0$
+            \item $2$ è minore di $2.5$, quindi $x_4^- = 2.5 - 2 = 0.5$
+        \end{enumerate}
+        Quindi $x^- = (0,3.5,0,0.5)$. Notiamo che
+
+        $$x = x^+ - x^- + m \mathds{1}$$
+        infatti
+        \begin{multline*}
+           (0.5,0,2.5,0) - (0,3.5,0,0.5) =\\ = (0.5,-3.5,2.5,-0.5) 
+        \end{multline*}
+        \begin{multline*}
+        (0.5,-3.5,2.5,-0.5) +
+        \\+ (2.5,2.5,2.5,2.5) = (3.5,-1,2.5,2)
+        \end{multline*}
+    \end{exmp}
+    
+    \noindent
+    Notiamo che $x_v^+,x_v^- \geq 0 \; \forall v \in V$. 
+    Per ogni $t > 0, t \leq \max_v y_v$
+
+    $$\{v \in V: x_v^+ \geq t\} $$
+    $$ \equiv \{v \in V: [x_v - m]_+ \geq t\}$$
+    Notiamo che siccome $t > 0$, sicuramente $x_v > m$, quindi $[x_v - m]_+ = x_v - m$.
+    $$ \equiv \{v \in V: x_v \geq m + t\}$$
+    La stessa cosa vale per $x^-$
+    $$\{v \in V: x_v^- \geq t\} $$
+    $$ \equiv \{v \in V: [m - x_v]_+ \geq t\}$$
+    $$ \equiv \{v \in V: x_v \leq  m - t\}$$
+    Ci rimane da dimostrare che $\exists y \geq 0 \; : \; R_L(y) \leq R_L(x)$. Poniamo
+    $$y = argmin_{z \in \{x^-, x^+\}}R_L(z)$$
+    e anche $x' = x - m\mathds{1} = x^+ - x^-$.
+    Prima di continuare osserviamo che $\forall c\; R_L(x + c\mathds{1}) = R_L(x)$. Il numeratore non cambia, infatti su $(x_i - x_j)$ l'aggiunta di una costante non ha effetto, dato che si eliminano a vicenda. Il denominatore diventa più grande ( o al limite uguale)
+
+    $$||x + c_1||^2 = ||x||^2 + c^2||\mathds{1}||^2 + 2c x^T \mathds{1}$$
+    siccome $x^T \mathds{1} = 0$ 
+
+    $$> ||x||^2$$
+    Quindi $R_L(x') \leq R_L(x)$.  Consideriamo $R_L(y)$, vogliamo dimostrare che $R_L(y) \leq R_L(x')$.
+
+    $$R_L(y) = \min\{R_L(x^+,R_L(x^-)\}$$
+    Usiamo il fatto che $\min\{A,B\} \leq \alpha A + (1-\alpha)B$ dove $0 \leq \alpha \leq 1$. Ovvero il minimo è minore o uguale della combinazione lineare di $A$ e $B$. Nel nostro caso $\alpha = \frac{||x^+||^2}{||x^+||^2 + ||x^-||^2}$
+    $$\leq \frac{||x^+||^2 R_L(x^+) + ||x^-||^2 R_L(x^-)}{||x^+||^2 + ||x^-||^2} $$
+    $$= \frac{\sum_{(i,j) \in E} (x_i^+ - x_j^+)^2 + \sum_{(i,j) \in E} (x_i^- - x_j^-)^2}{d(||x^+||^2 + ||x^-||^2)} $$
+    Facciamo un passaggio (al numeratore) che dimostriamo dopo
+
+    $$\leq \frac{\sum_{(i,j) \in E} ( (x_i^+ - x_j^+) - (x_i^- - x_j^-))^2}{d(||x^+||^2 + ||x^-||^2} $$
+    dove il denominatore è uguale perché, dato che $(x^+)^T x^- = 0$ (sicché se $x_i^+ = 0$ allora $x_i^- > 0$ e viceversa) abbiamo che 
+    $$||x^+||^2 + ||x^-||^2$$
+    $$=  ||x^+||^2 + ||x^-||^2 - 2(x^+)^T x^- $$
+    $$= ||x^+ - x^-||^2 = ||x'||^2$$
+    possiamo quindi concludere che 
+
+    $$\frac{\sum_{(i,j) \in E} ( (x_i^+ - x_j^+) - (x_i^- - x_j^-))^2}{d(||x^+||^2 + ||x^-||^2}$$
+    è uguale a 
+    $$= \frac{\sum_{(i,j) \in E} (x_i'-x_j')^2}{d ||x'||^2}$$
+    Dimostriamo ora quel passaggio che abbiamo lasciato in sospeso, ovvero che  $\forall (i,j) \in E$ vale
+
+    \begin{multline*}
+        (x_i^+ - x_j^+)^2 + (x_i^- - x_j^-)^2 \leq \\ \leq ( (x_i^+ - x_j^+) - (x_i^- - x_j^-))^2
+    \end{multline*}
+
+    \noindent
+    Abbiamo due casi:
+    \begin{enumerate}
+        \item $(x_i^+ - x_j^+) (x_i^- - x_j^-) = 0$. Allora o $x_i^+ - x_j^+$ è uguale a $0$, oppure $x_i^- - x_j^-$ è uguale  a $0$. Quindi vale la disuguaglianza. Inoltre questo implica che o $x_i',x_j' \geq 0$ oppure $x_i', x_j' \leq 0$.
+        \item $(x_i^+ - x_j^+) (x_i^- - x_j^-) \neq 0$. Senza perdita di generalità possiamo dire che  $x_i' < 0 < x_j'$, altrimenti saremmo nel primo caso. Allora
+
+        $$0 > x_i' = x_i^+ - x_i^- \leftrightarrow x_i^+ = 0$$
+        $$0 < x_j' = x_j^+ - x_j^- \leftrightarrow x_j^- = 0$$
+        Quindi
+        $$(x_i^+ - x_j^+)^2 + (x_i^- - x_j^-)^2$$
+        $$= (-x_j^+)^2 + (x_i^-)^2 $$
+        $$= (x_j^+)^2 + (- x_i^-)^2$$
+        ricordando che $x_j^+$ e $x_i^-$ hanno segno discorde:
+        $$\leq (x_j^+ - x_i^-)^2$$
+        
+    \end{enumerate}
+\end{dimo}
+
+\chapter{Tredicesima lezione}
+
+\noindent
+Concludiamo la dimostrazione della disuguaglianza $\phi(G) \leq \sqrt{2 \lambda_2}$. Per fare ciò dimostriamo un fatto e poi un lemma.
+
+\begin{fatto}
+    $\forall X,Y$ tali che $y > 0$ e $\va[X],\va[Y] \leq \infty$ vale che 
+
+    $$P(\frac{X}{Y} \leq \frac{\va[X]}{\va[Y]})>0$$    
+\end{fatto}
+
+\begin{dimo}
+    Poniamo 
+    $$r = \frac{\va[X]}{\va[Y]}$$
+    e notiamo che 
+    $$\va[X] - r\cdot \va[Y] = \va[X - rY] = 0$$
+    siccome il valore atteso è $0$ deve per forza valere
+    $$P(X-rY \leq 0) > 0$$
+    altrimenti il valore atteso sarebbe positivo.
+    Se dividiamo per $Y$
+    $$P(\frac{X}{Y} - r \leq 0) > 0$$
+    e abbiamo concluso la dimostrazione.
+\end{dimo}
+
+\begin{lemma}
+    $\forall y \in \mathbb{R}_{\geq 0}^n \; \exists t$ con $0 < t < \max_v y_v$ tale che 
+
+    $$xpn(\{v \in V: y_v \geq t\}) \leq \sqrt{2 R_L(y)}$$
+\end{lemma}
+
+\begin{dimo}
+    Dato che $R_L(y) = R_L(c\cdot y) \; \forall c > 0$ possiamo assumere che $\max_v y_v = 1$, ovvero scaliamo senza perdita di generalità. Sia $t \in [0,1]$ una variabile casuale tale che 
+    $$P(t \leq \sqrt{a}) = a \; \; \forall a \in [0,1]$$
+    quindi $t^2$ è distribuita uniformemente in $[0,1]$. Definiamo $$S_t = \{v \in v\;:\; y_v \geq t\}$$vale che $$|S_t| > 0 \; \forall t \in (0,1]$$ dato che $y_t$ è non negativo, se $t$ è minimo allora prendo tutti i vertici, se $t = 1$ prendo solo il massimo. Qualsiasi sia la scelta non è mai vuoto. Prendiamo l'espansione
+
+    $$xpn(S_t) = \frac{|E(S_t,\neg S_t)|}{d |S_t|}$$
+    Usando il fatto di prima possiamo dire che
+    $$\leq \frac{\va[|E(S_t,\neg S_t)|]}{d \va[|S_t|]}$$
+    con probabilità maggiore di $0$ rispetto a estrazione di $t$. Allora esiste $t$ tale che la disequazione vale.
+
+    Analizziamo il denominatore
+
+    $$\va[|S_t|] = \va[\sum_{v \ in V} \mathds{I}\{v \in S_t\}]$$
+    $$= \sum_{v \in V} P(v \in S_t) = \sum_{v \in V} P(t \leq y_v)$$
+    $$= \sum_{v \in V} y_t^2$$
+    Scegliamo qualsiasi $(i,j) \in E$ e assumiamo che $y_j \leq j_i$. Allora,
+
+    $$P(i \in S_t, j \in \neg S_t) = P(y_j < t \leq y_i)$$
+    Si consideri il disegno sottostante 
+
+    \disegna{
+        \node[] (A) at (-3,-2){};
+        \node[nodo] (A1) at (-3,-1){};
+        \node[] (B) at (-2,-2){};
+        \node[nodo] (B1) at (-2,-0.5){};
+        \node[] (C) at (-1,-2){};
+        \node[nodo] (C1) at (-1,0){};
+        \node[] (D) at (0,-2){};
+        \node[nodo] (D1) at (0,-0.75){};
+
+        \node[] (E2) at (1,-2.25){$y_j$};
+        \node[] (E) at (1,-2){};
+        \node[nodo] (E1) at (1,-1){};
+        
+        
+        \node[] (F) at (2,-2){};
+        \node[nodo] (F1) at (2,-1.35){};
+        \node[] (G) at (3,-2){};
+        \node[nodo] (G1) at (3,-0.25){};
+        \node[] (G2) at (3,-2.25){$y_i$};
+
+        \draw[dashed,color = red] (-3,-0.25) -- (G1); 
+        \draw[dashed,color = red] (-3,-1) -- (3,-1); 
+
+        \draw[dashed,thick,color = orange] (-3,-0.30) -- (-2.5,-0.99);
+        \draw[dashed,thick,color = orange] (-2.5,-0.30) -- (-2,-0.99);
+        \draw[dashed,thick,color = orange] (-2,-0.30) -- (-1.5,-0.99);
+        \draw[dashed,thick,color = orange] (-1.5,-0.30) -- (-1,-0.99);
+        \draw[dashed,thick,color = orange] (-1,-0.30) -- (-0.5,-0.99);
+        \draw[dashed,thick,color = orange] (-0.5,-0.30) -- (0,-0.99);
+        \draw[dashed,thick,color = orange] (2.5,-0.30) -- (3,-0.99);
+        \draw[dashed,thick,color = orange] (2,-0.30) -- (2.5,-0.99);
+        \draw[dashed,thick,color = orange] (1.5,-0.30) -- (2,-0.99);
+        \draw[dashed,thick,color = orange] (1,-0.30) -- (1.5,-0.99);
+        \draw[dashed,thick,color = orange] (0.5,-0.30) -- (1,-0.99);
+        \draw[dashed,thick,color = orange] (0,-0.30) -- (0.5,-0.99);
+        
+        \foreach \x in {A,B,C,D,E,F,G}
+            \draw (\x) -- (\x 1);
+    }
+    la parte tratteggiata è la parte che "teniamo". Il resto viene cancellato, quindi:
+    $$= P(t \leq y_i) - P(t \leq y_j) = y_i^2 - y_j^2$$
+    Ci concentriamo ora sul numeratore:
+
+    $$\va[|E(S_t,\neg S_t)|] = \va[ \sum_{(i,j) \in E} \mathds{I}\{i \in S_t, j \in \neg S_t\}$$
+
+    $$= \sum_{(i,j) \in E} P(i \in S_t, j \in \neg S_t) $$
+    $$= \sum_{(i,j) \in E} ( (y_i^2 - y_j^2)) \mathds{I}\{y_i \leq y_j\} + (y_j^2 - y_i^2)  \mathds{I}\{y_j \leq y_i\})$$
+    $$= \sum_{(i,j) \in E} |y_i^2 - y_j^2| = \sum_{(i,j) \in E} |y_i - y_j|(y_i + y_j)$$
+    Prendiamo $V,U \in \mathbb{R}^n$, per la \textbf{disuguaglianza di cauchy schwarz} vale che 
+    $$U^T V \leq ||U|| \cdot ||V||$$
+    nel nostro caso
+
+    $$\leq \sqrt{\sum_{(i,j) \in E} (y_i-y_j)^2} \sqrt{\sum_{(i,j) \in E} (y_i+y_j)^2}$$
+    Usando la disuguaglianza $(a+b)^2 \leq 2(a^2 + b^2)$ la sommatoria interna può essere trasformata in 
+    $$\sum_{(i,j) \in E} (y_i+y_j)^2 \leq 2 \sum_{(i,j) \in E} (y_i+y_j)^2 = 2d \sum_{v \in V} y_v^2$$
+    quindi
+
+    \begin{multline*}
+        xpn(S_t) \leq \\ \frac{\sqrt{2d||Y||^2 \sum_{(i,j) \in E} (y_i-y_j)^2}}{d ||Y||^2}
+    \end{multline*}
+    portiamo tutto dentro radice
+    $$= \sqrt{\frac{2 \sum_{(i,j) \in E} (y_i-y_j)^2}{d ||Y||^2}} = \sqrt{2 R_L(Y)}$$
+    concludendo così la dimostrazione.
+\end{dimo}
+Possiamo terminare la dimostrazione del teorema.
+Per il lemma 
+
+$\exists Y \in \mathbb{R}_{\geq 0}^n \; S_t =\{v \in V : y_v \geq t\}$
+possiamo quindi scrivere 
+$$\phi(S_f) = \min_t{\phi(S_t)}$$
+Ricordiamo che 
+$$\phi(S) = \frac{|E(S,\neg S)|}{d \min\{|S|,|\neg S|\}}$$
+e 
+$$xpn(S) = \frac{|E(S,\neg S)|}{d |S|}$$
+ma $Y$, per costruzione, ha al più $\frac{n}{2}$ componenti non zero ($Y \in \{x^-, x^+\}$, ricordiamo che $Y$ lo avevamo definito come $Y = arg\min_{Z \in \{x^-, x^+\}} R_L(Z)$). Questo implica che $|S_t| \leq \frac{n}{2} \; \forall t$, invece $|\neg S_t| \geq \frac{n}{2}$. E' quindi ovvio che $min(|S_t|,|\neg S_t|) = |S_t|$, quindi $\phi(S_t) = xpn(S_t)$.
+
+
+$$\phi(S_f) = \min_t{\phi(S_t)} = \min_t xpn(S_t)$$
+
+$$\leq \sqrt{2 R_L(Y)}$$
+per il lemma $R_L(Y) \leq R_L(X)$
+
+$$\leq \sqrt{2 R_L(X)}$$
+che conclude la dimostrazione!
+Quindi, per grafi $d$-regolari,  vale che 
+
+
+$$\frac{\lambda_2}{2} \leq \phi(G) \leq \sqrt{2 \lambda_2}$$
+
+\section{Grafi non regolari}
+Analizziamo brevemente cosa succede se il grafo non è $d$-regolare. Guardiamo alla generalizzazione del coefficiente di Rayleigh $R_L$.
+
+$$R_L = \frac{\sum_{(i,j) \in E} (x_i - x_j)^2}{\sum_{v \in V} d(v) x_v^2}$$
+
+$$=  \frac{\sum_{(i,j) \in E} (x_i - x_j)^2}{\sum_{v \in V} (\sqrt{d(v)} x_v) (\sqrt{d(v)} x_v)}$$
+Costruiamo la matrice diagonale $D$
+
+\[
+    D = \begin{bmatrix}
+        d(v_1)& \dots & 0 \\ 
+        \vdots & \ddots & \vdots \\ 
+        0 & \dots & d(v_n) 
+    \end{bmatrix}
+\]
+e siccome è diagonale ogni operazione sulla matrice si applica sui singoli elementi
+
+\[
+    \sqrt{D} = \begin{bmatrix}
+        \sqrt{d(v_1)}& \dots & 0 \\ 
+        \vdots & \ddots & \vdots \\ 
+        0 & \dots & \sqrt{d(v_n)} 
+    \end{bmatrix}
+\]
+stessa cosa vale per l'inversione
+
+\[
+    D^{-1} = \begin{bmatrix}
+        d(v_1)^{-1}& \dots & 0 \\ 
+        \vdots & \ddots & \vdots \\ 
+        0 & \dots & d(v_n)^{-1} 
+    \end{bmatrix}
+\]
+Ricordiamoci che $$x^T L x = \frac{1}{d} \sum_{(i,j) \in E} (x_i - x_j)^2$$ possiamo ottenere un risultato simile nel caso generalizzato.
+Prendiamo $x^T L D x$, dove $L = I - \frac{A}{D}$ ,e analizziamo cosa succede.
+
+$$x^T L D x = x^T (I - \frac{A}{D}) D x$$
+
+$$= x^T (D - A) x = x^T D x - x^T A x$$
+$$= \sum_i \sum_j x_i D_{ij} x_j - \sum_i \sum_j x_i A_{ij} x_j$$
+notiamo che $D_{ij} \neq 0$ solo quando $i = j$.
+$$= \sum_i x_i^2 D_{ii} + \sum_i \sum_j x_i A_{ij} x_j $$
+come avevamo fatto introducendo la Laplaciana possiamo scrivere
+
+$$= \sum_{i \in V} \sum_{j : (i,j) \in E} \frac{x_i^2}{D_{ii}} D_{ii} + \sum_{i \in V} \sum_{j : (i,j) \in E} x_i x_j $$
+da qui facilmente, come fatto nelle lezioni precedenti, otteniamo
+$$= \sum_{(i,j) \in E} (x_i - x_j)^2$$
+abbiamo dimostrato che 
+$$ x^T (D - A) x= \sum_{(i,j) \in E} (x_i - x_j)^2$$
+Allora riprendiamo il coefficiente di Rayleigh e scriviamo
+
+$$R_L = \frac{x^T (D-A) x}{\sum_{v \in V} (\sqrt{d(v)} x_v) (\sqrt{d(v)} x_v)} $$
+il denominatore può essere riscritto come
+
+$$= \frac{x^T (D-A) x}{(D^{\frac{1}{2}}x)^T (D^{\frac{1}{2}}x)}$$
+poniamo $U = D^{\frac{1}{2}}x$ e quindi ne deriva che $x = D^{-\frac{1}{2}}U$
+
+$$= \frac{(D^{-\frac{1}{2}}U)^T (D-A) D^{-\frac{1}{2}}U}{U^T U}$$
+sappiamo che $U^T U = ||U||^2$ e anche che $D^T = D$ perché diagonale
+
+$$\frac{U^T D^{-\frac{1}{2}} (D-A) D^{-\frac{1}{2}}U}{||U||^2}$$
+espandiamo il prodotto
+
+$$= \frac{U^T D^{-\frac{1}{2}}D D^{-\frac{1}{2}}U - U^T D^{-\frac{1}{2}}A D^{-\frac{1}{2}}U}{||U||^2}$$
+notiamo che 
+
+$$D^{-\frac{1}{2}} D D^{-\frac{1}{2}} = D^{-\frac{1}{2}} D^{\frac{1}{2}} D^{\frac{1}{2}} D^{-\frac{1}{2}} = I$$
+quindi
+
+$$R_L = \frac{U^T (I -  D^{-\frac{1}{2}} A D^{-\frac{1}{2}}) U}{||U||^2}$$
+Sia $G= (V,E)$ qualunque il Laplaciano normalizzato di $G$ è
+
+$$L = I - D^{-\frac{1}{2}} A D^{-\frac{1}{2}}$$
+e le disuguaglianze di Cheeger continuano a valere.
+Notiamo che se siamo nel caso $d-regolare$, ovvero
+
+\[  
+    D^{-\frac{1}{2}} = \begin{bmatrix}
+        \frac{1}{\sqrt{d}} & \dots & 0 \\
+        \vdots & \ddots & \vdots \\
+        0 & \dots & \frac{1}{\sqrt{d}}
+    \end{bmatrix}
+\]
+allora
+
+$$ D^{-\frac{1}{2}} A D^{-\frac{1}{2}} = \frac{1}{d} A$$
+e quindi 
+$$L = I - \frac{1}{d} A$$
+
+
+\section{Introduzione clique piantate}
+Vogliamo usare lo spettro per trovare comunità in reti sociali. Dato un grafo $G = (V,E)$ i nodi rappresentano le persone e $i,j$ sono amici ( o hanno interessi in comune) se e solo se $(i,j) \in E$. Una comunità è un sotto-grafo denso in un grafo, o alternativamente possiamo dire che è un insieme di utenti densamente connessi. Prendiamo un grafo $G_n \sim \mathcal{G}(n,\frac{1}{2})$ (dove scegliamo $\frac{1}{2}$ per semplicità) e consideriamo una clique $S \subseteq V$ tale che $|S| = o(|V|)$ costruita nel modo seguente:
+
+\begin{enumerate}
+    \item Scelgo $S \subseteq V$, tale che $|S| = k$
+    \item Estraggo $G_n \sim \mathcal{G}(n,\frac{1}{2})$
+    \item Completo la clique su $S$ aggiungendo gli archi mancanti. 
+\end{enumerate}
+
+\noindent
+Sappiamo che $\omega(G_n) \sim 2\log_2n$, quindi ha senso cercare una clique solamente se 
+$k >> 2\log_2n$, perché altrimenti non è una comunità ma una clique che si forma casualmente.
+
+\chapter{Quattordicesima lezione}
+
+\noindent
+Sia $|V| = n$ e $S \subset V$ tale che $|S| = k$. Sia $G_n \sim \mathcal{G}(n,\frac{1}{2})$ un grafo casuale.  Definiamo $G$ come il grafo $G_n$ a cui vengono aggiunti gli archi mancanti per ottenere una clique su $S$.
+
+\begin{exmp}
+    In figura, il grafo generato $G_n$. In rosso i nodi appartenenti a $S$ e in arancione gli archi aggiunti per ottenere il grafo $G$ dove $S$ è una cricca.
+
+\disegna{
+    \node[nodo, color = red] (A) at (0,0){};  
+    \node[nodo] (B) at (-1,-0.25){}; 
+    \node[nodo,  color = red] (C)  at (2,-1){};
+    \node[nodo] (D) at (1,-0.75){};
+    \node[nodo,  color = red] (E) at (0.10,-2){};
+    \node[nodo,  color = red] (F) at (0.40,1){};
+
+    \draw[] (A)--(C);
+    \draw[] (A)--(D);
+    \draw[] (A)--(B);
+    \draw[] (F)--(B);
+    \draw[] (F)--(E);
+    \draw[] (E)--(B);
+    \draw[] (D)--(C);
+    \draw[] (D)--(E);
+    \draw[] (C)--(E);
+
+    \draw[color = orange, dashed, thick] (E)--(A);
+    \draw[color = orange, dashed, thick] (F)--(A);
+    \draw[color = orange, dashed, thick] (F)--(C);
+}
+
+\end{exmp}
+
+\noindent 
+Come spiegato la scorsa lezione, ci interessa solo il caso in cui $k >> 2\log_2{n}$. Un primo algoritmo banale per trovare una cricca in un grafo è il seguente
+
+\begin{algorithm}[H]
+\caption{}\label{euclid}
+\begin{algorithmic}[1]
+\State Enumera tutti i sottoinsiemi di taglia $k$ in $V$
+\State Verifica che c'è una clique
+\end{algorithmic}
+\end{algorithm}
+
+\noindent 
+Questo algoritmo ha tempo $$\binom{n}{k}\binom{k}{2} \simeq k^2 (\frac{n}{k})^k$$
+ovvero esponenziale in $k$, dove $k$ è funzione di $n$. Diamo adesso un algoritmo più furbo
+
+\begin{algorithm}[H]
+\caption{}\label{euclid}
+\begin{algorithmic}[1]
+\State Enumera tutti i sottoinsiemi di taglia $3\log_2 n < k$.
+\State Verifica se c'è una clique sul sottoinsieme $S'$ considerato.
+\State Cerca $T\subset V \backslash S'$ tale che ogni vertice in $T$ è collegato con tutti i vertici di $S'$.
+\State Verifico che $T \cup S'$ sia una clique.
+\end{algorithmic}
+\end{algorithm}
+
+\noindent 
+Il tempo dell'algoritmo è 
+
+$$\binom{n}{3\log_2n} \simeq k^2 n^{3\log_2n}$$
+ovvero è quasi polinomiale. E' un problema aperto determinare se esista un algoritmo polinomiale per trovare una clique di taglia $\log n$. 
+In dipendenza della grandezza della clique che cerchiamo riusciamo a trovare algoritmi più o meno ottimi. 
+
+\disegna{
+    \node[] (A) at (-3.5,0){};
+    \node[] (B) at (3,0){};
+    \node[] (C) at (-2,0.30){$2\log_2n$};
+    \node[] (D) at (0,0.30){$\theta (\log n)$};
+    \node[] (E) at (2,0.30) {$?$};
+    \node[] at (-1,-1.5) {$?$};
+    \node[] at (1,-1.5) {$?$};
+    \draw[->] (A) -- (B);
+    \draw[] (-2,0) -- (-2,-3);
+    \draw[] (0,0) -- (0,-3);
+    \draw[dashed] (2,0) -- (2,-3);
+
+    \draw[] (-3.3,-1) -- (-2,0);
+    \draw[] (-3.2,-2) -- (-2,-1);
+    \draw[] (-3.1,-3) -- (-2,-2);
+}
+Non ha senso andare a cercare clique più piccole di $2\log_2n$. Infatti, in questo caso, sarebbero naturali all'interno del grafo. Tra $2\log_2n$ e $\theta (\log n)$ non sappiamo se esista un algoritmo efficiente. Sappiamo che più una clique è grande e più è facile trovarla. Ci chiediamo qual è quel valore tale per cui, da quel valore in su, esista un algoritmo efficiente per trovare una clique?
+Si consideri il seguente algoritmo
+
+
+\begin{algorithm}[H]
+\caption{}\label{euclid}
+\begin{algorithmic}[1]
+\State Ordina i vertici per grado decrescente.
+\State Trova il più grande $k$ tale che i primi $k$ vertici in questo ordine formano una clique.
+\end{algorithmic}
+\end{algorithm}
+
+\noindent
+E' ovvio che più un vertice abbia grado alto più è facile che compaia all'interno di una clique. Il tempo che ci impiega questo algoritmo è $n \log n + k^2$. Analizziamo l'algoritmo appena presentato. Sia $G_n \sim \mathcal{G}(n,\frac{1}{2})$ e sia $d_{G_n}(v)$ una variabile aleatoria binomiale di parametri $(n-1,\frac{1}{2})$, per ogni $v$, che rappresenta il numero di vicini di $v$. Poniamo, per semplicità, $d_{G_n}(v) = N_v$. Possiamo affermare quanto segue:
+
+$$\forall \; v \; N_v \leq \frac{n-1}{2} + \sqrt{\frac{n-1}{2} \ln {\frac{1}{\delta}}}$$
+con probabilità $1 - \delta$. Questo vale per il lemma di Chernoff-Hoffding.
+
+
+Sempre per questo lemma possiamo affermare che 
+
+$$\forall \; v \; N_v \geq \frac{n-1}{2} + \sqrt{\frac{n-1}{2} \ln {\frac{1}{\delta}}}$$
+con probabilità $1 - \delta$.
+Andiamo a considerare il grafo $G$, definito all'inizio della lezione come il grafo $G_n$ a cui vengono aggiunti gli archi per completare la clique $S$. Qual è il numero minimo di vicini di un qualsiasi $v \in S$? Cominciamo con il dire che sicuramente
+
+$$\min_{v \in S} d_G(v) \geq \frac{n-1}{2} - \sqrt{\frac{n-1}{2} \ln{\frac{2}{\delta^*}}}$$
+dove $\delta^* = \frac{\delta}{2}$, e quindi la disequazione vale con probabilità $1 - \frac{\delta}{2}$. Questa disequazione segue dalla disequazione di prima, ed è il numero di archi random che vengono generati. Possiamo ottenere un bound più stretto. Cominciamo con il notare che $\forall v \in S$ il numero di archi è tale che 
+
+$$|N_{G_n}(v) \land S| \leq \frac{k-1}{2} + \sqrt{\frac{k-1}{2}\ln{\frac{2}{\delta^*}}}$$
+Ci chiediamo, qual è il massimo valore che può assumere $|N_{G_n}(v) \land S|$, con $v \in S$? Utilizziamo la regola dell'union bound:
+
+$$P(\max_{v \in S} |N_{G_n}(v) \land S| \geq \varepsilon )$$
+dove $\varepsilon = \frac{k-1}{2} + \sqrt{\frac{k-1}{2}\ln{\frac{2}{\delta^*}}}$.
+$$= P( \exists \; v \in S: |N_{G_n}(v) \land S| > \varepsilon) $$
+$$= P(\bigcup_{v \in S} |N_{G_n}(v) \land S| > \varepsilon)$$
+$$\leq \sum_{v \in S} P(|N_{G_n}(v) \land S| > \varepsilon)$$
+Sappiamo che $|N_{G_n}(v) \land S| \leq \varepsilon$  con probabilità $1-\delta^*$, quindi $|N_{G_n}(v) \land S| > \varepsilon$ con probabilità $1 - (1-\delta^*) = \delta^*$. Siccome la sommatoria ha $k$ elementi scriviamo
+
+$$\leq k \delta^*$$
+vogliamo rendere questa probabilità minore di $\frac{\delta'}{2}$, ovvero
+
+$$k \delta^* \leq \frac{\delta'}{2}$$
+Quindi
+
+$$\delta^* \leq \frac{\delta'}{2k}$$
+Questo vuol dire che con probabilità $1-\frac{\delta'}{2}$ vale che 
+$$\max_{v \in S} |N_{G_n}(v) \land S| \leq \frac{k-1}{2} + \sqrt{\frac{k-1}{2}\ln{\frac{2k}{\delta'}}}$$
+Notiamo che quanto valga $\delta'$ non ci interessa, quello ci serve è la relazione tra l'argomento del logaritmo e la probabilità. Quindi, possiamo porre $\delta' = \delta$, dato che non ha alcun significato numerico, e non perdere alcuna informazione. Per arrivare ad avere una clique completa, dovrò aggiungere, almeno
+
+$$\frac{k-1}{2} -  \sqrt{\frac{k-1}{2}\ln{\frac{2k}{\delta'}}}$$
+infatti 
+
+$$\frac{k-1}{2} + \sqrt{\frac{k-1}{2}\ln{\frac{2k}{\delta'}}} -  \sqrt{\frac{k-1}{2}\ln{\frac{2k}{\delta'}}} = \frac{k-1}{2}$$
+che è il numero di vicini per ogni vertice all'interno di una clique. Quindi il vertice $v \in S$ con il minimo numero di vicini in $G$ ha almeno i vertici che ha ottenuto randomicamente in $G_n$, più tutti quelli che servono a completare la clique.
+
+\begin{multline*}
+\min_{v \in S} d_G(v) \geq \frac{n-1}{2} - \sqrt{\frac{n-1}{2} \ln{\frac{2}{\delta}}} \\+ \frac{k-1}{2} -  \sqrt{\frac{k-1}{2}\ln{\frac{2k}{\delta}}}
+\end{multline*}
+siccome $- \sqrt{\frac{n-1}{2} \ln{\frac{2}{\delta}}} \geq - \sqrt{\frac{k-1}{2}\ln{\frac{2k}{\delta}}}$ possiamo scrivere 
+
+$$\geq \frac{n-1}{2} + \frac{k-1}{2} - 2\sqrt{\frac{n-1}{2} \ln{\frac{2}{\delta}}}$$
+con probabilità $1- \delta$ \begin{comment}
+    perché è $1-\delta$ ???? lui dice che è perché considero entrambe le parti, e ogni parte è $1-\frac{\delta}{2}$ ma allora dovrebbe essere $(1-\frac{\delta}{2})^2$ no?
+\end{comment} 
+e $n \geq k$.
+Ricordando che non abbiamo aggiunto archi a vertici non in $S$ possiamo affermare
+$$\max_{v \in V\backslash S} d_G(v) \leq \frac{n-1}{2} + \sqrt{\frac{n-1}{2} \ln{\frac{n}{\delta}}}$$
+Supponiamo di prendere 
+
+$$\frac{k-1}{2} \geq 4 \sqrt{\frac{n-1}{2} \ln{\frac{n}{\delta}}}$$
+che vuol dire che $k = \Omega(\sqrt{n\log{n}})$. Allora, a parte un piccolo fattore $2$, possiamo dire che
+
+$$\min_{v \in S} d_G(v) \geq \frac{n-1}{2} + 2  \sqrt{\frac{n-1}{2}\ln{\frac{n}{\delta}}}$$
+Notiamo che, il vertice $v$ con il grado minore tra quelli in $S$ ha un grado che è maggiore del vertice con il grado maggiore tra quelli non in $S$. Quindi l'algoritmo ha un'alta probabilità di trovare la clique considerando per i primi i vertici con grado maggiore.
+
+
+\disegna{
+    \node[] (A) at (-3.5,0){};
+    \node[] (B) at (5,0){};
+    \node[] (C) at (-2,0.30){$2\log_2n$};
+    \node[] (D) at (0,0.30){$\theta (\log n)$};
+    \node[] (E) at (2,0.30) {$?$};
+    \node[] (E) at (4,0.30) {$\Omega(\sqrt{n\log{n}})$};
+    \node[] at (-1,-1.5) {$?$};
+    \node[] at (1,-1.5) {$?$};
+    \draw[->] (A) -- (B);
+    \draw[] (-2,0) -- (-2,-3);
+    \draw[] (0,0) -- (0,-3);
+    \draw[dashed] (2,0) -- (2,-3);
+    \draw[] (4,0) -- (4,-3);
+    \node[] at (5,-1.5) {\checkmark};
+    \node[] at (3,-1.5) {$?$};
+
+    \draw[] (-3.3,-1) -- (-2,0);
+    \draw[] (-3.2,-2) -- (-2,-1);
+    \draw[] (-3.1,-3) -- (-2,-2);
+}
+
+\noindent
+Ci interessa ora capire cosa succeda tra $\theta(\log{n})$ e $\Omega(\sqrt{n\log{n}})$.
+Consideriamo il caso $k = \Omega(\sqrt{n})$ e cerchiamo un algoritmo efficiente. E' ovvio che il caso di prima non funzioni, quindi usiamo tecniche spettrali. 
+Definiamo la matrice $J_n$ di dimensioni $n \times n$ come 
+\[
+J_n = 1^T 1 = \begin{bmatrix}
+        1 & \dots & 1\\ 
+        \vdots & \ddots & \vdots \\
+        1 & \dots & 1
+\end{bmatrix} 
+\]
+Data $M$ simmetrica definiamo $\lambda_{max}(M)$ come l'autovalore massimo. Notiamo che 
+
+$$1^T M 1 = \sum_{i,j} M_{ij}$$
+Enunciamo un lemma che non dimostriamo.
+\clearpage
+
+\begin{lemma}
+    Sia $G_n \sim \mathcal{G}(n,\frac{1}{2})$ con matrice di adiacenza $A_n$. Allora $$\lambda_{max}(A- \frac{1}{2}J_n) \leq 2 \sqrt{n} $$
+    con alta probabilità.
+\end{lemma}
+
+\noindent
+La matrice $- \frac{1}{2}J_n$ è tale che 
+\[
+\begin{bmatrix}
+        -\frac{1}{2} & \dots & -\frac{1}{2}\\ 
+        \vdots & \ddots & \vdots \\
+        -\frac{1}{2} & \dots & -\frac{1}{2}
+\end{bmatrix} 
+\]
+La matrice $A$ avrà su ogni riga circa $\frac{n-1}{2}$ uni, perché è il grado medio dei nodi in $G_n$. Ci saranno, quindi, alcuni zeri, che diventeranno $-\frac{1}{2}$, e ci saranno alcuni uni che diventeranno $\frac{1}{2}$. La matrice $(A- \frac{1}{2}J_n)$ sarà formata da $\frac{1}{2}$ e $-\frac{1}{2}$. Se la matrice fossero tutti $\frac{1}{2}$ (la diagonale sarebbe $-\frac{1}{2}$ perché sono degli zeri in $A$, ma non ha alcuna importanza) e la moltiplicassimo per il vettore di tutti $1$ otteniamo
+
+\[
+\begin{bmatrix}
+        \frac{1}{2} & \dots & \frac{1}{2}\\ 
+        \vdots & \ddots & \vdots \\
+        \frac{1}{2} & \dots & \frac{1}{2}
+\end{bmatrix} 
+\begin{bmatrix}
+    1 \\
+    \vdots \\
+    1
+\end{bmatrix} = 
+\begin{bmatrix}
+    \frac{n}{2} \\
+    \vdots \\
+    \frac{n}{2}
+\end{bmatrix}
+\]
+E' abbastanza evidente che $\lambda_{max} = \frac{n}{2}$, e cioè sarebbe una clique l'intero grafo.
 
 
 \end{document}
