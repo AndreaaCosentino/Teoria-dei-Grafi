@@ -1,5 +1,5 @@
 \documentclass[12pt]{report}
-\usepackage{mioStile}
+\usepackage{stileNormale}
 
 \pgfplotsset{compat = 1.18}
 
@@ -7,29 +7,14 @@
 \author{Andrea Cosentino}
 \sectionfont{\fontsize{12}{15}\selectfont}
 \date{\today}
-
 \begin{document}
 
-% background
- \begin{figure}
- \centering
- \begin{tikzpicture}[overlay,scale=2.5]
-% \pgftransformcm{1}{0.1}{0.2}{1}{\pgfpoint{0cm}{0cm}}
-\pgftransformcm{-1}{-0.1}{-0.2}{-1}{\pgfpoint{0cm}{-3cm}}
- % draw the grid
- \draw[step=.3cm,black!10,line width=0.01cm] (-3.9,-3.9) grid (3.9,3.9);
- \foreach \x in {-3.9,-3.6,...,3.9}
-     \foreach \y in {-3.9,-3.6,...,3.9}
-         \filldraw[black!10] (\x,\y) circle (0.4pt);
- \end{tikzpicture}
- \end{figure}
 
 \maketitle
 
 \tableofcontents
 \setlength{\columnsep}{0.8cm}
 \setlength{\columnseprule}{0.2pt}
-\twocolumn
 
 \chapter{Prima lezione}
 \noindent
@@ -874,9 +859,8 @@ Notiamo infatti che i nodi in $U$ hanno almeno un arco con un nodo in $V\backsla
 
 \begin{defi}
     Il \textbf{numero di clique} è definito come 
-    \begin{multline*}
-        \omega(G) := \max\{k \in \mathbb{N} | \exists U \subseteq V,\\ G[U] \; \text{completo con} \; |U| = k\}
-    \end{multline*}
+    $$
+        \omega(G) := \max\{k \in \mathbb{N} | \exists U \subseteq V, G[U] \; \text{completo con} \; |U| = k\}$$
 \end{defi}
 
 \noindent 
@@ -1068,9 +1052,9 @@ $$\chi(G) \leq \frac{1}{2}  + \sqrt{2 |E| + \frac{1}{4}}$$
     $$\frac{1}{2} \pm \frac{2\sqrt{(\frac{1}{4} + 2|E|)}}{2} =  \frac{1}{2} \pm \sqrt{(\frac{1}{4} + 2|E|)}$$
     Quindi 
 
-    \begin{multline*}
-            \frac{1}{2} - \sqrt{(\frac{1}{4} + 2|E|)} \leq \chi(G) \\ \leq \frac{1}{2} + \sqrt{(\frac{1}{4} + 2|E|)}
-    \end{multline*}
+    $$
+            \frac{1}{2} - \sqrt{(\frac{1}{4} + 2|E|)} \leq \chi(G)  \leq \frac{1}{2} + \sqrt{(\frac{1}{4} + 2|E|)}$$
+   
     Abbiamo dimostrato il teorema.
 \end{dimo}
 
@@ -1096,7 +1080,7 @@ Se $G$ è una cricca o un ciclo di lunghezza dispari allora è un'uguaglianza.
 \begin{fatto}
     Vale che 
 
-    $\forall G  \; \chi(G) \cdot \alpha(G) \geq |V|$
+    $$\forall G  \; \chi(G) \cdot \alpha(G) \geq |V|$$
 \end{fatto}
 
 \begin{dimo}
@@ -1112,7 +1096,7 @@ Se $G$ è una cricca o un ciclo di lunghezza dispari allora è un'uguaglianza.
 \chapter{Quinta lezione}
 
 \noindent
-Terminiamo la lezione precedente enu\\nciando un fatto:
+Terminiamo la lezione precedente enunciando un fatto:
 
 \begin{fatto}
     Vale quanto segue 
@@ -1132,28 +1116,28 @@ Intuitivamente possiamo pensare
 
 \vspace{5px}
 
-\trimbox{1cm 0cm 0cm 0cm}{
+\begin{center}
 \begin{tikzpicture}[domain=0:2]
            \begin{axis} [xlabel = x, ylabel = y, axis lines=center, ymin = -1,  yticklabel=\empty, xticklabel = \empty, clip = false]            \addplot[color=white,samples=100,smooth,ultra thick] {(2*x-1)^2 + 1 };
-           \addplot[color = white] coordinates {(0.5,0)} node[below] (A) {$x$};
-           \addplot[color = white] coordinates {(1.5,0)} node[below] (B) {$y$};
-           \addplot[color = white,dashed] coordinates{(0.5,0) (0.5,1)};
-           \addplot[color = white,dashed] coordinates{(1.5,0) (1.5,5)};
-           \addplot[color = white] coordinates {(1,0)} node[below] (C) {$\frac{x+y}{2}$};
-           \addplot[color = white,dashed] coordinates{(1,0) (1,2)};
-           \addplot[color = white] coordinates {(0,1)} node[left] {$f(x)$};
-            \addplot[color = white,dashed] coordinates{(0,1) (0.5,1)};
-            \addplot[color = white] coordinates {(0,2)} node[above left] {$f(\frac{x+y}{2})$};
-            \addplot[color = white,dashed] coordinates{(0,2) (1,2)};
-             \addplot[color = white] coordinates {(0,5)} node[ left] {$f(y)$};
-            \addplot[color = white,dashed] coordinates{(0,5) (1.5,5)};
+           \addplot[color = black] coordinates {(0.5,0)} node[below] (A) {$x$};
+           \addplot[color = black] coordinates {(1.5,0)} node[below] (B) {$y$};
+           \addplot[color = black,dashed] coordinates{(0.5,0) (0.5,1)};
+           \addplot[color = black,dashed] coordinates{(1.5,0) (1.5,5)};
+           \addplot[color = black] coordinates {(1,0)} node[below] (C) {$\frac{x+y}{2}$};
+           \addplot[color = black,dashed] coordinates{(1,0) (1,2)};
+           \addplot[color = black] coordinates {(0,1)} node[left] {$f(x)$};
+            \addplot[color = black,dashed] coordinates{(0,1) (0.5,1)};
+            \addplot[color = black] coordinates {(0,2)} node[above left] {$f(\frac{x+y}{2})$};
+            \addplot[color = black,dashed] coordinates{(0,2) (1,2)};
+             \addplot[color = black] coordinates {(0,5)} node[ left] {$f(y)$};
+            \addplot[color = black,dashed] coordinates{(0,5) (1.5,5)};
 
             \addplot[color = red] coordinates {(0,3)} node[above right] {$\frac{f(x) + f(y)}{2}$};
             \addplot[color = red] coordinates{(0.5,1) (1.5,5)};
             \addplot[color = red] coordinates{(0,3) (1,3)};
             \end{axis}
 \end{tikzpicture}
-}
+\end{center}
 
 \vspace{5px}
 \noindent 
@@ -1181,6 +1165,7 @@ I nodi $v_i$ che scegliamo formano un insieme indipendente. Infatti non può esi
 
 \vspace{5px}
 
+\begin{center}
 \begin{tikzpicture}
     \node[squarednode,minimum width=5cm](A3)[]{};
     \node[nodo, color = red] (v) at (-1,0){};
@@ -1206,6 +1191,7 @@ I nodi $v_i$ che scegliamo formano un insieme indipendente. Infatti non può esi
     \draw[color = red, very thick] (X1) -- (X2);
     \draw[color = red, very thick] (Y1) -- (Y2);
 \end{tikzpicture}
+\end{center}
 
 \noindent 
 Se tra $v_i$ e $v_j$ esistesse un arco, allora scegliendo $v_i$ avremmo eliminato $v_j$ (o viceversa), e quindi non avremmo potuto sceglierlo successivamente. 
@@ -1285,9 +1271,9 @@ Presentiamo il seguente fatto:
 \begin{defi}
     Il \textbf{numero di dominazione} è 
 
-    \begin{multline*}
-    \gamma(G):= \min\{k \in \mathbb{N} | \exists U \subseteq V\\ \; \text{dominante}, |V| = k\} 
-    \end{multline*}
+    $$
+    \gamma(G):= \min\{k \in \mathbb{N} | \exists U \subseteq V \; \text{dominante}, |V| = k\} 
+    $$
 \end{defi}
 \noindent 
 Dove un \textbf{insieme di dominazione} è $U \subseteq V$ tale che ogni vertice in $V \backslash U$ ha un unico vicino in $U$. Un vertice domina se stesso.
@@ -1376,15 +1362,15 @@ Applichiamo la nota disequazione
 $$1-x \leq e^{-x} \; \forall x \in \mathbb{R}$$
 
 
-\trimbox{1.75cm 0cm 0cm -0.5cm}{
+\begin{center}
 \begin{tikzpicture}[domain=-1:2]
            \begin{axis} [xlabel = x, ylabel = y, axis lines=center, ymin = -1,xmax = 2.5, ymax = 3,  yticklabel=\empty, xticklabel = \empty, clip = false]           
-           \addplot[color=yellow,samples=100,smooth, thick] {1-x}node[below left, pos = 0.1]{$1-x$};
+           \addplot[color=blue,samples=100,smooth, thick] {1-x}node[below left, pos = 0.1]{$1-x$};
            \addplot[color=purple,samples=100,smooth, thick] {e^(-x)}node[above right, pos = 0.1]{$e^{-x}$};
 
             \end{axis}
 \end{tikzpicture}
-}
+\end{center}
 
 
 $$n(1-\frac{1 +\delta(G)}{n})^m $$
@@ -1488,9 +1474,9 @@ Questa disuguaglianza è detta \textbf{disuguaglianza di Markov}. La dimostrazio
 
         
         $$P(\alpha(G) > k )$$
-        \begin{multline*}
-            = P(\exists U \subseteq V \; \text{t.c.} \;  |U| = k,\\\; \text{indipendente in }\; G)
-        \end{multline*}
+        $$
+            = P(\exists U \subseteq V \; \text{t.c.} \;  |U| = k,\; \text{indipendente in }\; G)$$
+    
 
         $$= P(\bigcup_{\substack{U \subseteq V \\ |U| = k}} \{\text{U è indipendente in G}\}) $$
 
@@ -1556,9 +1542,11 @@ Prima di dimostrare il teorema introduciamo un lemma utile alla sua dimostrazion
     $$= \frac{n (n-1) \dots (n-k+1)}{2k} p^k$$
 \end{dimo}
 
+
+
 \chapter{Ottava lezione}
 
-\noindent
+\noindent 
 Dimostriamo ora il teorema di Erd\H{o}s.
 
 \begin{dimo}
@@ -1650,9 +1638,10 @@ Cioè se il grafo $G_n$ ha la proprietà $\omega(G_n) \leq f(n)$ con $n$ molto g
     Dato $p_n = \frac{1}{2}$ e $\pi_n(G_n) = \mathds{I}\{\omega(G_n) = 2\log_2{n}\}$ (stesso discorso può essere fatto per $\pi_n(G_n) = \mathds{I}\{\alpha(G_n) = 2\log_2{n}\}$). Vediamo cosa succedere con il crescere di $n$.
     
 
+\begin{center}
 \begin{tikzpicture}[domain=-1:2]
            \begin{axis} [xlabel = x, ylabel = y, axis lines=center, ymin = -0.1,xmax = 2, ymax = 3,  yticklabel=\empty, xticklabel = \empty, clip = false]           
-           \addplot[color=yellow,samples=100,smooth, thick] {gauss(1,0.3)}node[] at (1,-0.3){$2\log_2{n}$};
+           \addplot[color=purple,samples=100,smooth, thick] {gauss(1,0.3)}node[] at (1,-0.3){$2\log_2{n}$};
            \addplot[color = white,dashed] coordinates{(1,0) (1,1.3)} node[] at (-0.65,2.5){$n = 1000$};
 
             \end{axis}   
@@ -1660,24 +1649,26 @@ Cioè se il grafo $G_n$ ha la proprietà $\omega(G_n) \leq f(n)$ con $n$ molto g
 \end{tikzpicture}
 
 
-\trimbox{-0.2cm 0cm 0cm 0.75cm}{
+
+\trimbox{-0.625cm 0cm 0cm 0.75cm}{
 \begin{tikzpicture}[domain=-1:2]
            \begin{axis} [xlabel = x, ylabel = y, axis lines=center, ymin = -1,xmax = 2.5, ymax = 3,  yticklabel=\empty, xticklabel = \empty, clip = false]           
-           \addplot[color=yellow,samples=100,smooth, thick] {gauss(1,0.18)}node[] at (1,-0.3){$2\log_2{n}$};
+           \addplot[color=purple,samples=100,smooth, thick] {gauss(1,0.18)}node[] at (1,-0.3){$2\log_2{n}$};
            \addplot[color = white,dashed] coordinates{(1,0) (1,2.2)} node[] at (-0.65,2.5){$n = 10^6$};
 
             \end{axis}    
 \end{tikzpicture}
 }
 
-\trimbox{1cm 0cm 0cm 0cm}{
+\trimbox{-0.625cm 0cm 0cm 0cm}{
 \begin{tikzpicture}[domain=-1:2]
            \begin{axis} [xlabel = x, ylabel = y, axis lines=center, ymin = -1,xmax = 2.5,xmin = -1, ymax = 3,  yticklabel=\empty, xticklabel = \empty, clip = false]           
-           \addplot[color = yellow,thick] coordinates{(1,0) (1,2.2)} node[color = white] at (-0.65,2.5){$n \rightarrow \infty$} node[] at (1,-0.3){$2\log_2{n}$};
+           \addplot[color = purple,thick] coordinates{(1,0) (1,2.2)} node[color = white] at (-0.65,2.5){$n \rightarrow \infty$} node[] at (1,-0.3){$2\log_2{n}$};
 
             \end{axis}    
 \end{tikzpicture}
 }
+\end{center}
 \end{exmp}
 
 \noindent
@@ -1837,9 +1828,9 @@ Per rispondere a questa domanda utilizzeremo l'algebra lineare applicata ai graf
 \noindent 
 Consideriamo matrici $M \in \mathbb{R}^{n \times n}$, ovvero matrici quadrate a coefficienti lineari. Se 
 
-\begin{multline*}
-\exists \lambda \in \mathbb{R}, u \in R^n\backslash \{0\} \rightarrow \\ u \neq (0,\dots,0) \; \text{t.c.} \; Mu = \lambda u
-\end{multline*}
+$$
+\exists \lambda \in \mathbb{R}, u \in R^n\backslash \{0\} \rightarrow u \neq (0,\dots,0) \; \text{t.c.} \; Mu = \lambda u$$
+
 $u$ viene chiamato \textbf{autovettore} di $M$ con \textbf{autovalore} $\lambda$. Possiamo assumere che tutti i vettori $u$ abbiano norma $1$. Infatti, se $||u|| \neq 1$ dividiamo ambo i lati per $||u||$
 
 $$M \frac{u}{||u||} = \lambda \frac{u}{||u||}$$
@@ -1883,7 +1874,7 @@ Introduciamo un teorema importante che utilizzeremo estensivamente.
 \end{teo}
 
 \begin{dimo}
-    Dimostrazione \\per induzione.
+    Dimostrazione per induzione.
 
     \noindent 
     \textbf{CASO BASE}: Se $n=1$, allora $M \in \mathbb{R}^{1 \times 1} \equiv \mathbb{R}$ e $\forall x \in \mathbb{R} \backslash \{0\}$ è un autovettore con autovalore $M$ perché $Mx = Mx$. % non è chiaro come autovettori di dimensione 1 siano ortogonali tra loro
@@ -1892,9 +1883,8 @@ Introduciamo un teorema importante che utilizzeremo estensivamente.
     \noindent
      \textbf{IPOTESI INDUTTIVA}: Il teorema vale per $n-1$. Per il primo fatto che abbiamo dimostrato in questa lezione vale 
 
-    \begin{multline*}
-            \exists \lambda_n \in \mathbb{R}, \exists x_n \in R^{n}\; \text{t.c.}\; \\ Mx_n = \lambda_n x_n, \; x_n \neq (0,\dots,0)
-    \end{multline*}
+    $$
+            \exists \lambda_n \in \mathbb{R}, \exists x_n \in R^{n}\; \text{t.c.}\;  Mx_n = \lambda_n x_n, \; x_n \neq (0,\dots,0)$$
 
     \begin{claim}
         Per $y \in \mathbb{R}^n \backslash \{0\}$ vale che $y^T x_n = 0 \rightarrow (My)^Tx_n = 0$. Infatti 
@@ -1991,25 +1981,26 @@ Senza perdita di generalità possiamo assumere che il vettore $u$ abbia norma $1
     Andiamo a vedere cosa vuol dire a livello geometrico, per ovvi motivi $n = 2$. Inizialmente la situazione è
 
 
-\trimbox{1.25cm 0cm 0cm 0cm}{
+\begin{center}
 \begin{tikzpicture}[domain=-1:1]
            \begin{axis} [xlabel = x, ylabel = y, axis lines=center, ymin = -1,xmin = -1, xmax = 1,ymax = 1,yticklabel=\empty, xticklabel = \empty, clip = false]             
-            \addplot[color=yellow,samples=100,smooth,domain=0:0.225] {x} node[ above right, pos = 0.8]{$U: ||U|| = 1$};
+            \addplot[color=blue,samples=100,smooth,domain=0:0.225] {x} node[ above right, pos = 0.8]{$U: ||U|| = 1$};
             \node[circle,draw,minimum width = 2cm] at (0,0){};
             \end{axis}
 \end{tikzpicture}
-}
+\end{center}
+
 Se applichiamo a $u$ la trasformazione $u^TM$ otteniamo
 
-\trimbox{1.25cm 0cm 0cm 0cm}{
+\begin{center}
 \begin{tikzpicture}[domain=-1:1]
            \begin{axis} [xlabel = x, ylabel = y, axis lines=center, ymin = -1,xmin = -1, xmax = 1,ymax = 1,yticklabel=\empty, xticklabel = \empty, clip = false]             
-            \addplot[color=yellow,samples=100,smooth,domain=0:-0.25] {x} node[ below right, pos = 1]{$\lambda_1$};
-            \addplot[color=yellow,samples=100,smooth,domain=0:-0.3875] {-x} node[ above right, pos = 1]{$\lambda_2$};
+            \addplot[color=blue,samples=100,smooth,domain=0:-0.25] {x} node[ below right, pos = 1]{$\lambda_1$};
+            \addplot[color=blue,samples=100,smooth,domain=0:-0.3875] {-x} node[ above right, pos = 1]{$\lambda_2$};
             \draw[rotate around = {-20:(0,0)}] (0,0) ellipse (2cm and 1cm);
             \end{axis}
 \end{tikzpicture}
-}
+\end{center}
 
 \noindent
 La lunghezza degli assi dell'ellisse corrisponde al valore degli autovalori. L'asse più corto è $\lambda_1$, il più lungo è $\lambda_2$. La rappresentazione geometrica riesce a catturare lo spettro della matrice. Sappiamo che $\lambda_1$ è il minimo degli autovalori, vediamo ora che $\lambda_n$ (nell'esempio a $2$ dimensioni $\lambda_2$) è il maggiore.
@@ -2202,8 +2193,7 @@ Siccome $xpn$ non è simmetrica definiamo una simmetrizzazione, detta \textbf{co
 \begin{defi}
     La \textbf{conduttanza} è definita come 
 
-    $$\phi(S) = \max{\{xpn(S),xpn(\neg S)\}}$$
-    $$ = \frac{|E(S,\neg S)}{d \cdot \min{ \{|S|, |\neg S| \}}}$$
+    $$\phi(S) = \max{\{xpn(S),xpn(\neg S)\}} = \frac{|E(S,\neg S)}{d \cdot \min{ \{|S|, |\neg S| \}}}$$
 \end{defi}
 
 \noindent 
@@ -2215,10 +2205,10 @@ Che relazione c'è tra la conduttanza e la sparsità? Cominciamo con il dire che
 $$\frac{1}{n} \min{\{|S|,|\neg S|\}} = \min{\{\frac{|S|}{n},\frac{|\neg S|}{n}\}}$$
 Inoltre, data la partizione $S,\neg S$ per definizione sono tali che $|S| + |\neg S| = n$. Poniamo $\frac{|S|}{n} = \alpha$ e $\frac{|\neg S |}{n} = 1 - \alpha$. Sicuramente $\alpha$ è tale che $0 \leq \alpha \leq 1$. Vale la seguente disuguaglianza
 
-$$\color{blue} \alpha(1-\alpha) \color{white} \leq \color{green}  \min{\{\alpha,1-\alpha\}} \color{white} \leq \color{red} 2 \alpha(1- \alpha)$$
+$$\color{blue} \alpha(1-\alpha) \color{black} \leq \color{green}  \min{\{\alpha,1-\alpha\}} \color{black} \leq \color{red} 2 \alpha(1- \alpha)$$
 
 
-\trimbox{1.5cm 0cm 0cm 0cm}{
+\begin{center}
 \begin{tikzpicture}[domain=0:1]
            \begin{axis} [ axis lines=center, ymin = -0.25,  yticklabel=\empty, xticklabel = \empty, clip = false]
             
@@ -2227,28 +2217,26 @@ $$\color{blue} \alpha(1-\alpha) \color{white} \leq \color{green}  \min{\{\alpha,
            \addplot[color=green,samples=100,smooth,ultra thick,domain=0:0.5] {x};
            \addplot[color=green,samples=100,smooth,ultra thick,domain=0.5:1] {-x + 1};
         
-           \addplot[color = white] coordinates {(1,0)} node[below] {$1$};
+           \addplot[color = black] coordinates {(1,0)} node[below] {$1$};
 
-            \addplot[color = white] coordinates {(0,0.5)} node[left] {$\frac{1}{2}$};
-            \addplot[color = white,dashed] coordinates{(0,0.5) (0.5,0.5)};
-            \addplot[color = white,dashed] coordinates{(0,0.25) (0.5,0.25)};
-            \addplot[color = white] coordinates {(0,0.25)} node[left] {$\frac{1}{4}$};
+            \addplot[color = black] coordinates {(0,0.5)} node[left] {$\frac{1}{2}$};
+            \addplot[color = black,dashed] coordinates{(0,0.5) (0.5,0.5)};
+            \addplot[color = black,dashed] coordinates{(0,0.25) (0.5,0.25)};
+            \addplot[color = black] coordinates {(0,0.25)} node[left] {$\frac{1}{4}$};
         
             \end{axis}
 \end{tikzpicture}
-}
+\end{center}
 \begin{enumerate}
 \item La parabola più esterna rappresenta $2\alpha(1 - \alpha)$
 \item La parabola più interna rappresenta $\alpha(1-\alpha)$
-\item In mezzo tra le due \\ $\min{\{\alpha,1-\alpha\}}$ 
+\item In mezzo tra le due $\min{\{\alpha,1-\alpha\}}$ 
 \end{enumerate}
 
 \noindent 
 Quindi  
 
-$$\frac{|S| |\neg S|}{n} \leq \min{\{\frac{|S|}{n},\frac{|\neg S|}{n}\}}$$
-
-$$\leq 2 \frac{|S| |\neg S|}{n}$$
+$$\frac{|S| |\neg S|}{n} \leq \min{\{\frac{|S|}{n},\frac{|\neg S|}{n}\}} \leq 2 \frac{|S| |\neg S|}{n}$$
 Ricaviamo che 
 
 $$\phi(S) \leq \frac{n}{d} \sigma(S) \leq 2 \phi(S)$$
@@ -2280,6 +2268,7 @@ $$= \frac{1}{d} \sum_{j: (i,j) \in E} (x_i^2 + x_j^2 - 2x_i x_j)$$
 
 $$= \frac{1}{d} \sum_{j: (i,j) \in E} (x_i - x_j)^2$$
 Che è sempre non negativo.  Questo vuol dire che la matrice laplaciana è positiva semidefinita.
+
 
 \chapter{Undicesima lezione}
 
@@ -2348,9 +2337,7 @@ Quindi $\mathds{1}^T L \mathds{1} = 0$. Quindi $\lambda_1 = 0$ dato che $0$ è i
 Ogni altro autovettore $U$ è tale che $$U^T \frac{\mathds{1}}{n} = 0 \leftrightarrow U^T \mathds{1} = 0 \leftrightarrow \sum_{i = 1}^n u_i = 0$$
 Concentriamoci sul secondo autovalore, $\lambda_2$. Vale che 
 
-$$\lambda_2 = \min_{\substack{U \in \mathbf{R}^n \backslash \{0\} \\ U^T \perp \mathds{1} = 0 }} \frac{U^T L U}{U^T U}$$
-
-$$= \min_{\substack{U \in \mathbf{R}^n \backslash \{0\} \\ U^T \perp \mathds{1} = 0 }} \frac{\sum_{(i,j) \in E} (u_i - u_j)^2}{d \sum_{i \in V} u_i^2}$$
+$$\lambda_2 = \min_{\substack{U \in \mathbf{R}^n \backslash \{0\} \\ U^T \perp \mathds{1} = 0 }} \frac{U^T L U}{U^T U} = \min_{\substack{U \in \mathbf{R}^n \backslash \{0\} \\ U^T \perp \mathds{1} = 0 }} \frac{\sum_{(i,j) \in E} (u_i - u_j)^2}{d \sum_{i \in V} u_i^2}$$
 Se $G$ ha due componenti connesse
 
 \disegna{
@@ -2391,9 +2378,7 @@ sommiamo e sottraiamo $d \sum_i u_i^2$
 $$= \max \frac{1}{d \sum u_i^2} (2d \sum_i u_i^2 - (d \sum_i u_i^2 +  \sum_{(i,j) \in E} (2u_iu_j
 )) $$
 
-$$= \max 2  - \frac{\sum_{(i,j) \in E} (u_i + u_j)^2}{d \sum_i u_i^2} $$
-
-$$= 2 - \min \frac{\sum_{(i,j) \in E} (u_i + u_j)^2}{d \sum_i u_i^2} $$
+$$= \max 2  - \frac{\sum_{(i,j) \in E} (u_i + u_j)^2}{d \sum_i u_i^2} = 2 - \min \frac{\sum_{(i,j) \in E} (u_i + u_j)^2}{d \sum_i u_i^2} $$
 Quindi $0 \leq \lambda_n \leq 2$. Notiamo che $\lambda_n$ vale $2$ nel caso in cui nel grafo sia presente una componente bipartita. 
 \disegna{
     \node[cloud,draw,minimum width = 2.5cm,
@@ -2432,6 +2417,8 @@ Come si lega la sparsità, o la conduttanza, allo spettro?
 
     $$\frac{\lambda_2}{2} \leq \phi(G) \leq \sqrt{2 \lambda_}$$
 \end{defi}
+
+\noindent
 La disuguaglianza di Cheeger può essere anche scritta come
 
 $$\frac{2 \lambda_2}{2n} \leq \sigma(G) \leq \frac{2d}{n} \sqrt{2\lambda_2}$$
@@ -2458,18 +2445,14 @@ Sia $\forall S \subseteq V, \; U \in \{0,1\}^n$ tale che $u_i = 1 \leftrightarro
 $$|E(S,\neq S)| = \sum_{(i,j) \in E}(u_i-u_j)^2$$
 e sapendo che $u_i = u_i^2$ (dato che $1^2 = 1$ e $0^2 = 0$) possiamo dire
 
-$$|S| |\neg S| = (\sum_i u_i^2) (n-\sum_i u_i^2)$$
-
-$$= n \sum_i u_i^2 - \sum_{i,j} u_i u_j$$
+$$|S| |\neg S| = (\sum_i u_i^2) (n-\sum_i u_i^2) = n \sum_i u_i^2 - \sum_{i,j} u_i u_j$$
 In una dimostrazione precedente avevamo trovato che 
 $\sum_i \sum_j (u_i - u_j)^2 = 2n \sum_i u_i^2 - 2(\sum_i u_i)^2$. Il lato destro è esattamente quello che abbiamo noi moltiplicato per un fattore $2$, quindi
 
 $$= \frac{1}{2} \sum_{i,j} (u_i - u_j)^2$$
 Allora 
 
-$$\sigma(G) = \min_{(S,\neg S)\; cut} \frac{|E(S,\neg S)|}{|S| |\neg S|}$$
-
-$$= \min_{\substack{U \in \mathbb{R}^n \backslash \{0, \mathds{1}\}}} \frac{\sum_{(i,j) \in E} (u_i - u_j)^2}{\frac{d}{2n} \sum_{ij} (u_i-u_j)^2} \geq \frac{d}{n} \lambda_2$$
+$$\sigma(G) = \min_{(S,\neg S)\; cut} \frac{|E(S,\neg S)|}{|S| |\neg S|} = \min_{\substack{U \in \mathbb{R}^n \backslash \{0, \mathds{1}\}}} \frac{\sum_{(i,j) \in E} (u_i - u_j)^2}{\frac{d}{2n} \sum_{ij} (u_i-u_j)^2} \geq \frac{d}{n} \lambda_2$$
 Che implica che 
 
 $$\frac{d}{n} \lambda_2 \leq \sigma(G) \leq \frac{2d}{n} \phi(G)$$
@@ -2486,7 +2469,6 @@ $$\frac{\lambda_2}{2} \leq \phi(G)$$
 Dimostriamo l'altra parte della disequazione di Cheeger.
 
 $$\phi(G) \leq \sqrt{2 \lambda_2}$$
-
 Introduciamo il seguente algoritmo:
 
 \begin{algorithm}
@@ -2502,6 +2484,7 @@ Introduciamo il seguente algoritmo:
 \noindent 
 L'algoritmo di \textbf{Fiedler} ordina le componenti di $x$ e poi costruisce vari tagli, dividendo in due gruppi le componenti, e trova il migliore tra questi. L'ordinamento ha una complessità di $O(|V| \log |V|)$ mentre trovare il minimo taglio costa $O(|E|)$ perché dobbiamo passare tutta la lista, infatti inizialmente avremo il taglio $\{v_1\}$ e calcoleremo la relativa conduttanza, poi $\{v_1,v_2\}$ fino a $\{v_1,\dots,v_{n-1}\}$. 
 
+\noindent
 Fiedler trova un cut $(S_F,\neg S_F)$ tale che 
 
 $$\phi(S_f) \leq \sqrt{2 \lambda_2}$$
@@ -2557,27 +2540,24 @@ Per provare questo teorema abbiamo bisogno del seguente lemma.
 
         $$x = x^+ - x^- + m \mathds{1}$$
         infatti
-        \begin{multline*}
-           (0.5,0,2.5,0) - (0,3.5,0,0.5) =\\ = (0.5,-3.5,2.5,-0.5) 
-        \end{multline*}
-        \begin{multline*}
+        $$
+           (0.5,0,2.5,0) - (0,3.5,0,0.5) = (0.5,-3.5,2.5,-0.5) 
+        $$
+        $$
         (0.5,-3.5,2.5,-0.5) +
-        \\+ (2.5,2.5,2.5,2.5) = (3.5,-1,2.5,2)
-        \end{multline*}
+        + (2.5,2.5,2.5,2.5) = (3.5,-1,2.5,2)
+        $$
     \end{exmp}
     
     \noindent
     Notiamo che $x_v^+,x_v^- \geq 0 \; \forall v \in V$. 
     Per ogni $t > 0, t \leq \max_v y_v$
 
-    $$\{v \in V: x_v^+ \geq t\} $$
-    $$ \equiv \{v \in V: [x_v - m]_+ \geq t\}$$
+    $$\{v \in V: x_v^+ \geq t\} \equiv \{v \in V: [x_v - m]_+ \geq t\}$$
     Notiamo che siccome $t > 0$, sicuramente $x_v > m$, quindi $[x_v - m]_+ = x_v - m$.
     $$ \equiv \{v \in V: x_v \geq m + t\}$$
     La stessa cosa vale per $x^-$
-    $$\{v \in V: x_v^- \geq t\} $$
-    $$ \equiv \{v \in V: [m - x_v]_+ \geq t\}$$
-    $$ \equiv \{v \in V: x_v \leq  m - t\}$$
+    $$\{v \in V: x_v^- \geq t\} \equiv \{v \in V: [m - x_v]_+ \geq t\} \equiv \{v \in V: x_v \leq  m - t\}$$
     Ci rimane da dimostrare che $\exists y \geq 0 \; : \; R_L(y) \leq R_L(x)$. Poniamo
     $$y = argmin_{z \in \{x^-, x^+\}}R_L(z)$$
     e anche $x' = x - m\mathds{1} = x^+ - x^-$.
@@ -2597,9 +2577,7 @@ Per provare questo teorema abbiamo bisogno del seguente lemma.
 
     $$\leq \frac{\sum_{(i,j) \in E} ( (x_i^+ - x_j^+) - (x_i^- - x_j^-))^2}{d(||x^+||^2 + ||x^-||^2} $$
     dove il denominatore è uguale perché, dato che $(x^+)^T x^- = 0$ (sicché se $x_i^+ = 0$ allora $x_i^- > 0$ e viceversa) abbiamo che 
-    $$||x^+||^2 + ||x^-||^2$$
-    $$=  ||x^+||^2 + ||x^-||^2 - 2(x^+)^T x^- $$
-    $$= ||x^+ - x^-||^2 = ||x'||^2$$
+    $$||x^+||^2 + ||x^-||^2 =  ||x^+||^2 + ||x^-||^2 - 2(x^+)^T x^- = ||x^+ - x^-||^2 = ||x'||^2$$
     possiamo quindi concludere che 
 
     $$\frac{\sum_{(i,j) \in E} ( (x_i^+ - x_j^+) - (x_i^- - x_j^-))^2}{d(||x^+||^2 + ||x^-||^2}$$
@@ -2607,9 +2585,9 @@ Per provare questo teorema abbiamo bisogno del seguente lemma.
     $$= \frac{\sum_{(i,j) \in E} (x_i'-x_j')^2}{d ||x'||^2}$$
     Dimostriamo ora quel passaggio che abbiamo lasciato in sospeso, ovvero che  $\forall (i,j) \in E$ vale
 
-    \begin{multline*}
-        (x_i^+ - x_j^+)^2 + (x_i^- - x_j^-)^2 \leq \\ \leq ( (x_i^+ - x_j^+) - (x_i^- - x_j^-))^2
-    \end{multline*}
+    $$
+        (x_i^+ - x_j^+)^2 + (x_i^- - x_j^-)^2 \leq ( (x_i^+ - x_j^+) - (x_i^- - x_j^-))^2
+    $$
 
     \noindent
     Abbiamo due casi:
@@ -2620,9 +2598,7 @@ Per provare questo teorema abbiamo bisogno del seguente lemma.
         $$0 > x_i' = x_i^+ - x_i^- \leftrightarrow x_i^+ = 0$$
         $$0 < x_j' = x_j^+ - x_j^- \leftrightarrow x_j^- = 0$$
         Quindi
-        $$(x_i^+ - x_j^+)^2 + (x_i^- - x_j^-)^2$$
-        $$= (-x_j^+)^2 + (x_i^-)^2 $$
-        $$= (x_j^+)^2 + (- x_i^-)^2$$
+        $$(x_i^+ - x_j^+)^2 + (x_i^- - x_j^-)^2 (-x_j^+)^2 + (x_i^-)^2 = (x_j^+)^2 + (- x_i^-)^2$$
         ricordando che $x_j^+$ e $x_i^-$ hanno segno discorde:
         $$\leq (x_j^+ - x_i^-)^2$$
         
@@ -2671,9 +2647,7 @@ Concludiamo la dimostrazione della disuguaglianza $\phi(G) \leq \sqrt{2 \lambda_
 
     Analizziamo il denominatore
 
-    $$\va[|S_t|] = \va[\sum_{v \ in V} \mathds{I}\{v \in S_t\}]$$
-    $$= \sum_{v \in V} P(v \in S_t) = \sum_{v \in V} P(t \leq y_v)$$
-    $$= \sum_{v \in V} y_t^2$$
+    $$\va[|S_t|] = \va[\sum_{v \ in V} \mathds{I}\{v \in S_t\}]= \sum_{v \in V} P(v \in S_t) = \sum_{v \in V} P(t \leq y_v) = \sum_{v \in V} y_t^2$$
     Scegliamo qualsiasi $(i,j) \in E$ e assumiamo che $y_j \leq j_i$. Allora,
 
     $$P(i \in S_t, j \in \neg S_t) = P(y_j < t \leq y_i)$$
@@ -2737,17 +2711,16 @@ Concludiamo la dimostrazione della disuguaglianza $\phi(G) \leq \sqrt{2 \lambda_
     $$\sum_{(i,j) \in E} (y_i+y_j)^2 \leq 2 \sum_{(i,j) \in E} (y_i+y_j)^2 = 2d \sum_{v \in V} y_v^2$$
     quindi
 
-    \begin{multline*}
-        xpn(S_t) \leq \\ \frac{\sqrt{2d||Y||^2 \sum_{(i,j) \in E} (y_i-y_j)^2}}{d ||Y||^2}
-    \end{multline*}
+    $$
+        xpn(S_t) \leq  \frac{\sqrt{2d||Y||^2 \sum_{(i,j) \in E} (y_i-y_j)^2}}{d ||Y||^2}
+    $$
     portiamo tutto dentro radice
     $$= \sqrt{\frac{2 \sum_{(i,j) \in E} (y_i-y_j)^2}{d ||Y||^2}} = \sqrt{2 R_L(Y)}$$
     concludendo così la dimostrazione.
 \end{dimo}
+\noindent
 Possiamo terminare la dimostrazione del teorema.
-Per il lemma 
-
-$\exists Y \in \mathbb{R}_{\geq 0}^n \; S_t =\{v \in V : y_v \geq t\}$
+Per il lemma $\exists Y \in \mathbb{R}_{\geq 0}^n \; S_t =\{v \in V : y_v \geq t\}$
 possiamo quindi scrivere 
 $$\phi(S_f) = \min_t{\phi(S_t)}$$
 Ricordiamo che 
@@ -2757,9 +2730,7 @@ $$xpn(S) = \frac{|E(S,\neg S)|}{d |S|}$$
 ma $Y$, per costruzione, ha al più $\frac{n}{2}$ componenti non zero ($Y \in \{x^-, x^+\}$, ricordiamo che $Y$ lo avevamo definito come $Y = arg\min_{Z \in \{x^-, x^+\}} R_L(Z)$). Questo implica che $|S_t| \leq \frac{n}{2} \; \forall t$, invece $|\neg S_t| \geq \frac{n}{2}$. E' quindi ovvio che $min(|S_t|,|\neg S_t|) = |S_t|$, quindi $\phi(S_t) = xpn(S_t)$.
 
 
-$$\phi(S_f) = \min_t{\phi(S_t)} = \min_t xpn(S_t)$$
-
-$$\leq \sqrt{2 R_L(Y)}$$
+$$\phi(S_f) = \min_t{\phi(S_t)} = \min_t xpn(S_t) \leq \sqrt{2 R_L(Y)}$$
 per il lemma $R_L(Y) \leq R_L(X)$
 
 $$\leq \sqrt{2 R_L(X)}$$
@@ -2772,9 +2743,7 @@ $$\frac{\lambda_2}{2} \leq \phi(G) \leq \sqrt{2 \lambda_2}$$
 \section{Grafi non regolari}
 Analizziamo brevemente cosa succede se il grafo non è $d$-regolare. Guardiamo alla generalizzazione del coefficiente di Rayleigh $R_L$.
 
-$$R_L = \frac{\sum_{(i,j) \in E} (x_i - x_j)^2}{\sum_{v \in V} d(v) x_v^2}$$
-
-$$=  \frac{\sum_{(i,j) \in E} (x_i - x_j)^2}{\sum_{v \in V} (\sqrt{d(v)} x_v) (\sqrt{d(v)} x_v)}$$
+$$R_L = \frac{\sum_{(i,j) \in E} (x_i - x_j)^2}{\sum_{v \in V} d(v) x_v^2} =  \frac{\sum_{(i,j) \in E} (x_i - x_j)^2}{\sum_{v \in V} (\sqrt{d(v)} x_v) (\sqrt{d(v)} x_v)}$$
 Costruiamo la matrice diagonale $D$
 
 \[
@@ -2805,9 +2774,7 @@ stessa cosa vale per l'inversione
 Ricordiamoci che $$x^T L x = \frac{1}{d} \sum_{(i,j) \in E} (x_i - x_j)^2$$ possiamo ottenere un risultato simile nel caso generalizzato.
 Prendiamo $x^T L D x$, dove $L = I - \frac{A}{D}$ ,e analizziamo cosa succede.
 
-$$x^T L D x = x^T (I - \frac{A}{D}) D x$$
-
-$$= x^T (D - A) x = x^T D x - x^T A x$$
+$$x^T L D x = x^T (I - \frac{A}{D}) D x = x^T (D - A) x = x^T D x - x^T A x$$
 $$= \sum_i \sum_j x_i D_{ij} x_j - \sum_i \sum_j x_i A_{ij} x_j$$
 notiamo che $D_{ij} \neq 0$ solo quando $i = j$.
 $$= \sum_i x_i^2 D_{ii} + \sum_i \sum_j x_i A_{ij} x_j $$
@@ -2987,8 +2954,7 @@ Ci chiediamo, qual è il massimo valore che può assumere $|N_{G_n}(v) \land S|$
 
 $$P(\max_{v \in S} |N_{G_n}(v) \land S| \geq \varepsilon )$$
 dove $\varepsilon = \frac{k-1}{2} + \sqrt{\frac{k-1}{2}\ln{\frac{2}{\delta^*}}}$.
-$$= P( \exists \; v \in S: |N_{G_n}(v) \land S| > \varepsilon) $$
-$$= P(\bigcup_{v \in S} |N_{G_n}(v) \land S| > \varepsilon)$$
+$$= P( \exists \; v \in S: |N_{G_n}(v) \land S| > \varepsilon) = P(\bigcup_{v \in S} |N_{G_n}(v) \land S| > \varepsilon)$$
 $$\leq \sum_{v \in S} P(|N_{G_n}(v) \land S| > \varepsilon)$$
 Sappiamo che $|N_{G_n}(v) \land S| \leq \varepsilon$  con probabilità $1-\delta^*$, quindi $|N_{G_n}(v) \land S| > \varepsilon$ con probabilità $1 - (1-\delta^*) = \delta^*$. Siccome la sommatoria ha $k$ elementi scriviamo
 
@@ -3009,9 +2975,9 @@ infatti
 $$\frac{k-1}{2} + \sqrt{\frac{k-1}{2}\ln{\frac{2k}{\delta'}}} -  \sqrt{\frac{k-1}{2}\ln{\frac{2k}{\delta'}}} = \frac{k-1}{2}$$
 che è il numero di vicini per ogni vertice all'interno di una clique. Quindi il vertice $v \in S$ con il minimo numero di vicini in $G$ ha almeno i vertici che ha ottenuto randomicamente in $G_n$, più tutti quelli che servono a completare la clique.
 
-\begin{multline*}
-\min_{v \in S} d_G(v) \geq \frac{n-1}{2} - \sqrt{\frac{n-1}{2} \ln{\frac{2}{\delta}}} \\+ \frac{k-1}{2} -  \sqrt{\frac{k-1}{2}\ln{\frac{2k}{\delta}}}
-\end{multline*}
+$$
+\min_{v \in S} d_G(v) \geq \frac{n-1}{2} - \sqrt{\frac{n-1}{2} \ln{\frac{2}{\delta}}} + \frac{k-1}{2} -  \sqrt{\frac{k-1}{2}\ln{\frac{2k}{\delta}}}
+$$
 siccome $- \sqrt{\frac{n-1}{2} \ln{\frac{2}{\delta}}} \geq - \sqrt{\frac{k-1}{2}\ln{\frac{2k}{\delta}}}$ possiamo scrivere 
 
 $$\geq \frac{n-1}{2} + \frac{k-1}{2} - 2\sqrt{\frac{n-1}{2} \ln{\frac{2}{\delta}}}$$
@@ -3067,7 +3033,6 @@ Data $M$ simmetrica definiamo $\lambda_{max}(M)$ come l'autovalore massimo. Noti
 
 $$1^T M 1 = \sum_{i,j} M_{ij}$$
 Enunciamo un lemma che non dimostriamo.
-\clearpage
 
 \begin{lemma}
     Sia $G_n \sim \mathcal{G}(n,\frac{1}{2})$ con matrice di adiacenza $A_n$. Allora $$\lambda_{max}(A- \frac{1}{2}J_n) \leq 2 \sqrt{n} $$
@@ -3103,6 +3068,189 @@ La matrice $A$ avrà su ogni riga circa $\frac{n-1}{2}$ uni, perché è il grado
 \end{bmatrix}
 \]
 E' abbastanza evidente che $\lambda_{max} = \frac{n}{2}$, e cioè sarebbe una clique l'intero grafo.
+
+\chapter{Quindicesima lezione}
+
+\section{Caso $k = \Omega(\sqrt{n})$}
+
+\noindent
+Nella scorsa lezione abbiamo visto che dato un grafo $G_n \sim \mathcal{G}(n,\frac{1}{2})$, con $|V| = n$ e $S \subseteq V \; |S| = k$, la clique completata su $S$ viene trovata in modo efficiente se $k = \Omega(\sqrt{n}\log{n})$. In questa lezione ci concentriamo sul caso in cui $k = \Omega(\sqrt{n})$ e andremo a utilizzare il fatto introdotto la scorsa lezione. Cominciamo a definire 
+\begin{itemize}
+    \item $G$ il grafo perturbato, ovvero il grafo in cui è presente la clique nascosta.
+    \item $A$ la matrice di adiacenza di $G$
+\end{itemize}
+ci chiediamo come si comporta l'autovalore massimo $\lambda_{max}$. Cominciamo a esprimerlo attraverso il coefficiente di Rayleigh
+
+$$\lambda_{max}(A - \frac{J_n}{2}) = \max_{x\;: \; x\; \neq \;0} \frac{x^T(A-\frac{J_n}{2})x}{x^Tx}$$
+Costruiamo il vettore $\mathds{1}_s \in \{0,1\}^n$ che è definito come
+$$(\mathds{1}_s)_i = \begin{cases}
+    1 \hspace{20px} \text{se}\; i \in S \\
+    0 \hspace{20px} \text{altrimenti}
+\end{cases}$$
+siccome $\mathds{1}_s$ è un qualunque vettore diverso da $0$, vale che 
+
+$$\geq \frac{{\mathds{1}_s}^T(A-\frac{J_n}{2}){\mathds{1}_s}}{{\mathds{1}_s}^T{\mathds{1}_s}} $$
+$$= \frac{{\mathds{1}_s}^TA{\mathds{1}_s} - \frac{1}{2} {\mathds{1}_s}^TJ_n{\mathds{1}_s}}{{\mathds{1}_s}^T{\mathds{1}_s}} $$
+Facciamo le seguenti considerazioni:
+
+\begin{itemize}
+    \item Il vettore $\mathds{1}_s$  ha esattamente $k$ posizioni poste a $1$, mentre le altre sono tutte poste a $0$. Per questo motivo il denominatore è tale che 
+    $$\mathds{1}_s^T \mathds{1}_s = k$$
+    \item L'espressione $\frac{1}{2}\mathds{1}_s^T J_n \mathds{1}_s$ può essere riscritta come segue
+    $$\sum_{i = 1}^n \sum_{j=1}^n (\mathds{1}_s)_i 1 (\mathds{1}_s)_j = k^2$$
+    dove l'$1$ compare perché $J_n$ è una matrice di soli $1$.
+    \item L'espressione $\mathds{1}_s^T A \mathds{1}_s$ è invece esprimibile come
+    $$\sum_{i \in S} \sum_{j \in S} A_{ij} = k(k-1)$$
+    e intuitivamente indica che ci sono $k$ elementi connessi con $k-1$ elementi, cioè formano una clique.
+\end{itemize}
+Fatte queste considerazioni possiamo riscrivere l'espressione precedente come
+
+$$= \frac{k(k-1) - \frac{k^2}{2}}{k} = \frac{k}{2} - 1$$ 
+Ricapitolando abbiamo che
+
+$$\lambda_{max}(A_n - \frac{J_n}{2}) \leq 2 \sqrt{n}$$
+$$\lambda_{max}(A - \frac{J_n}{2}) \geq \frac{k}{2}-1$$
+Se $k = \Omega(\sqrt{n})$ possiamo distinguere $G_n$ da $G$ con una clique nascosta. Non abbiamo un modo per capire quale sia questa clique nascosta. Consideriamo la matrice $A = A_n + A_s$ dove $A_n$ è la matrice di adiacenza di $G_n$ e $A_s$ è la matrice che contiene gli archi aggiunti. Potremmo vedere $A_s$ come la matrice di adiacenza di un grafo $G_k \sim \mathcal{G_k}(k,\frac{1}{2})$, anche se non sarebbe propriamente corretto dato che $A_s$ ha dimensioni $n \times n$. Per il lemma sappiamo che con alta probabilità vale
+
+$$\lambda_{max}(A_n - \frac{J_n}{2}) \leq 2 \sqrt{n}$$
+$$\lambda_{max}(A_s - \frac{J_s}{2}) \leq 2 \sqrt{k}$$
+%perché è sqrt{k} e non sqrt{n} ? infondo è pur sempre una matrice nxn
+dove $J_s = \mathds{1}_s \mathds{1}_s^T$. Sia $x \in R^n$ un autovettore con autovalore $\lambda_{max}(A-\frac{J_n}{2})$. Assumiamo che $x$ abbia norma $1$ per semplicità. Sappiamo che
+
+$$\frac{k}{2}-1 \leq \frac{x^T (A - \frac{J_n}{2}) x}{x^T x}$$
+siccome $||x|| = 1$ allora $x^T x = 1$. Utilizziamo il fatto che $A = A_n + A_s$
+
+$$= x^T A_s x + x^T(A_n - \frac{J_n}{2})x \leq x^T A_s x + 2\sqrt{n}$$
+Sistemando i membri
+
+$$\frac{k}{2}-1 -  2\sqrt{n} \leq x^T A_s x$$
+sommiamo e sottraiamo $\frac{J_s}{2}$
+$$= x^T (A_s - \frac{J_s}{2} + \frac{J_s}{2}) x$$
+espandiamo la parentesi e usiamo il fatto che $J_s = \mathds{1}_s \mathds{1}_s^T$
+$$= x^T (A_s - \frac{J_s}{2}) x + x^T \frac{\mathds{1}_s \mathds{1}_s^T}{2}x$$
+ricordando la definizione di autovalore massimo e che $(x^T y)^2 = x^T y y^T x$ possiamo scrivere
+$$\leq \lambda_{max}(A_s - \frac{J_s}{2}) + \frac{1}{2} (x^T \mathds{1}_s)^2$$
+allora con alta probabilità
+$$\leq 2 \sqrt{k} + \frac{1}{2} (x^T \mathds{1}_s)^2$$
+Definiamo il vettore $y_i = |x_i| \; \forall \; i = 1,\dots,n$. Notiamo che $$y^T \mathds{1}_s = \sum_{i \in S} y_i = \sum_{i \in S} |x_i|  \geq |\sum x_i| = |x^T \mathds{1}_s|$$ 
+Riprendiamo il risultato che abbiamo trovato poco fa e risolviamo per $x$
+
+$$(x^T \mathds{1}_s)^2 \geq k-2 - 4 \sqrt{n} - 4\sqrt{k}$$
+se $k = \Omega(\sqrt{n})$ e per $n$ sufficientemente grande 
+$$ \geq (1 - \alpha)^2 k$$
+Per comprendere come mai questa affermazione valga, ricordiamo che $k = \Omega(\sqrt{n})$ e quindi $k = c \sqrt{n}$. Quindi,
+
+$$k - 2 - 4\sqrt{n} - 4\sqrt{k} = c \sqrt{n} - 2 - 4\sqrt{n} - 4\sqrt{\sqrt{n}}$$
+ignoriamo il fattore $4\sqrt{\sqrt{n}}$  e $-2$ dato che influiscono poco
+
+$$= (c-4)\sqrt{n}$$
+vogliamo che valga
+$$(c-4) \sqrt{n} \geq (1-\alpha)^2 \sqrt{n}$$
+ovvero
+$$(c-4) \geq (1-\alpha)^2$$
+Risolviamo per $c$ e otteniamo
+$$c \geq \frac{(1-\alpha)^2}{4}$$
+Quindi per un qualsiasi $\alpha$ posso trovare $k$ dell'ordine di $\sqrt{n}$ tale per cui vale la disequazione
+
+$$(x^T \mathds{1}_s)^2 \geq (1-\alpha)^2 k$$
+Prendiamo la radice
+$$||x^T \mathds{1}_s|| \geq (1-\alpha) \sqrt{k}$$
+\begin{fatto}
+    Il vettore $\sqrt{k}y$ è vicino a $\mathds{1}_s$.
+\end{fatto}
+\begin{dimo} Cominciamo con l'osservare che $\mathds{1}_s$ è il vettore che descrive la clique, se conosciamo $\mathds{1}_s$ conosciamo la clique, sappiamo dove sta. Quindi il vettore $\sqrt{k}y$ è una buona proxy per trovare la clique. Per dimostrare che sono vicini andiamo a vedere la loro distanza al quadrato.
+    $$||\mathds{1}_s - \sqrt{ky}||^2 = ||\mathds{1}_s||^2 + k ||y||^2 - 2\sqrt{k}(y^T \mathds{1}_s)$$
+sappiamo che $||\mathds{1}_s||^2 = k$ e che $k ||y||^2 = k$ quindi
+$$\leq 2k - 2(1-\alpha)k$$
+dove la disuguaglianza segue dal fatto che
+$$y^T \mathds{1}_s \geq |x^T \mathds{1}_s| \geq (1-\alpha) \sqrt{k}$$
+allora concludiamo con il dire
+$$= 2 \alpha k$$
+Dato che possiamo scegliere $\alpha$ come ci pare sono vicini tanto quanto vogliamo.
+\end{dimo}
+
+\section{Algoritmo Improved Clique Finder}
+
+Diamo adesso un algoritmo per trovare la clique
+
+\begin{algorithm}
+\caption{}\label{euclid}
+\textbf{Input:} $G,k,\epsilon > 0$
+\begin{algorithmic}[1]
+\State Calcola $A$ per $G$
+\State Sia $x$ l'autovettore di $\lambda_{max}(A - \frac{J_n}{2})$
+\State Sia $L$ l'insieme contenente i $k$ vertici corrispondenti alle componenti più grandi di $y$
+\end{algorithmic}
+\textbf{Output:} Genero i vertici di $y$ con almeno $(\frac{3}{4}-\epsilon)k$ vicini in $L$
+\end{algorithm}
+\noindent
+Chiariamo il contenuto del vettore $L$. Se $y$ fosse il vettore $[0,1,2,3,-3]$ e $k = 3$, il vettore $L$ sarebbe $[1,2,3]$ ovvero i $3$ elementi più grandi.
+
+Cominciamo con il considerare un valore soglia $t$ tale che 
+$$i \in L \Leftrightarrow \sqrt{k}y_i \geq t$$
+Definiamo 
+$$m = |S \backslash L | = |L \backslash S|$$
+dove la seconda uguaglianza vale perché $L$ e $S$ hanno la stessa cardinalità. Quindi
+
+$$||\mathds{1}_s - \sqrt{k}y||^2 = \sum_{i \in S} (1 - \sqrt{k} y_i)^2 + \sum_{j \notin S} ky_j^2$$
+dove abbiamo diviso gli elementi che stanno in $S$ (e quindi $(\mathds{1}_s)_i = 1$) da quelli che non stanno in $S$ (e quindi $(\mathds{1}_s)_i = 0$). Possiamo minorare l'espressione precedente con
+$$\geq \sum_{i \in S\backslash L} (1-\sqrt{k} y_i)^2 + \sum_{j \in L \backslash S} ky_j^2$$
+è facile convincersi che questo valga osservando che $S \backslash L \subseteq S$, $L\backslash S \subseteq L$ e anche che tutti gli elementi della sommatoria sono positivi dato che sono dei quadrati. Osserviamo che se $j \in L$ allora $y_j \sqrt{k} \geq t$ per costruzione. Quindi, $\forall j \in L$
+    $$y_l \geq \frac{t}{\sqrt{k}}$$
+Siccome $y$ è un vettore con norma $1$, se poniamo $y_j = 0\; j > k$ allora
+
+$$y_1,\dots,y_k = \frac{1}{\sqrt{k}}$$
+e dunque $t$ è al massimo $1$. Possiamo dire che 
+
+$$\geq \sum_{i \in S\backslash L} (1-\sqrt{k} y_i)^2 + \sum_{j \in L \backslash S} ky_j^2$$
+$$\geq \sum_{i \in S\backslash L} (1-t)^2 + \sum_{j \in L \backslash S} t^2$$
+dato che:
+
+\begin{itemize}
+    \item Se $i \notin L$ allora $\sqrt{k}y_i < t$, per definizione.
+    \item Se $i \in L$ allora $y_i \geq \frac{t}{\sqrt{k}}$
+\end{itemize}
+Sappiamo che la cardinalità dei due insiemi $S\backslash L$ e $L \backslash S$ è esattamente $m$
+
+$$= m(1-t)^2 + mt^2$$
+con qualche manipolazione algebrica arriviamo a
+
+$$= m(1-2t + 2t^2)$$
+cerchiamo un minorante per $t$. Quando $1 - 2t - 2t^2$ assume un valore minimo? Prendiamo la derivata e poniamola $= 0$.
+
+$$-4t + 2 = 0 \Leftrightarrow t = \frac{1}{2} $$
+Allora
+$$m(1-2t + 2t^2) \geq \frac{m}{2}$$
+Quindi
+
+$$\frac{m}{2} \leq || \mathds{1}_s - \sqrt{k}y||^2 \leq 2 \alpha k$$
+Scegliamo $\alpha = \frac{1}{16}$
+$$m \leq \frac{k}{4}$$
+Questo vuol dire che $L$ contiene almeno $\frac{3}{4}k$ elementi di $S$. Ogni elemento di $S$ ha almeno $\frac{3k}{4}$ vicini in $L$
+$$\forall v \in S \; |N_v \land L| \geq \frac{3}{4}k$$
+con alta probabilità. I nodi che non stanno in $S$ hanno un vicinato che è generato in modo casuale e quindi
+
+$$\forall v \notin S \; |N_v \land L| \leq \frac{k}{2} + \sqrt{k \log{n}}$$
+% non è chiarissimo come ci sia arrivato
+con alta probabilità.
+
+
+\disegna{
+    \node[] (A) at (0,-0.40){$\sqrt{k\log{n}} + \frac{k}{2}$};
+    \node[] (B) at (3,-0.40){$\frac{3k}{4}$};
+    \draw[-, thick]  (0.45,0.05) -- (0.45,-0.05);
+    \draw[-, thick]  (3,0.05) -- (3,-0.05);
+    \draw[->] (-2,0) -- (5,0);
+    \node[] (C) at (-1,0.30) {$\neg S$};
+    \node[] (D) at (4,0.30) {$S$};
+    \node[] (E) at (1.75,0.50) {GAP};
+    \draw[] (E) -- (3,0.50);
+    \draw[] (E) -- (0.45,0.50);
+    \node[] (F) at (1.75,0) {x};
+    \draw[->] (2.5,-1)-- (F);
+    \node[] (G) at (2.75,-1.25) {Soglia};
+}
+Riusciamo a discriminare elementi di $S$, ovvero parte della clique, da elementi che non fanno parte di $S$, ovvero non della clique, con alta probabilità.
 
 
 \end{document}
