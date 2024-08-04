@@ -3252,5 +3252,191 @@ con alta probabilità.
 }
 Riusciamo a discriminare elementi di $S$, ovvero parte della clique, da elementi che non fanno parte di $S$, ovvero non della clique, con alta probabilità.
 
+\chapter{Sedicesima lezione}
+
+\section{Introduzione camminate casuali su grafi}
+
+\noindent
+Le camminate casuali su grafi (random walks) sono dei processi stocastici su una struttura discreta (come il grafo). Trovano applicazioni in molti contesti, tra cui:
+
+\begin{itemize}
+    \item Pagerank: ranking di pagine web. Veniva usato da google per identificare le pagine più importanti. Una pagina è tanto importante tanto quanto sono le connessioni ad altre pagine web (definizione ricorsiva).
+    \item Diffusione di informazione su una rete sociale online. Modellizza processo di diffusione virale, come notizie, meme, etc... Chiamato anche "cascading process".
+    \item Stima di proprietà di una rete grande: n° di nodi, diametro, distribuzione dei gradi.
+    \item Estrazione casuale di elementi da un insieme combinatoriale: alberi di copertura di un grafo, cicli hamiltoniani, le permutazioni di un insieme finito che soddisfano certi vincoli. 
+\end{itemize}
+
+\section{Relazione tra autovalori e grado del grafo}
+Consideriamo un grafo  (semplice) $G = (V,E)$, la sua matrice di adiacenza $A$ con autovalori $\alpha_1 \geq \dots \geq \alpha_n$ e la matrice laplaciana $L$ con autovalori $\lambda_1 \leq \dots \leq \lambda_n$. Notiamo che la numerazione degli autovalori di $A$ e $L$ è invertita. Infatti, se $G$ è d-regolare, abbiamo che
+
+$$L = I - \frac{1}{d} \Rightarrow \lambda_i = 1 - \frac{\alpha_i}{d}$$
+il segno $-$ fa ribaltare l'ordine degli autovalori. Inoltre, $\alpha_i \in [-d,d]$ poiché $\lambda_i \in [0,2]$ (già dimostrato in passato), infatti:
+
+$$\lambda_i = 1 - \frac{\alpha_i}{d} \Rightarrow \alpha_i = d(1 - \lambda_i)$$
+Ricordiamo che con $D(G)$ indichiamo il grado medio dei nodi in $G$ e con $\Delta(G)$ il grado massimo. E' facile vedere che $\forall G$ (anche non regolare) vale che 
+
+$$D(G) \leq \alpha_1 \leq \Delta(G)$$
+\begin{dimo}
+    Cominciamo con il dimostrare la parte sinistra della relazione. 
+
+    $$\alpha_i = \max_{x \; : \; x \neq 0} \frac{x^T A x}{||x||^2} \geq \frac{\mathds{1}^T A \mathds{1}}{||\mathds{1}||^2} = \frac{\sum_{i} \sum_j A_{ij}}{n}$$
+    fissiamo una riga e sommiamo su tutte le colonne, otteniamo così il grado del nodo
+    $$\frac{1}{n} \sum_i d(i) = D(G)$$
+    Dimostriamo la seconda parte della relazione.
+    Sia $u$ autovettore tale che $Au = \alpha_1 u$ e sia $u_i = \max_j u_j > 0$. Se $u_i$ (componente massima di $u$)  fosse $\leq 0$, consideriamo $-u$ (ribaltiamo il vettore), in questo modo vale la relazione e $u$ resta autovettore.
+
+    $$\alpha_1 = \frac{(Au)_i}{u_i} = \frac{1}{u_i} \sum_j A_{i,j} u_j = \sum_j A_{ij} \frac{u_j}{u_i} \leq \sum_i A_{ij} = d(i) \leq \Delta(G)$$
+    dove siccome $u_i$ è la componente più grande, allora $\frac{u_j}{u_i} \leq 1$.
+\end{dimo}
+
+\section{Risultati utili su autovettori e autovalori}
+
+\begin{fatto}
+    Se $A_n$ è una matrice simmetrica $n \times n$ allora 
+    $$\sum_{i = 1}^n A_{ii} = \sum_{i = 1}^n \lambda_i$$
+    ovvero la somma degli elementi sulla diagonale è uguale alla somma degli autovalori.
+\end{fatto}
+
+\noindent
+Se $A$ è la matrice di adiacenza di $G$ (connesso) allora $A_ii = 0 \; \forall \; i = 1,\dots,n$, dato che non ci sono cappi. Allora per il fatto di prima 
+
+$$0 = \sum_{i = 1}^n A_{i,i} = \sum_{i = 1}^n \alpha_i$$
+Dato che $\alpha_i \geq d(G) > 0$ allora $\alpha_n < 0$.
+
+\begin{lemma}
+    Sia $G = (V,E)$ connesso. Sia $M$ simmetrica e non negativa tale che $m_{ij} > 0$ se e solo se $(i,j) \in E$. Se un vettore $u$ non negativo è un autovettore per $M$, allora $u$ è strettamente positivo.
+\end{lemma}
+
+\begin{dimo}
+    Se $u$ non è strettamente positivo allora c'è almeno una componente pari a zero, $u_r = 0$. Dato che $G$ è un grafo connesso esiste $(r,s) \in E$ tale che $u_s > 0$. Questo perché un autovettore non può essere nullo quindi c'è una componente, almeno, strettamente positiva. Inoltre, la componente nulla ($u_r$) deve essere connessa a una non nulla ($u_s$) perché il grafo è connesso.
+
+    \disegna{
+        \node[nodino] at (-2,1) {};
+        \node[nodino] at (-1.9,0) {};
+        \node[nodino] at (-3,1.1) {};
+        \node[nodino] at (-1.6,-1) {};
+        \node[nodino] at (-3.3,-0.4) {};
+
+        
+        \node[nodino] at (2,0.5) {};
+        \node[nodino] at (1,0.3) {};
+        \node[nodino] at (1.3,1.3) {};
+        \node[nodino] at (1.1,-1) {};
+        \node[nodino] at (0,-0.4) {};
+        \node[circle,draw,minimum width = 3cm] at (-2.5,0){};
+        \node[circle,draw,minimum width = 3cm] at (1,0){};
+        \node[nodo] (A) at (-0.50,0){};
+        \node[nodo] (B) at (-1,0){};
+        \draw[-,thick]  (A)--(B);
+        \node[align = center] (C) at (-0.50,-3){Almeno un arco tra \\ i due insiemi deve esistere \\ altrimenti il grafo è sconnesso};
+        \draw[->] (C) -- (-0.75,-0.20);
+        \node[] at (-2.5,2) {$u_i < 0$};
+        \node[] at (1,2) {$u_i > 0$};
+    }
+
+    \noindent 
+    Definiamo $\mu$ tale che $Mu = \mu u$, ovvero $\mu$ è autovalore di $u$. Deve valere
+
+    $$0 = (Mu)_r = \sum_{i = 1}^n M_{ri} u_i \geq M_{rs} u_s > 0$$
+    ottenendo quindi una contraddizione.
+\end{dimo}
+
+\noindent 
+Enunciamo ora un teorema utile nell'analisi di camminate casuali su grafi.
+
+\begin{teo}
+    \textbf{Perron-Frobenius per matrici simmetriche}
+
+    \noindent
+    Sia $G = (V,E)$ connesso e sia $M$ una matrice simmetrica non negativa tale che 
+    $$M_{ij} > 0 \Leftrightarrow (i,j) \in E$$
+    allora gli autovalori $\mu_1\geq\dots\geq\mu_n$ di $M$ soddisfano
+
+    \begin{enumerate}
+        \item $\mu_1$ ha un autovettore strettamente positivo
+        \item $\mu_1 \geq - \mu_n$
+        \item $\mu_1 > \mu_2$ (unico autovalore distinto per $u_1$, $\mu_1$ ha molteplicità $1$)
+    \end{enumerate}
+\end{teo}
+
+\begin{dimo} Definiamo $Mu_1 = \mu_1 u_1$ e $x_i = |(u_1)_i| \, \forall i = 1, \dots,n$. Notiamo che $$||x|| = ||u_1|| = 1$$ Inoltre
+
+$$\mu_1 = u_1^T M u_1$$ 
+questo perché 
+$$Mu_1 = \mu_1 u_1 \Leftrightarrow u^T M u_1 = u^T \mu u_1$$
+dove abbiamo moltiplicato per $u_1$ ambo i membri. Siccome $\mu$ è uno scalare possiamo raccoglierlo a fattore comune
+$$\Leftrightarrow u_1^T M u_1 = \mu (u_1^T u_1)$$
+sapendo che $u_1^T u_1 = 1$ troviamo che
+$$\mu_1 = u_1^T M u_1$$ 
+$$= \sum_i \sum_j M_{ij} (u_1)_i (u_1)_j$$
+sappiamo che $M_{ij}$ è sempre $\geq 0$ quindi sostituendo $u$ con $x$ 
+$$\leq \sum_i \sum_j M_{ij} x_i x_j = x^T M x$$
+Dato che $\mu_1$ è autovalore massimo, $x$ deve essere autovettore di $\mu_1$. Siccome $x$ è non negativo allora ha componenti strettamente positive per il lemma precedente. Abbiamo dimostrato la prima asserzione, dimostriamo ora la seconda.
+
+\noindent 
+Sia $u_n$ autovalore minimo tale che $M u_n = \mu_n u_n$. Definiamo $x_i = |(u_n)_i| \;$ $ \forall \; i = 1, \dots,n$. Allora
+
+$$|\mu_n| = |u_n^T M u_n| = \sum_i \sum_j M_{ij} |(u_n)_i| |(u_n)_j| = x^T M x$$
+per definizione di autovalore massimo
+$$x^T M x \leq \mu_1$$
+
+\noindent 
+Dimostriamo ora la parte terza parte.
+Sia $\mu_2$ tale che $Mu_2 = \mu_2 u_2$. Notiamo che $u_1 > 0$ e che $u_2^T u_1 = 0$ per definizione.  Allora $u_2$ deve contenere sia componenti positiva che negative. Infatti, se contenesse solo componenti positive il prodotto $u_2^T u_1$ sarebbe positivo, se contenesse solo componenti negative sarebbe negativo.
+$$\min_i (u_2)_i < 0 < \max_i (u_2)_i$$
+Definiamo $x_i = |(u_2)_i|$ per $i = 1,\dots,n$. Ancora una volta notiamo che 
+
+$$\mu_2 = u_2^T M u_2 \leq x^T M x \leq \mu_1$$
+Dato che $G$ è connesso (la spiegazione è stata fatta con disegno sopra)
+$$\exists \; (r,s) \; \in E\; : \; (u_2)_r < 0 < (u_2)_s$$
+Tenendo presente che
+
+\begin{itemize}
+    \item la sommatoria $$u_2^T M u_2 = \sum_{i,j} M_{ij} (u_2)_i (u_2)_j$$  contiene il termine $M_{rs} (u_2)_s (u_2)_r$ che è minore di $0$
+    \item la sommatoria $$x_2^T M x_2 = \sum_{i,j} M_{ij} x_i x_j$$  contiene il termine $M_{rs} x_s x_r$ che è maggiore di $0$
+\end{itemize}
+possiamo dire che 
+
+$$M_{ij} (u_2)_i (u_2)_j \leq M_{ij} x_i x_j$$
+per ogni $i,j$ e che
+$$M_{rs} (u_2)_r (u_2)_s \leq M_{rs} x_r x_s$$
+e quindi
+$$u_2^T M u_2 < x^T M x$$
+possiamo concludere che $\mu_2 < \mu_1$.
+\end{dimo}
+
+\begin{fatto}
+    $\mu_n = -\mu_1$ se e solo se il grafo $G$ è bipartito.
+\end{fatto}
+
+\disegna{
+    \draw[->] (-3,0) -- (3,0);
+    \node[] (A) at (-2,0.35) {$-\Delta(G)$};
+    \draw[-] (-2,0.10) -- (-2,-0.10);
+    \draw[-] (2,0.10) -- (2,-0.10);
+    \draw[-] (0,0.10) -- (0,-0.10);
+    \node[] (C) at (0,0.35) {$0$};
+    \node[] (B) at (2,0.35) {$\Delta(G)$};
+    \node[] (D) at (1.5,0) {x};
+    \node[]  at (1,0) {x};
+    \node[]  at (0.40,0) {x};
+    \node[] (E) at (-1.50,0) {x};
+    \node[] at (-0.6,0) {x};
+    \draw[-] (1.4,0.20) edge [out=110,in=280,distance=5mm]  (1,1);
+    \draw[-] (1.20,0.20) edge [out=110,in=280,distance=5mm]  (-1,1);
+    \node[] at (1.20,0.10) {\tiny $<$};
+    \node[align=center] at(-1,1.50) {strettamente\\maggiore};
+    \node[] at(1,1.20) {$u_1$};
+    \draw[-] (2,-0.50)-- (1.50,-0.50);
+    \draw[-] (1.50,-0.40)--(1.50,-0.60);
+    \draw[-] (2,-0.40)--(2,-0.60);
+    \draw[-] (-2,-0.40)--(-2,-0.60);
+    \draw[-] (-1.50,-0.40)--(-1.50,-0.60);
+    \draw[-] (-2,-0.50)-- (-1.50,-0.50);
+    \node[] at (-1.75,-0.80) {$d_1$};
+    \node[] at (1.75,-0.80) {$d_2$};
+    \node[align=center] at (0, -1.50) {$d_2 \geq d_1$\\ sono uguali solo \\se grafo bipartito.};
+}
+
 
 \end{document}

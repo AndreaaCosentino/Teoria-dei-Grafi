@@ -10,7 +10,7 @@ Il professore già mette a disposizione degli appunti esaustivi, con molta proba
 
 ### Programma completato
 
-Sono fruibili le lezioni dalla **prima** alla **quindicesima**. Il programma compreso da queste lezioni è il seguente:
+Sono fruibili le lezioni dalla **prima** alla **sedicesima**. Il programma compreso da queste lezioni è il seguente:
 
 - Definizioni di base sui grafi
 - Proprietà dei grafi (numero cromatico, numero d'indipendenza, numero di dominazione)
@@ -18,8 +18,9 @@ Sono fruibili le lezioni dalla **prima** alla **quindicesima**. Il programma com
 - Nozioni di algebra lineare
 - Correlation clustering
 - Clique piantate
+- Introduzione cammini casuali su grafi
 
-Mancano le lezioni relative ai cammini casuali su grafi.
+Mancano le lezioni relative ai cammini casuali su grafi e ai minori.
 
 La data prevista per il completamento, con colpevole ritardo, (della prima versione) è per agosto.
 
