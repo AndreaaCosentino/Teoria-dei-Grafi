@@ -3438,5 +3438,132 @@ possiamo concludere che $\mu_2 < \mu_1$.
     \node[align=center] at (0, -1.50) {$d_2 \geq d_1$\\ sono uguali solo \\se grafo bipartito.};
 }
 
+\chapter{Diciassettesima lezione}
+
+\section{Definizione camminata casuale}
+
+\noindent 
+Dato $G = (V,E)$ connesso con $V = \{1,\dots,n\}$, una \textbf{camminata casuale} è definita come
+$$V_0 \rightarrow V_1 \rightarrow V_2 \rightarrow V_3 \rightarrow \dots$$
+dove $V_0$ è il vertice di partenza e a ogni step la camminata passa da $v_t$ a $v_{t+1}$. Noi consideriamo solo camminate uniformi. I termini $V_i$ sono delle variabili casuali su $\mathds{V}$  con distribuzione $p_i$. Possiamo assumere che l'inizio (ovvero $V_0$) sia deterministico, ovvero lo scegliamo. Definiamo la distribuzione $p_t$ come
+$$p_t(i) = \probP(V_t = i) =  \sum_{\substack{j\;:\\ (i,j) \in E}} \probP(V_t = i | V_{t-1} = j) \probP(V_{t-1} = j)$$
+dove
+$$\probP(V_t=i|V_{t-1} = j) = \frac{A_{ij}}{d(j)}$$
+ovvero $V_t$ è scelto uniformemente a caso in $N_{V_{t-1}}$. Possiamo dedurre che ci occupiamo di camminate stazionarie poiché la probabilità di transizione è indipendente dal tempo. Introduciamo i versori $e_i$ per ogni vertice. Contengono $1$ solo nella posizione $i-esima$
+$$e_i = (0,\dots,0,1,0,\dots,0)$$
+Possiamo esprimere la distribuzione di probabilità del primo vertice come $p_0 = e_0$.
+Cerchiamo di esprimere $p_t(i)$ in modo più compatto. Introduciamo la matrice diagonale $D$ tale che
+
+\[
+    D = \begin{bmatrix}
+        d(1) & \dots & 0 \\
+        \vdots & \ddots & \vdots \\
+        0 & \dots & d(n)
+    \end{bmatrix}
+\]
+Siccome è una matrice diagonale ha inverso
+$$D_{ij}^{-1} = \frac{\mathds{I}\{i = j\}}{d(j)}$$
+Notiamo che
+$$(AD^{-1})_{ij} = \sum_{k = 1}^n A_{ik} D_{kj}^{-1} = \sum_{k=1}^n A_{ik} \frac{\mathds{I}\{k = j\}}{d(j)} = \frac{A_{ij}}{d(j)}$$
+dove l'ultimo passaggio vale perché tutti i termini, tranne il $j$-esimo, della sommatoria sono pari a $0$, per definizione stessa della funzione indicatrice.
+A questo punto possiamo riscrivere $p_t$ come
+
+$$p_t = AD^{-1} p_{t-1}$$
+Poniamo $W = AD^{-1}$ e quindi $\forall t \geq 1$
+
+$$p_t = W p_{t-1} = W^t p_0$$
+dove abbiamo srotolato $p_{t-1}$. Siccome $W_{ij} = \frac{A_ij}{d(j)}$, la matrice $W$ non è simmetrica ed è non negativa. Notiamo che
+
+$$(\mathds{1}^T W)_j = \sum_{i = 1}^n \frac{A_{ij}}{d(j)} $$
+sommiamo le colonne di $A$ e otteniamo il grado del nodo
+$$= \frac{d(j)}{d(j)} = 1$$
+Questo vuol dire che la matrice $\mathds{1}^T W$ è una matrice stocastica sulle colonne, ovvero la somma delle colonne (che sono non negative) è $1$. 
+
+\section{Distribuzione stazionaria}
+
+Diciamo che una distribuzione $\pi$ su $\mathds{V}$ è una distribuzione stazionaria per $W$ se $W \pi = \pi$, dove $\pi$ è un autovettore non normalizzato di $W$ con autovalore $1$. Sia $d = (d_1,\dots, d_n)$, definiamo $\pi(i)$ come 
+$$\pi(i) = \frac{d(i)}{\mathds{1^T}d}$$
+Intuitivamente il tempo trascorso su un nodo è proporzionale al suo grado. Siccome vale
+
+$$(W\pi)_i = \sum_{j = 1}^n W_{ij} \pi(j) = \sum_{j=1}^n \frac{A_{ij}}{d(j)} \frac{d(j)}{\mathds{1}^T d} = \frac{1}{\mathds{1}^T d} \sum_{j = 1}^n A_{ij} = \frac{d(i)}{\mathds{1}^T d} = \pi(i)$$
+quindi $W \pi = \pi$ e allora $\pi$ è stazionaria per $W$. 
+\section{Convergenza della camminata casuale alla distribuzione stazionaria}
+Definiamo 
+$$A_{norm} = D^{-\frac{1}{2}} A D^{-\frac{1}{2}}$$
+che è il modo matriciale per dire che dividiamo $A$ per $D$. Siccome $W = A D^{-1}$
+
+$$A_{norm} = D^{-\frac{1}{2}} W D^{\frac{1}{2}}$$
+Definiamo anche 
+$$L_{norm} = I - D^{-\frac{1}{2}} A D^{-\frac{1}{2}} = I - A_{norm}$$
+con $\lambda_1 \leq \dots \leq \lambda_N \in [0,1]$ gli autovalori di $L_{norm}$ e $\omega_1\geq \dots \geq \omega_n \in [-1,1]$ gli autovalori di $A_{norm}$. Notiamo che $\lambda_i = 1 - \omega_i$.
+
+\begin{fatto}
+    $\psi$ è un autovettore di $A_{norm}$ con autovalore $\omega$ se e solo se $D^{\frac{1}{2}} \psi$ è un autovettore di $W$ con autovalore $\omega$.
+\end{fatto}
+
+\begin{dimo}Siccome
+    $$A_{norm} = D^{-\frac{1}{2}} W D^{\frac{1}{2}}$$
+    allora moltiplicando per $D^{\frac{1}{2}}$ ambo i membri
+    $$ D^{\frac{1}{2}} A_{norm} = W D^{\frac{1}{2}}$$
+    Se $A_{norm} \psi = \omega \psi$ allora
+
+    $$W(D^{\frac{1}{2}}\psi) = D^{\frac{1}{2}} A_{norm}\psi = D^{\frac{1}{2}}\omega\psi = (D^{\frac{1}{2}}\psi)\omega$$
+    quindi ($D^{\frac{1}{2}}\psi)$ è un autovettore di $W$ con autovalore $\omega$. Analogamente $W u = \omega u$ implica che (non lo dimostriamo ma è facile da fare) $$A_{norm} (D^{\frac{1}{2}} u) = \omega(D^{-\frac{1}{2}} u)$$
+\end{dimo}
+
+\vspace{20px}
+\noindent
+Possiamo applicare Perron-Frobenius ad $A_{norm}$. L'autovalore massimo di $W$ ($\omega_1$) ha un unico autovettore le cui componenti sono strettamente positive e $\omega_n = \omega_1 \Leftrightarrow$ $G$ è bipartito. Inoltre, se $\psi_1$ è l'autovettore di $A_{norm}$ con autovalore $1$ allora $\pi = D^{\frac{1}{2}} \psi_1$. 
+Definiamo delle proprietà spettrali che ci torneranno utili più avanti.
+
+\begin{fatto}
+    Sia $A$ una matrice simmetrica $n \times n$ con spettro $\lambda_1,\dots,\lambda_n$ e $u_1,\dots,u_n$. Allora $\forall t \in \mathds{N}$ 
+    $$A^t = \sum_{i=1}^n \lambda_i^t u_i u_i^t = U \Lambda U^T$$ 
+\end{fatto}
+\begin{dimo}
+    Dimostrazione per induzione. 
+    \begin{itemize}
+        \item Caso base, $t = 1$, vero per il teorema spettrale.
+        \item Passo induttivo. Scriviamo $A^t$ come
+        $$A^t = A A^{t-1}$$
+        e applichiamo l'ipotesi induttiva
+        $$= (\sum_i \lambda_i u_i u_i^T) (\sum_j \lambda_j^{t-1} u_j u_j^T) = \sum_i \sum_j \lambda_i \lambda_j^{t-1} u_i u_i^T u_j u_j^T$$
+        siccome $u_i$ e $u_j$ sono ortogonali vale che $u_i^T u_j = \mathds{I}\{i = j\}$. Allora 
+
+        $$= \sum_i \lambda_i \lambda_i^{t-1} u_i u_i^T = \sum_i \lambda_i^t u_i u_i^T$$
+    \end{itemize}
+\end{dimo}
+
+\noindent 
+Enunciamo un teorema, che dimostreremo nella prossima lezione, che prova la convergenza della camminata casuale alla distrubizione stazionaria.
+
+\begin{teo}
+    $\forall G$ connesso, non bipartito,  vale che 
+    $$\lim_{t\rightarrow \infty} W^t p_0 = \pi = \frac{d}{1^T d}$$
+    $\forall p_0$.
+\end{teo}
+Cerchiamo di capire intuitivamente perché il grafo non possa essere bipartito.  Consideriamo un caso limite di grafo bipartito
+
+\disegna{
+    \node[nodo] (A) at (-1,0){};
+    \node[nodo] (B) at (1,0){};
+    \node[] at(-1,-0.40){$1$};
+    \node[] at(1,-0.40){$2$};
+    \draw[-] (A) edge [out=80,in=100,distance=7.5mm]  (B);
+}
+Se $p_0 = e_1$ allora
+
+$$V_t = \begin{cases}
+    1 \hspace{10px} \text{se $t$ è pari} \\
+    2 \hspace{10px} \text{altrimenti} 
+\end{cases}$$
+se invece $p_0 = e_2$
+$$V_t = \begin{cases}
+    1 \hspace{10px} \text{se $t$ è dispari} \\
+    2 \hspace{10px} \text{altrimenti} 
+\end{cases}$$
+ovvero le distribuzioni non convergono! E' proprio il fatto che $\omega_n = - \omega_1$ che ci blocca. Ovviamente esistono distribuzioni anche sui grafi bipartiti che convergono, per esempio 
+$$p_0=(\frac{1}{2},\frac{1}{2})$$
+in questo caso $Wp_0 = p_0$.
 
 \end{document}

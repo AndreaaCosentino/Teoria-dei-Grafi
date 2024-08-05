@@ -1,4 +1,6 @@
 # Teoria-dei-Grafi
+![LicenzaCreativa](https://img.shields.io/badge/Licenza-CC%2FBY%2FNC%2FSA-yellow.svg?style=for-the-badge)
+
 In questa repository pubblicherò i miei appunti sull'insegnamento di teoria dei grafi tenuto dal professore Nicolò Cesa-Bianchi. 
 
 Gli appunti fanno riferimento all'edizione 2021-2022 dell'insegnamento. 
@@ -10,7 +12,7 @@ Il professore già mette a disposizione degli appunti esaustivi, con molta proba
 
 ### Programma completato
 
-Sono fruibili le lezioni dalla **prima** alla **sedicesima**. Il programma compreso da queste lezioni è il seguente:
+Sono fruibili le lezioni dalla **prima** alla **diciassettesima**. Il programma compreso da queste lezioni è il seguente:
 
 - Definizioni di base sui grafi
 - Proprietà dei grafi (numero cromatico, numero d'indipendenza, numero di dominazione)
@@ -18,9 +20,9 @@ Sono fruibili le lezioni dalla **prima** alla **sedicesima**. Il programma compr
 - Nozioni di algebra lineare
 - Correlation clustering
 - Clique piantate
-- Introduzione cammini casuali su grafi
+- Cammini casuali su grafi
 
-Mancano le lezioni relative ai cammini casuali su grafi e ai minori.
+Le lezioni totali sono **24**.
 
 La data prevista per il completamento, con colpevole ritardo, (della prima versione) è per agosto.
 
