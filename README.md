@@ -1,5 +1,5 @@
 # Teoria-dei-Grafi
-![Latex](https://img.shields.io/badge/Realizzato%20con-LaTeX-1s355d.svg)
+![Latex](https://img.shields.io/badge/Realizzato%20con-LaTeX-green.svg?style=for-the-badge)
 ![LicenzaCreativa](https://img.shields.io/badge/Licenza-CC%2FBY%2FNC%2FSA-yellow.svg?style=for-the-badge)
 
 
