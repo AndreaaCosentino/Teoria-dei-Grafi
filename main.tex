@@ -3566,4 +3566,156 @@ ovvero le distribuzioni non convergono! E' proprio il fatto che $\omega_n = - \o
 $$p_0=(\frac{1}{2},\frac{1}{2})$$
 in questo caso $Wp_0 = p_0$.
 
+\chapter{Diciottesima lezione}
+
+\section{Dimostrazione}
+
+\noindent 
+Andiamo a dimostrare il teorema della lezione precedente. 
+
+\begin{dimo}
+    Cominciamo con il considerare $\psi_1,\dots,\psi_n$ autovettori di $A_{norm}$. Questi formano una base ortonormale di $\mathbb{R}^n$. Andiamo a a proiettare $D^{-\frac{1}{2}}p_0$ sulla base ortonormale
+    $$D^{-\frac{1}{2}}p_0 = \sum_{i = 1}^n (\psi_i^T D^{-\frac{1}{2}}p_0) \psi_i =$$
+    poniamo $\psi_i^T D^{-\frac{1}{2}}p_0 = c_i$
+    $$=  \sum_{i = 1}^n c_i \psi_i$$
+    Andiamo a concentrarci su $p_t$
+
+    $$p_t = W^t p_0 = (D^\frac{1}{2} A_{norm} D^{-\frac{1}{2}})^t p_0$$
+    che abbiamo già dimostrato in precedenza. Espandiamo il prodotto
+    
+    \disegna{
+        \node[] at (0,0){$D^\frac{1}{2} A_{norm} D^{-\frac{1}{2}} \cdot D^\frac{1}{2} A_{norm} D^{-\frac{1}{2}} \dots$};
+        \node[] at (4.30,0) {$D^\frac{1}{2} A_{norm} D^{-\frac{1}{2}}p_0$};
+        \draw[thick] (-1.25,0.40)--(0.5,0.40);
+        \draw[thick] (-1.25,0.35)--(-1.25,0.45);
+        \draw[thick] (0.5,0.35)--(0.5,0.45);
+        \node[] at (-0.25,0.65) {$I$};
+    }    
+    siccome $D^{-\frac{1}{2}} \cdot D^\frac{1}{2} = I$ e $A_{norm}$ si ripete $t$ volte
+
+    $$= D^{\frac{1}{2}} A_{norm}^t D^{-\frac{1}{2}} p_0 = D^{\frac{1}{2}} A_{norm}^t \sum_{i = 1}^n c_i \psi_i$$
+    che vale per quello che abbiamo scritto prima.
+    Dal teorema spettrale sappiamo che $A_{norm} = \sum_{i = 1}^n \omega_i \psi_i \psi_i^T$. Inoltre, la scorsa lezione abbiamo dimostrato che è robusto rispetto alle potenze, quindi
+    $$= D^{\frac{1}{2}} (\sum_{i = 1}^n \omega_i^t \psi_i \psi_i^T) \sum_{i = 1}^n c_i \psi_i$$
+    uniamo le sommatorie
+    $$= D^{\frac{1}{2}} \sum_{i = 1}^n \sum_{j = 1}^n \omega_i^t c_j \psi_i \psi_i^T \psi_j$$
+    Siccome sono ortogonali tra loro, $\psi_i^T \psi_i$ è uguale a $1$ solo se $i = j$, altrimenti è $0$. Possiamo sostituire $\psi_i^T \psi_i$ con $\mathds{I}\{i=j\}$ e quindi eliminare tutti i casi in cui $i \neq j$:
+    $$= D^{\frac{1}{2}} \sum_{i = 1}^n \omega_i^t c_i \psi_i$$
+    Ricordiamo che l'autovalore massimo è tale che $\omega_i = 1$. Se $G$ fosse bipartito (ed è importante che non lo sia per questa dimostrazione) $\omega_n = - \omega$. Il teorema però specifica che il grafo non può essere bipartito, quindi $|\omega_n| < \omega_1$. Inoltre, siccome $\omega_2 < \omega_1$ possiamo dire che $\omega_2,\dots,\omega_n \in (-1,1)$. Questo è interessante dato che $\lim_{t \rightarrow \infty} \omega^t = 0$ se $\omega \in (-1,1)$. Stacchiamo $i = 1$ dalla sommatoria e esprimiamo $\omega_1 = 1$
+
+    $$= D^{\frac{1}{2}} c_1 \psi_1 + D^{\frac{1}{2}} \sum_{i = 2}^n \omega_i^t c_i \psi_i$$
+    Consideriamo 
+    $$\lim_{t \rightarrow \infty} p_t$$
+    per le considerazioni fatte prima sappiamo che
+    $$= D^\frac{1}{2} c_1 \psi_1$$
+    Consideriamo $\pi$ autovettore di $W$ associato a $\omega_1 = 1$. $W$ e $A_{norm}$ hanno gli stessi autovettori ma autovalori diversi. Possiamo scrivere
+    $$\frac{d}{\mathds{1}d} = \pi = D^\frac{1}{2} \psi_1 c$$
+    dove $c$ è una costante di scalatura. Questo perché $\pi$ è normalizzato con norma $1$, mentre $\psi$ con norma $2$. Ribaltiamo l'equazione ed esprimiamo $c$ come la norma due
+    $$\psi_1 = \frac{D^{-\frac{1}{2}}\pi}{||D^{-\frac{1}{2}}\pi||} = \frac{D^{-\frac{1}{2}}d}{||D^{-\frac{1}{2}}d||}$$
+    Allora riprendiamo $D^\frac{1}{2} c_1 \psi_1$ e lavoriamo su $c_1$. Utilizziamo la definizione di $c_1$ e scriviamo
+    $$c_1 = \psi_1^T D^{-\frac{1}{2}} p_0 $$
+    usiamo la definizione appena trovata di $\psi_1$ (ricordandoci che è trasposto)
+    $$= \frac{d^T D^{-\frac{1}{2}}}{||D^{-\frac{1}{2}}d||} D^{-\frac{1}{2}} p_0 $$
+    dato che $D^{-\frac{1}{2}} D^\frac{1}{2} = D^{-1}$
+    $$= \frac{d^T D^{-1} p_0}{||D^{-\frac{1}{2}}d||}$$
+    $d$ è il vettore dei gradi mentre $D^{-1}$ è la matrice con i reciproci dei gradi. Quindi
+
+    $$= \frac{\mathds{1}^T p_0}{||D^{-\frac{1}{2}}d||}$$
+    inoltre $\mathds{1}^T p_0 = 1$ dato che $p_0$ è una distribuzione di probabilità, e la somma delle probabilità è uguale a $1$
+    $$= \frac{1}{||D^{-\frac{1}{2}}d||}$$
+    Allora
+    $$D^\frac{1}{2} c_1 \psi_1 = \frac{D^\frac{1}{2}\psi_1}{||D^{-\frac{1}{2}}d||}$$
+    esprimiamo $\psi_1$
+    $$= \frac{D^\frac{1}{2}D^{-\frac{1}{2}} d}{||D^{-\frac{1}{2}}d||^2} = \frac{d}{||D^{-\frac{1}{2}}d||^2} =  \frac{d}{d^T D^{-1}d} = \frac{d}{\mathds{1}^T d} = \pi$$
+    dove il penultimo passaggio vale perché
+    $$d^T D^{-1} d = \sum_i\sum_j d(i) \frac{\mathds{I}\{i=j\}}{d(j)} d(j) = \sum_I \frac{d(i)^2}{d(i)} = \mathds{1}^T d$$
+    Abbiamo quindi dimostrato che 
+    $$\lim_{t \rightarrow \infty} W^T p_0 = \lim_{t \rightarrow \infty} p_t = \pi $$
+\end{dimo}
+
+\section{Velocità di convergenza}
+
+Sappiamo che $p_t = \pi$ se $t$ tende a infinito. Cosa possiamo dire per $t$ finito? Ovvero, $\forall v \in V$
+
+$$|p_t(v) - \pi(v)| \leq \; ?$$
+Dopo un $t$ quanto sono lontano da $pi$? Dopo quanto tempo posso fermarmi essendo sicuro di avere una buona approssimazione?
+
+\begin{teo}
+    Per $u,v \in V$ e $t \in \mathbb{N}$, se $p_0 = e_u$ allora
+
+    $$|p_t(v) - \pi(v)| \leq (\sqrt{\frac{d(v)}{d(u)}   )}k^t $$
+    con $k = \max\{|\omega_n|,|\omega_2|\}$.
+\end{teo}
+\noindent
+Notiamo che $k$ è minore di $1$ (almeno che il grafo non sia bipartito). Quindi per $t \rightarrow \infty$ $k$ tende a $0$. Questo teorema è interessante però il problema è che dobbiamo curarci sia di $\omega_n$ che di $\omega_2$. Ci piacerebbe se dipendesse solo da $\omega_2$. Infatti, se avessimo un grafo del tipo
+
+\disegna{
+ \node[cloud,draw,minimum width = 2.5cm,
+    minimum height = 2cm] at(-2,0){};
+ \node[cloud,draw,minimum width = 2.5cm,
+    minimum height = 2cm] at(2,0){};
+ \node[] at(-2,0){$k_\frac{n}{2}$};
+ \node[] at(2,0){$k_\frac{n}{2}$};
+ \node[nodo] (A) at(-0.85,0){};
+ \node[nodo] (B) at(0.85,0){};
+ \draw[] (A) edge[out=60,in=125,distance=0.5cm] (B);
+}
+allora $$\lambda_2 << 1$$ e potremmo affermare che la convergenza è lenta (dato che $\omega_2 = 1- \lambda_2$). Però il problema è che non stiamo tenendo in conto $\omega_n$ e quindi non lo sappiamo. Cominciamo con il dimostrare il teorema sopra citato, poi ci occuperemo di questo problema.
+
+\begin{dimo}
+    Sappiamo che $$p_t(v) = e_v^T p_t = e_v^T \pi + e_v^T D^\frac{1}{2} \sum_{i = 2}^n c_i \omega_i^t \psi_i$$
+    dove abbiamo utilizzato la definizione di $p_t$ che abbiamo trovato nella dimostrazione del teorema precedente.
+    Ricordiamoci che
+    \begin{itemize}
+        \item $c_i = \psi_i^T D^{-\frac{1}{2}} e_u = \psi_i^T \frac{e_u}{\sqrt{d(u)}}$ che abbiamo ottenuto semplicemente moltiplicando $D^{-\frac{1}{2}}$ con $e_u$.
+        \item $e_v^T D^\frac{1}{2} = \sqrt{d(v)} e_v^T$ per la stessa ragione di sopra.
+    \end{itemize}
+    $$= \pi(v) + e_v^T D^\frac{1}{2} \sum_{i = 2}^n \omega_i^t  \psi_i \psi_i^T D^{-\frac{1}{2}} e_u = \pi(v) + \sqrt{\frac{d(v)}{d(u)}} e_v^T \sum_{i = 2}^n \omega_i^t \psi_i e_u \psi_i^T $$
+    dove abbiamo utilizzato i due fatti sopra citati. Portiamo dentro $e_v^T$
+    $$= \pi(v) + \sqrt{\frac{d(v)}{d(u)}} \sum_{i = 2}^n \omega_i^t (e_v^T \psi_i) (e_u \psi_i^T) $$
+    consideriamo la sommatoria
+    $$ \sum_{i = 2}^n \omega_i^t (e_v^T \psi_i) (e_u \psi_i^T) $$
+    prendiamo i valori assoluti
+    $$\leq  \sum_{i = 2}^n |\omega_i|^t |e_v^T \psi_i| |e_u \psi_i^T| $$
+    Sappiamo che $k$ è il massimo tra il valore assoluto di tutti gli autovalori tali che $i = 2,\dots,n$, quindi
+    $$\leq k^t   \sum_{i = 1}^n |e_v^T \psi_i| |e_u \psi_i^T|$$
+    per la disuguaglianza di Cauchy-Schwarz scriviamo
+    $$\leq k^t \sqrt{\sum_{i = 1}^n (e_v^T \psi_i)^2}\sqrt{\sum_{i = 1}^n (e_u^T \psi_i)^2}$$
+    Siccome $\psi_1,\dots,\psi_n$ è una base ortonormale vale che $||v|| = \sqrt{\sum_{i=1}^n (v_i^T \psi_i)^2}$
+    $$= k^t ||e_v||\cdot ||e_u|| = k^t$$
+    dato che la norma di $e_i = 1$. Concludiamo la dimostrazione mettendo tutto insieme
+    $$p_t(v) \leq \pi(v) + \sqrt{\frac{d(v)}{d(u)}}k^t$$
+\end{dimo}
+
+\section{Camminata pigra}
+Prima abbiamo accennato al fatto che ci piacerebbe se
+
+$$|\pi(v) - p_t(v)|| \leq (...)(1-\lambda_2)^t$$
+dove con $...$ indichiamo un qualche coefficiente. Definiamo
+$$W' = \frac{1}{2} I + \frac{1}{2} W = \frac{1}{2}(I+W)$$
+$W'$ è la camminata casuale tale che 
+$$
+\probP(v_{t+1} = i | v_t = j) = \frac{1}{2} \mathds{I}\{i=j\} + \frac{A_{ij}}{2d(j)}\mathds{I}\{i\neq j\}
+$$
+ovvero abbiamo probabilità $\frac{1}{2}$ di restare sul nodo in cui siamo. In pratica usiamo il seguente "algoritmo"
+
+\begin{enumerate}
+    \item Tiro una moneta
+    \item Se testa resto altrimenti mi sposto sul vicino scelto a caso
+\end{enumerate}
+$\omega_1\geq \dots\geq \omega_n$ sono gli autovalori di $W$ mentre $\omega_1'\geq \dots\geq \omega_n'$  sono gli autovalori di $W'$ tali che 
+$$\omega_i' = \frac{1}{2}(1 + \omega_i)$$
+quindi $\omega_i' \in [0,1]$, abbiamo scalato $\omega_i$. La distribuzione stazionaria $\pi$ per $W$ lo è anche per $W'$. Applicando la definizione di $W$ possiamo scrivere
+$$W' = I - \frac{1}{2}D^\frac{1}{2} L_{norm} D^{-\frac{1}{2}}$$
+e $\omega_i' = \frac{1}{2}(1 + 1 -\lambda_i) = 1 - \frac{\lambda_i}{2}$, dove abbiamo usato $\omega_i = 1 - \lambda_i$.
+Andiamo a considerare
+$$p_t = (W')^t p_0$$
+possiamo scrivere
+$$= \pi + D^\frac{1}{2} \sum_{i=2}^n c_i (1 -\frac{\lambda_i}{2})^t \psi_i$$
+che abbiamo già dimostrato, l'unica differenza è che stiamo usando $\omega_i' = (1 -\frac{\lambda_i}{2})^t$ invece di $\omega_i$. Per la dimostrazione che abbiamo fatto nella sezione precedente, possiamo scrivere 
+$$p_t(v) \leq \pi(v) + \sqrt{\frac{d(v)}{d(u)}}(1 - \frac{\lambda_2}{2})^t$$
+perché il massimo tra $|\omega_n'|$ e $|\omega_2'|$ è  $|\omega_2'|$, in virtù di quella riscalatura che abbiamo fatto. Infatti ora $\omega' \geq 0 \; \forall i$ e $\omega_2' \geq \omega_3' \geq \dots \geq \omega_n' > 0$. Usiamo la nota disuguaglianza $e^{-x} \geq 1-x$ per scrivere
+$$|p_t(v) - \pi(v) | \leq \sqrt{\frac{d(v)}{d(u)}} e^{-\frac{\lambda_2}{2}}$$
+Possiamo concludere che la velocità di convergenza è esponenziale.
+
 \end{document}

@@ -1,5 +1,7 @@
 # Teoria-dei-Grafi
+![Latex](https://img.shields.io/badge/Realizzato%20con-LaTeX-1s355d.svg)
 ![LicenzaCreativa](https://img.shields.io/badge/Licenza-CC%2FBY%2FNC%2FSA-yellow.svg?style=for-the-badge)
+
 
 In questa repository pubblicherò i miei appunti sull'insegnamento di teoria dei grafi tenuto dal professore Nicolò Cesa-Bianchi. 
 
@@ -12,7 +14,7 @@ Il professore già mette a disposizione degli appunti esaustivi, con molta proba
 
 ### Programma completato
 
-Sono fruibili le lezioni dalla **prima** alla **diciassettesima**. Il programma compreso da queste lezioni è il seguente:
+Sono fruibili le lezioni dalla **prima** alla **diciottesima**. Il programma compreso da queste lezioni è il seguente:
 
 - Definizioni di base sui grafi
 - Proprietà dei grafi (numero cromatico, numero d'indipendenza, numero di dominazione)
