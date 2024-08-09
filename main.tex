@@ -3718,4 +3718,227 @@ perché il massimo tra $|\omega_n'|$ e $|\omega_2'|$ è  $|\omega_2'|$, in virt�
 $$|p_t(v) - \pi(v) | \leq \sqrt{\frac{d(v)}{d(u)}} e^{-\frac{\lambda_2}{2}}$$
 Possiamo concludere che la velocità di convergenza è esponenziale.
 
+
+\chapter{Diciannovesima lezione}
+
+\section{Tempo di Mixing}
+Il \textbf{tempo di mixing} è definito come il minimo tempo prima del quale non ha senso considerare la distribuzione corrente della nostra camminata casuale con un'approssimazione ragionevole della distribuzione stazionaria. In altre parole, dopo il tempo di mixing possiamo iniziare a campionare la distribuzione corrente. Formalmente definiamo il tempo di mixing su $W'$ come
+$$\min\{t  :  |p_t(v) -\pi(v)| \leq \frac{\pi(v)}{2}\; \forall v \in V\}$$
+dove $p_t = (W')^t p_0$. Quindi se abbiamo una camminata
+$$V_0 \rightarrow V_1 \rightarrow \dots \rightarrow V_t$$
+se $t >$ mix per $W'$ allora $V_t \sim \pi_t$, a meno di un'approssimazione (noi abbiamo usato $\frac{1}{2}$ nella definizione). Come calcoliamo il tempo di mixing?
+Sappiamo che 
+
+$$|p_t(v) - \pi(v)| \leq \sqrt{\frac{d(v)}{d(u)}} e^{\frac{-\lambda_2 t}{2}}$$
+e vogliamo che
+$$\leq \frac{\pi(v)}{2} = \frac{d(v)}{2 \mathds{1}^T D} $$
+osserviamo che $\mathds{1}^T D = \sum_i d(i) = 2 |E|$, fatto che abbiamo dimostrato in una delle prime lezioni. Risolviamo la disequazione per $t$
+
+$$t \geq \frac{2}{\lambda_2} \ln{\frac{4|E|}{\sqrt{d(v)d(u)}}}$$
+siccome $d(v),d(u) \geq \delta$ riscriviamo come
+$$t \geq \frac{2}{\lambda_2} \ln{\frac{4|E|}{\delta}}$$
+Allora possiamo dire che 
+$$t = \Omega(\frac{1}{\lambda_2}\ln{|E|})$$
+
+\subsection{Caratterizzazione autovalori}
+
+Prima di andare ad analizzare il tempo di mixing su alcuni grafi mettiamo in relazione lo spettro di $L = D-A$ (con autovalori $\lambda_1',\dots,\lambda_n'$) con lo spettro di $L_{norm} = I - D^{-\frac{1}{2}} A D^{\frac{-1}{2}}$ (con autovalori $\lambda_1,\dots,\lambda_n$ e autovettori $v_1,\dots,v_n$). Questo perché lo spettro del laplaciano ($L$) è più facile da calcolare. Enunciamo due fatti.
+
+\begin{fatto}
+$x^TL_{norm}x = y^TLy$ dove scegliamo $y$ tale che $y = D^{-\frac{1}{2}}x$.
+\end{fatto}
+\begin{dimo}
+    Applichiamo la definizione di $L_{norm}$
+    $$x^T L_{norm} x = x^T(I - D^{-\frac{1}{2}} A D^{-\frac{1}{2}}) x = x^T I x  - (x^T D^{-\frac{1}{2}}) A(D^{-\frac{1}{2}} x)$$
+    $$= x^T I x - y^T A y$$
+    Concentriamoci sul primo termine. Sappiamo che $D^{-\frac{1}{2}} D^\frac{1}{2} = I$ quindi
+    $$= x^T I I x =  (x^T  D^{-\frac{1}{2}}) (D^\frac{1}{2} D^\frac{1}{2}) (D^{-\frac{1}{2}} x) = y^T D y$$
+    mettendo insieme le due parti
+    $$= y^T D y - y^T A y = y^T (D - A ) y = y^T L y$$
+    che conclude la dimostrazione.
+\end{dimo}
+
+Notiamo che la relazione appena esposta ($y = D^{-\frac{1}{2}}x$) è biettiva (ovvero va da $R^n$ a $R^n$) e che la matrice $D$ è a rango pieno. 
+
+\begin{teo}
+    Sia $L$ la matrice laplaciana di un grafo con autovalori $\lambda_1',\dots,\lambda_n'$ e sia $L_{norm}$ la sua laplaciana normalizzata con autovalori $\lambda_1,\dots,\lambda_n$. Allora, $\forall i = 1, \dots,n$ vale che
+    $$\frac{\lambda_i'}{\Delta} \leq \lambda_i \leq \frac{\lambda_i'}{\delta}$$
+\end{teo}
+
+\begin{dimo}
+    Usando il teorema di Courant-Fischer  sulla caratterizzazione degli autovalori scriviamo
+
+    $$\lambda_i = \min_{\substack{x \in R^n \backslash \{0\}\\ x \perp \{u_1,\dots,u_{i-1}\}}} \frac{x^TL_{norm}x}{x^Tx} = \min_{S: \text{dim}(S) = i} \max_{x \in S}  \frac{x^TL_{norm}x}{x^Tx}$$
+    ruotiamo il sottospazio, traslazioni lineari biettive di sottospazi sono sempre sottospazi quindi
+    $$= \min_{S: \text{dim}(S) = i} \max_{y \in S}  \frac{y^TL_{norm}y}{y^Ty}$$
+    Facciamo due osservazioni:
+    \begin{enumerate}
+        \item $$y^T D y = \sum_{i=1}^n d(i) y_i^2 \geq \delta \sum_{i=1}^n  y_i^2 = \delta y^Ty$$
+        \item $$y^T D y = \sum_{i=1}^n d(i) y_i^2 \leq \Delta \sum_{i=1}^n  y_i^2 = \Delta y^Ty$$
+    \end{enumerate}
+    Quindi possiamo dire che $\lambda_i$ è
+    $$\geq 1\frac{1}{\Delta} \min \max \frac{y^TLy}{y^Ty} = \frac{\lambda_i'}{\Delta}$$
+    e per la stessa ragione anche che è
+    $$\leq \frac{\lambda_i'}{\delta}$$
+    Concludiamo che
+    $$\frac{\lambda_i'}{\Delta} \leq  \lambda_i \leq \frac{\lambda_i'}{\delta}$$
+\end{dimo}
+\subsection{Tempo di Mixing su clique}
+Andiamo ad analizzare il tempo di mixing su una clique $K_n$. Cominciamo con il notare che
+
+\[
+    L = D - A = n I - \mathds{1} \mathds{1}^T = \begin{bmatrix}
+        n-1 & \dots & -1 \\
+        \vdots & \ddots & \vdots \\
+        -1 & \dots & n-1
+    \end{bmatrix}
+\]
+Possiamo dire che 
+$$u_1 = \frac{1}{\sqrt{n}}$$
+questo è vero per qualsiasi laplaciano. Inoltre, siccome la somma delle righe e delle colonne è $0$, l'autovalore di $u_1$ è $0$. L'autovettore $u_2$ deve essere perpendicolare a $u_1$
+
+$$u_2^T u_1 = 0 \Leftrightarrow \sum_{i=1}^n u_{2,i} = 0 \Leftrightarrow \mathds{1}^T u_2 = 0$$
+Possiamo generalizzare per un vettore qualunque $x \neq 0$.
+
+$$\mathds{1}x = 0$$
+troviamo l'autovalore
+$$Lx = (n\mathds{I} - \mathds{1}\mathds{1}^T)x = (nx) - \mathds{1}(\mathds{1}^Tx)$$
+siccome $\mathds{1}^Tx = 0$
+$$ = nx$$
+quindi qualsiasi vettore ortogonale a $u_1$ è autovettore di $L$ con autovalore $n$. Siccome  $\lambda_2',\lambda_3',\dots,\lambda_n' = n$  e anche che $\Delta = \delta = n-1$ allora
+
+$$\lambda_i = \frac{\lambda_i'}{n-1} = \frac{n}{n-1}$$
+Allora il mixing time per $k_n$ è
+$$t \sim \frac{1}{\lambda_2} \ln{\frac{|E|}{n-1}} \sim (1-\frac{1}{n})\ln{n}$$
+che tende a $1$ per $n$ che tende a infinito.
+
+\subsection{Tempo di Mixing su grafo a stella}
+Cominciamo con il calcolare la componente $i$-esima della matrice $Lx$.
+$$(Lx)_i = ( (D-A) x)_i = (D x)_i - \sum_{j=1}^n A_{ij}x_j = d(i) x_i - \sum_{j \in N_i} x_j = \sum_{j \in N_i} (x_i - x_j)$$
+Consideriamo ora il grafo a stella $S_n$
+
+\disegna{
+    \node[nodo] (A) at (0,0) {};
+    \node[] at (0.05,0.20){\tiny $1$};
+    \node[nodo] (B) at (1,1) {};
+    \node[] at (1,1.25){\tiny $2$};
+    \node[nodo] (C) at (1.15,-0.20) {};
+    \node[] at (1.15,0.05){\tiny $3$};
+    \node[nodo] (D) at (0.30,-1) {};
+    \node[] at (0.30,-1.25){\tiny $4$};
+    \node[nodo] (E) at (-0.50,-0.85) {};
+    \node[] at (-0.50,-1.10){\tiny $5$};
+    \node[nodo] (F) at (-1.50,0.30) {};
+    \node[nodo] (G) at (-0.20,1.20) {};
+    \node[] at (-0.20,1.45){\tiny $n$};
+    \draw[-] (A) -- (B);
+    \draw[-] (A) -- (C);
+    \draw[-] (A) -- (D);
+    \draw[-] (A) -- (E);
+    \draw[-] (A) -- (F);
+    \draw[-] (A) -- (G);
+    \draw[-,dotted] (E) edge [out=130,in=215,distance=2cm] (G);
+}
+Per ogni vertice che non sia quello centrale, quindi $\forall a,b > 1$
+ consideriamo il vettore $e_a - e_b$ e calcoliamo
+
+ $$(L(e_a-e_b))_i$$
+ per quello che abbiamo scritto prima vale che 
+$$
+   = \sum_{j \in N_i} \mathds{I}\{i = a\} - \mathds{I}\{i = b\} - \mathds{I}\{j = a\} + \mathds{I}\{j = b\}  
+$$
+siccome stiamo considerando nodi diversi da quello centrale, tutti i nodi hanno un solo vicino, e quindi possiamo scrivere
+$$= \mathds{I}\{i = a\} - \mathds{I}\{i = b\} = e_a - e_b$$
+In generale, $\forall a,b > 1$ vale che
+$$L(e_a - e_b) = e_a - e_b$$
+Andiamo ora a considera $n-2$ autovettori linearmente indipendenti e non ortogonali. Li costruiamo in questo modo
+$$e_i - e_{i+1} = v_i$$
+$\forall i = 2, \dots, n-1$. Prendiamo il caso $n = 5$ e consideriamo la matrice $5 \times 5$ formata da questi vettori
+\[
+    \begin{bmatrix}
+        0 & 1 & -1 & 0 & 0 \\
+        0 & 0 & 1 & -1 & 0 \\
+        0 & 0 & 0 & 1 & -1 \\
+        0 & 0 & 0 & 0 & 0 \\
+        0 & 0 & 0 & 0 & 0 
+    \end{bmatrix}
+\]
+Vediamo che i primi tre vettori sono indipendenti, infatti non è possibile ottenere uno applicando trasformazioni lineari agli altri. Consideriamo i vettori $U_1,\dots,U_{n-2}$ di $span\{e_2 - e_3,\dots,e_{n-1} - e_n\}$ tali che
+$$U_i = \sum_{j = 2}^{n-1} c_j v_j$$
+allora
+
+$$LU_i = L \sum_{j=2}^{n-1}c_jv_j = \sum_j c_j L v_j = \sum_j c_v v_j = U_i$$
+Siamo partiti da dei vettori non ortogonali e abbiamo ottenuto dei vettori ortogonali. Questi sono autovettori di L con autovalori tali che $\lambda_1'=0$, come al solito perché autovalore del autovettore più grande del laplaciano,  e $\lambda_2' = \dots = \lambda_{n-1}' = 1$ perché $e_a - e_b$ ha autovalore $1$ (infatti $L(e_a-e_b) = 1 (e_a-e_b)$). Ci resta da capire l'autovalore di $\lambda_n'$. Consideriamo la sommatoria della diagonale
+
+$$\sum_i L_{ii} = n - 1 + n -1=2n -2 $$
+perché è la somma del vertice centrale ($n-1$) con tutti gli altri vertici ($1(n-1)$).
+Per definizione è uguale a
+$$\sum_i \lambda_i'$$
+quindi
+$$\sum_i \lambda_i' = 2n - 2$$
+possiamo riscrivere $\sum_i \lambda_i'$ come
+$$\sum_{i = 2}^{n-1} (\lambda_i') + \lambda_n' = n + \lambda_n'$$
+allora
+$$2n-2 = n + \lambda_n' \Leftrightarrow \lambda_n' = n-2$$
+Troviamo $\lambda_2$ per capire come si comporta il mixing time.
+$$\frac{\lambda_2'}{n-1} \leq \lambda_2 \leq \frac{\lambda_2'}{1}$$
+dove $n-1$ è il grado massimo e $1$ il grado minimo. Siccome $\lambda_2' = 1$
+$$\frac{1}{n-1} \leq \lambda_2 \leq 1$$
+Quindi se $\lambda_2$ fosse vicino a $\frac{1}{n-1}$ avremmo
+$$t \sim n-1 \ln{n}$$
+che è peggio della clique. Mentre se fosse vicino a $1$
+$$t \sim \ln{n}$$
+Non lo dimostriamo ma è noto che $\lambda_2$ è molto vicino a $1$.
+\subsection{Tempo di mixing grafo a manubrio}
+Consideriamo il grafo a manubrio (dumbbell in inglese)
+
+\disegna{
+ \node[cloud,draw,minimum width = 2.5cm,
+    minimum height = 2cm] at(-2,0){};
+ \node[cloud,draw,minimum width = 2.5cm,
+    minimum height = 2cm] at(2,0){};
+ \node[] at(-2,0){$k_n$};
+ \node[] at(2,0){$k_n$};
+ \node[nodo] (A) at(-0.85,0){};
+ \node[nodo] (B) at(0.85,0){};
+ \draw[] (A) edge[out=60,in=125,distance=0.5cm] (B);
+}
+
+Siccome
+$$\sum_i \lambda_i' = |E| \sim n^2$$
+nel caso migliore
+$$\lambda_2' = O(n)$$
+e dato che $\Delta = n$ allora
+$$\lambda_2 \geq 1$$
+In generale però
+
+$$\lambda_2' = \min_{\substack{x \neq 0 \\ \mathds{1}^Tx = 0}} \frac{x^TLx}{x^Tx} \leq \frac{v^T L v}{v^T v}$$
+dove $v$ è un vettore tale che 
+
+\disegna{
+    \node[] at (0,0) {$v = (-1,\dots,-1,1,\dots,1)$};
+    \draw[-] (-1.30,0.40)--(0.70,0.40);
+    \draw[-] (-1.30,0.30)--(-1.30,0.40);
+    \draw[-] (0.7,0.30)--(0.7,0.40);
+    \draw[-] (2.20,-0.40)--(0.80,-0.40);
+    \draw[-] (2.20,-0.30)--(2.20,-0.40);
+    \draw[-] (0.8,-0.30)--(0.8,-0.40);
+    \node[] at(-0.30,0.50) {\tiny $n$};
+    \node[] at(1.50,-0.50) {\tiny $n$};
+}
+dove $-1$ in posizione $i$ indica che il vertice è nella parte sinistra del grafo, mentre $1$ che è nella parte destra.
+Il numeratore è pari a 
+$$v^T L v = \sum_{(i,j) \in E} (v_i - v_j)^2 = 4$$
+perché tutti i vertici tranne $2$ sono connessi solo ad altri vertici nella stessa parte di grafo, e quindi $v_i - v_j = 0$. L'unico caso che non è $0$ è per i vertici di "frontiera", infatti che vale $v_i - v_j = 1- (-1) = 2$.
+Consideriamo il denominatore
+$$v^T v = 2n$$
+perché è la somma dei quadrati dei coefficienti.
+Quindi
+$$\lambda_2' \leq \frac{4}{2n} = \frac{2}{n}$$
+A questo punto sappiamo che
+$$\lambda_2 \leq \frac{\lambda_2'}{\delta} = \frac{2}{n(n-1)}$$
+e allora
+$$t \sim \frac{1}{\lambda_2} \ln{\frac{|E|}{\delta}} \sim n^2 \ln{n}$$
+vuol dire che dobbiamo aspettare un tempo $n^2$. Questo ha senso se pensiamo che la probabilità di cambiare clique è $\frac{1}{n}$ e quindi per esplorare il grafo abbiamo bisogno di ordine $n^2$ step.
+
 \end{document}

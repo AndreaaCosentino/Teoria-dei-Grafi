@@ -14,7 +14,7 @@ Il professore già mette a disposizione degli appunti esaustivi, con molta proba
 
 ### Programma completato
 
-Sono fruibili le lezioni dalla **prima** alla **diciottesima**. Il programma compreso da queste lezioni è il seguente:
+Sono fruibili le lezioni dalla **prima** alla **diciannovesima**. Il programma compreso da queste lezioni è il seguente:
 
 - Definizioni di base sui grafi
 - Proprietà dei grafi (numero cromatico, numero d'indipendenza, numero di dominazione)
