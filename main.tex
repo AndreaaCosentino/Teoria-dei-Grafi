@@ -3941,4 +3941,217 @@ e allora
 $$t \sim \frac{1}{\lambda_2} \ln{\frac{|E|}{\delta}} \sim n^2 \ln{n}$$
 vuol dire che dobbiamo aspettare un tempo $n^2$. Questo ha senso se pensiamo che la probabilità di cambiare clique è $\frac{1}{n}$ e quindi per esplorare il grafo abbiamo bisogno di ordine $n^2$ step.
 
+\chapter{Ventesima lezione}
+
+\section{Algoritmi distribuiti}
+
+Vediamo un'applicazione della teoria spettrale dei grafi. Parliamo di algoritmi distribuiti e nello specifico di unanimità distribuita. Abbiamo una rete di comunicazione $G= (V,E)$
+
+\disegna{
+    \node[nodo] (A) at (-1,1) {};
+    \node[nodo] (B) at (1.25,1) {};
+    \node[nodo] (C) at (4,0) {};
+    \node[nodo] (D) at (3,-1) {};
+    \node[nodo] (E) at (0,-1) {};
+    \draw[] (A)--(B);
+    \draw[] (A)--(D);
+    \draw[] (B)--(E);
+    \draw[] (B)--(D);
+    \draw[] (D)--(E);
+    \draw[] (A)--(C);
+    \draw[] (C)--(D);
+}
+Ogni nodo ha un processore. Questi nodi vogliono calcolare qualcosa in modo distribuito. Ogni nodo non conosce $G$ e può solo scambiare messaggi con i propri vicini. A ciascun nodo assumiamo un numero
+
+\disegna{
+    \node[] at (0,0) {$x_0 = (x_0(1),\dots,x_0(n))$};
+    \draw[thick] (-0.95,-0.4) -- (0,-0.4);
+    \draw[thick] (-0.95,-0.4) -- (-0.95,-0.3);
+    \draw[thick] (0,-0.4) -- (0,-0.3);
+    \node[] at (-0.475,-0.6) {$v_1$};
+
+    \draw[thick] (0.95,-0.4) -- (1.90,-0.4);
+    \draw[thick] (0.95,-0.4) -- (0.95,-0.3);
+    \draw[thick] (1.90,-0.4) -- (1.90,-0.3);
+    \node[] at (1.475,-0.6) {$v_n$};
+}
+Per esempio vogliamo calcolare la media di questi numeri
+$$\mu = \frac{1}{n}\sum_{i=1}^n x_0(n)$$
+definiamo $\mu_t(i)$ come lo stato del nodo $i$ dopo $t$ passi e $x_0(i)$ è lo stato iniziale. Creiamo un processo che converge per ciascun nodo, quindi tale che
+
+$$\lim_{t \rightarrow \infty} x_t(i) = x$$
+$\forall i = 1, \dots, n$. Costruiamo $x_{t+1}(i)$ a partire da $x_t(i)$ in questo modo (cambiamo notazione, indichiamo nodo con $v$)
+
+$$x_{t+1}(v) = \sum_{u : (v,u) \in E} W_{v,u}\;x_t(u)$$
+Per capire cos'è $W$ consideriamo il grafo seguente
+
+\disegna{
+    \node[draw,shape = circle] (A) at (0,0) {$v$};
+    \node[draw,shape = circle] (B) at (-2,-1) {$i$};
+    \node[draw,shape = circle] (C) at (0,-2) {$j$};
+    \node[draw,shape = circle] (D) at (3,-1.5) {$k$};
+
+    \draw[] (A) -- (B) node[midway,above left] {$W_{vi}$};
+    \draw[] (A) -- (C) node[midway,sloped,above] {$W_{vj}$};
+    \draw[] (A) -- (D) node[midway,above right] {$W_{vk}$};
+}
+Ogni arco(e quindi ogni vicino) ha un peso. Il nodo $v$ chiede lo stato dei nodi vicini e li somma in modo pesato. La richiesta degli stati viene fatta da tutti i nodi simultaneamente (non ci sono problemi di sincronizzazione perché viene chiesto il valore al tempo $t$). Possiamo scrivere il vettore $x_{t+1}$ come
+
+$$x_{t+1} = W x_t$$
+la matrice $W$ è detta \textbf{matrice di gossip} ed è 
+
+\begin{enumerate}
+    \item Non negativa e simmetrica
+    \item Doppiamente stocastica, quindi $W \mathds{1} = \mathds{1}$ e $\mathds{1}^T W = \mathds{1}^T$
+    \item Le sue componenti sono $W_{ij} > 0 \Leftrightarrow (i,j) \in E$ altrimenti sono nulle.
+\end{enumerate}
+
+\begin{fatto}
+    Il più grande autovalore di una matrice stocastica sulle righe ($W \mathds{1} = \mathds{1}$) è $1$
+\end{fatto}
+
+\begin{dimo}
+    Chiaramente, $1$ è autovalore di $W$ per definizione stessa di matrice stocastica. Per assurdo esista $\mu > 1$ e $x \neq 0$ tale che $Wx = \mu x$. Sia quindi $x_k = \max_i (x_i)$. Senza perdita di generalità assumiamo $x_k > 0$ (infatti se $x$ è autovettore anche $-x$ lo è). Gli elementi di $W$ sono non negativi
+    $$\forall \; i\; W_{ij}  \geq 0 \; j = 1,\dots,n$$
+    e ogni riga somma a $1$
+    $$\sum_{j=1}^n W_{ij} = 1$$
+    Vale che
+    $$(Wx)_i = \sum_{j=1}^n W_{ij}x_j \leq \max_j x_j = x_k$$
+    Possiamo anche dire che $\forall i$
+    $$(\mu x)_i = (Wx)_i \leq x_k$$
+    Siccome $\mu$ è maggiore di $1$ 
+    $$x_k < \mu x_k \leq x_k$$
+    ed è una contraddizione.
+\end{dimo}  
+
+\vspace{10px}
+Assumiamo $\omega_n \leq \dots \leq \omega_1 = 1$ autovalori di $W$. Ricordiamoci che vogliamo calcolare
+
+$$\frac{1}{n} \sum_{i=1}^n x_0(i) = \frac{1}{n}\mathds{1}^T x_0 = \mu$$
+Definiamo il vettore $(\mu_1,\dots,\mu_n)$, che è il vettore a cui vorremmo convergesse il vettore degli stati dei nodi. Chiamiamo questo vettore $x$. Vale che
+
+$$x = \mu \mathds{1} = \frac{1}{n}\mathds{1}\mathds{1}^T x_0$$
+Verifichiamo che $x$ sia una distribuzione stazionaria per $W$, vogliamo quindi che $Wx = x$.
+
+$$Wx = \frac{1}{n} W \mathds{1} \mathds{1}^T x_0$$
+siccome $W$ è stocastica allora $W \mathds{1} = 1$, dunque
+$$= x$$
+
+\begin{fatto}
+    Vale che
+    $$\frac{1}{n} \mathds{1} \mathds{1}^T x_t = \frac{1}{n} \mathds{1} \mathds{1}^T W x_{t-1} = \frac{1}{n} \mathds{1} \mathds{1}^T x_{t-1}$$
+    iterando il processo otteniamo 
+
+    $$\frac{1}{n} \mathds{1} \mathds{1}^T x_t = \frac{1}{n} \mathds{1} \mathds{1}^T x_0 = x \; \forall t$$
+\end{fatto}
+
+\noindent
+Ci interessa mostrare che 
+$$||x_t - x || \rightarrow \infty$$ 
+per $t \rightarrow \infty$. Questo implica che $x_t \rightarrow x$, cioè che con tempo abbastanza grande ci avviciniamo al risultato giusto. Sappiamo che $\forall W, \forall x$ (per ogni matrice quadrata e per qualsiasi vettore) vale 
+$$|| W x || \leq ||W||\cdot||x||$$
+dove $$||W||$$ è l'autovalore massimo, cioè la direzione in cui la matrice "stiracchia" di più il vettore $x$. Se $x$ è l'autovettore corrispondente all'autovalore massimo allora
+$$|| W x || = ||W||\cdot||x||$$
+Andiamo a vedere come progredisce la differenza (guardiamo il quadrato, è più facile)
+
+$$||x_{t+1} - x||^2 = ||W x_t - W x||^2 =$$
+raccogliamo $W$ e aggiungiamo un fattore che è uguale a $0$
+$$=  ||W(x_t - x) - \frac{\mathds{1} \mathds{1}^T}{n} (x_t-x)||$$
+dove $\frac{\mathds{1} \mathds{1}^T}{n} (x_t-x)= 0$ per il fatto che
+
+$$\frac{\mathds{1} \mathds{1}^T}{n} x_t = \frac{\mathds{1} \mathds{1}^T}{n} x$$
+Raccogliamo a fattore comune e otteniamo
+$$= || (W - \frac{\mathds{1} \mathds{1}^T}{n}) (x_t - x)||^2$$
+che sappiamo essere
+$$\leq || W - \frac{\mathds{1} \mathds{1}^T}{n}||^2 \cdot ||x_t - x ||^2$$
+Per far sì che $x_t \rightarrow x$ abbiamo bisogno che
+
+$$|| W - \frac{\mathds{1} \mathds{1}^T}{n}||^2 << 1$$
+
+\begin{fatto}
+    Se $G$ non è bipartito allora
+
+    $$|| W - \frac{\mathds{1}\mathds{1}^T}{n} || = \max\{|\omega_2|, |\omega_n|\}$$
+\end{fatto}
+
+\begin{dimo}
+    Sappiamo che $\omega_1 = 1$, $u_1 = \frac{\mathds{1}}{\sqrt{n}}$. Consideriamo la matrice $W = U \Lambda U^T$  tale che 
+    \[
+        \Lambda = \begin{bmatrix}
+            1 &   \dots & 0 \\
+            \vdots & \ddots & \vdots \\ 
+            0 & \dots & \omega_n 
+        \end{bmatrix}
+    \]
+    ovvero $\Lambda = diag(1,\omega_2,\dots,\omega_n)$, mentre $U = [u_1,\dots,u_n]$. Definiamo la matrice maschera $M$
+    \[
+        M = \begin{bmatrix}
+             1 &   \dots & 0 \\
+            \vdots & \ddots & \vdots \\ 
+            0 & \dots & 0 
+        \end{bmatrix}
+    \]
+    che è formata da tutti $0$ tranne che nella posizione $(1,1)$. Vale che
+    $$U M U^T = u_1 u_1^T = \frac{\mathds{1} \mathds{1}^T}{n}$$
+    Allora
+
+    $$||W - \frac{\mathds{1} \mathds{1}^T}{n}|| = ||U \Lambda U^T - UMU^T||= ||U (\Lambda - M) U^T ||$$
+    \[= ||U \begin{bmatrix}
+        0 & \dots & 0 \\ 
+        \vdots & \omega_2 & \vdots \\
+        0 & \dots &\omega_n
+    \end{bmatrix}
+    U^T||
+    \] 
+    concludiamo la dimostrazione
+    $$= \max\{|\omega_2|, |\omega_n|\} = \kappa $$
+\end{dimo}
+
+\noindent
+Possiamo quindi dire che
+
+$$||x_t - x || \leq \kappa^t ||x_0 - x||$$ 
+dove $0 < \kappa < 1$.
+Come scegliamo $W$ in pratica? Consideriamo $L = D-A$ e $0 < \alpha \leq \frac{1}{\Delta(G)}$. Allora $W$ è tale che 
+
+$$W = I - \alpha L$$
+Notiamo che $\mathds{1}^T I = 1 = I \mathds{1}$, cioè $I$ è bi-stocastica. Inoltre $L \mathds{1} = 0 = \mathds{1}^T L$, cioè la somma delle righe e delle colonne di $L$ è $0$. Anche se perturbo $L$ con $-\alpha$ resta vero. Quindi noi stiamo sommando una matrice bi-stocastica($I$) a una matrice ($-\alpha L$)  tale che la somma delle colonne e delle righe è $0$. La matrice risultante non può che essere bi-stocastica. Per capire se è una matrice di gossip dobbiamo vedere se $\omega_{ij}\geq 0$. Possiamo riscrivere $W$ come
+
+$$W = (I- \alpha D) + \alpha A$$
+dove 
+\[
+    D = \begin{bmatrix}
+        d(1) & \dots & 0 \\
+        \vdots & \ddots & \vdots \\
+        0 & \dots & d(n)
+    \end{bmatrix}
+    \cdot \alpha
+\]
+siccome $\alpha \leq \frac{1}{\Delta(G)}$
+\[
+    = \begin{bmatrix}
+        < 1 & \dots & 0 \\
+        \vdots & \ddots & \vdots \\
+        0 & \dots & < 1
+    \end{bmatrix}
+\]
+Quindi $I - \alpha D > 0$, e la somma di due quantità positive è $> 0$. 
+Adesso andiamo a prendere il grafo $G$ e il laplaciano $L$ con i suoi autovalori $0 \leq \lambda_1 \leq \dots \leq \lambda_n$. Abbiamo detto che $W = I - \alpha L$. Quindi gli autovalori di $W$ sono tali che 
+$$\omega_i = 1 - \alpha \lambda_i > 0$$
+In particolare
+$$\kappa = \max\{|\omega_n|,|\omega_2|\} = \omega_2 = 1 -\alpha \lambda_2$$
+Analizziamo $\omega_2$
+
+$$\omega_2^t = (1- \alpha \lambda_2)^t$$
+usiamo $\alpha = \frac{1}{\Delta(G)}$
+$$= (1- \frac{\lambda_2}{\Delta(G)}) \leq e^{- \frac{\lambda_2 t}{\Delta(G)}}$$
+Siccome $\omega_2 = \kappa$ e $\kappa$ è il fattore di convergenza, possiamo dire che abbiamo una convergenza esponenziale di $x_t$, limitata da $\frac{\lambda_2}{\Delta(G)}$. Per questa scelta di $W$ possiamo definire $x_{t+1}$, cosa che ci eravamo preposti a inizio lezione,
+
+$$x_{t+1} = W x_t \Leftrightarrow $$
+$$x_{t+1}(v) = \alpha + x_t(v) + \sum_{u : (u,v) \in E} (x_t(u) - x_t(v))$$
+dove 
+$$\sum_{u : (u,v) \in E} (x_t(u) - x_t(v))$$
+è la somma della differenza tra i vecchi stati.
+
+
 \end{document}
