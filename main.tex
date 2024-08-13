@@ -4153,5 +4153,171 @@ dove
 $$\sum_{u : (u,v) \in E} (x_t(u) - x_t(v))$$
 è la somma della differenza tra i vecchi stati.
 
+\chapter{Ventunesima lezione}
+
+\section{Decisioni sequenziali}
+Parliamo della teoria delle decisioni sequenziali usando la teoria spettrale. Vogliamo raccomandare dei film a degli utenti. Quindi abbiamo una sequenza di utenti e a ogni utente ne raccomandiamo uno. Consideriamo un grafo $G = (V,E)$ noto
+
+\disegna{
+    \node[nodo] (A) at (-1.5,0.50){};
+    \node[nodo] (B) at (2,-0.50){};
+    \node[nodo] (C) at (1.5,0){};
+    \node[nodo] (D) at (0,-2){};
+    \node[nodo] (E) at (-2,-1){};
+
+    \draw[] (A) -- (B);
+    \draw[] (A) -- (D);
+    \draw[] (B) -- (C);
+    \draw[] (D) -- (E);
+    \draw[] (E) -- (C);
+}
+ogni nodo corrisponde a un film e ogni arco è una relazione di similarità. Se tra due film c'è un arco, i film sono simili. Definiamo $l_t(i)$ come quanto dispiace il film $i$-esimo al $t$-esimo. Questa è una funzione di loss, quindi più piccolo è il valore meglio è. Non conosciamo $l_t(i) \; \forall t = 1,2,\dots \; i \in V$, sappiamo solamente che $l_t(i) \in [0,1]$. Definiamo un algoritmo per la scelta delle raccomandazioni.
+
+
+\begin{algorithm}
+\caption{}\label{euclid}
+\begin{algorithmic}[1]
+\For{$t = 1,2,\dots$}
+\State Raccomandiamo $I_t \in V$ al $t-esimo$ utente
+\State Rileviamo $l_t(I_t) \in [0,1]$, ovvero il gradimento dell'utente
+\State Osserviamo $l_t(i) \; \forall i \in N_{I_t}$, ovvero vediamo il gradimento se avessimo scelto uno dei vicini di $I_t$
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+\noindent
+Il nostro obiettivo è minimizzare il dispiacere, quindi
+$$\sum_t l_t(I_t)$$
+il problema è che questo valore è dipendente dal numero di film e dal numero di vicini di un nodo. Consideriamo allora il regret
+
+$$R_T = \sum_{i=1}^T l_t(I_t) - \min_{i\in V} \sum_{t=1}^T l_t(i)$$
+ovvero quanto perdiamo rispetto alla migliore scelta, cioè il singolo film che \textbf{globalmente} (non per singola scelta) piaceva di più. Notiamo che nel peggiore dei casi $R_t$ è lineare rispetto al numero di scelte, $R_t = O(T)$. Noi vorremmo un regret sub-lineare, ovvero
+
+$$\frac{R_T}{T} \rightarrow 0 $$
+per $T \rightarrow \infty$. Dimostriamo che $\forall G \; \forall l_1,\dots,l_T \in [0,1]^k$ vale 
+$$R_T \leq c \sqrt{\alpha(G)T \ln{k}}$$
+dove $k = |V|$, $c$ è una costante, $\alpha(G)$ il numero di indipendenza e $T$ il numero di decisioni che prendo. Notiamo che se il grafo è sparso allora $\alpha(G) \rightarrow k$, mentre se è denso $\alpha(G) \rightarrow 1$. Cioè, più è denso più ottengo informazioni rapidamente. In che modo raccomando un film? Consideriamo la raccomandazione al tempo $t$, $I_t \sim p_t$ su V. $p_t$ è tale che 
+
+$$p_t(i) = \probP(I_t = i | I_1,\dots I_{n-1}) = \frac{exp(-\eta \sum_{s = 1}^{t-1} \hat l_s(i))}{\sum_{j \in V} exp(-\eta \sum_{s = 1}^{t-1} \hat l_s(i))}$$
+dove $exp$ indica semplicemente l'esponenziale ($e^x$) mentre $\mu$  è un fattore $> 0$. Il denominatore è semplicemente un fattore di normalizzazione. Usiamo l'esponenziale perché funziona bene, dilata i valori. Cosa sono $\hat l_s(i)$? Noi non conosciamo $l_s(i)$ per tutti i film, infatti lo conosciamo solo per il film scelto e per i suoi vicini. Quindi costruiamo degli stimatori, $\hat l_s(i)$ è una stima di $l_s(i)$.
+Ci chiediamo qual è la probabilità di osservare $l_t(i)$?
+$$\probP(\text{osservare} \; l_t(i) | I_1,\dots,I_t) =\sum_{j \in N_i} p_t(j) + p_t(i)  = q_t(i)$$
+Questo perché, come già detto prima, conosciamo $l_t(i)$ se lo scegliamo direttamente oppure se scegliamo uno dei suoi vicini. Definiamo la stima $\hat l_t(i)$ come
+
+$$\hat l_t(i) = \frac{l_t(i)}{q_t(i)}\mathds{I}\{\text{osservo} \; l_t(i)\}$$
+dove dividiamo per $q_t(i)$ per rendere più grande il valore. Lo stimatore può assumere solo due valori
+$$\hat l_t(i) \in \{ \frac{l_t(i)}{q_t(i)},0\}$$
+notiamo che è uno stimatore stocastico, perché dipende da scelte stocastiche. Il problema è che all'inizio non abbiamo ancora fatto alcuna scelta, quindi definiamo
+
+$$P_1(i) = \frac{1}{k} \; \; \; i = 1,\dots,k$$
+Da ora indicheremo il numeratore di $p_t(i)$ con $w_t(i)$ e il denominatore con $W_t$, quindi
+$$p_t(i) = \frac{w_t(i)}{W_t} \geq 0$$
+Fissiamo $I_1,\dots,I_n$ e andiamo a considerare il rapporto
+
+$$\frac{W_{t+1}}{W_t}$$
+non è chiaro perché partiamo da questo rapporto, però ci servirà a trovare un bound per $R_T$.
+$$= \sum_{i \in V} \frac{w_{t+1}(i)}{W_t}$$
+notiamo che 
+
+$$w_{t+1}(i) = e^{-\eta \sum_{s = 1}^t\hat l_s(i)} = w_t(i) e^{-\eta \hat l_t(i)} $$
+quindi il rapporto può essere riscritto come
+
+$$= \sum_{i \in V} \frac{w_t(i)}{W_t}e^{-\eta \hat l_t(i)} = \sum_{i \in V}p_t(i) e^{-\eta \hat l_t(i)} $$
+sappiamo che $e^{-x} \leq 1 - x + \frac{x^2}{2} \; \forall x \geq 0$
+
+\begin{center}
+\begin{tikzpicture}[domain=-0.2:4]
+           \begin{axis} [xlabel = x, ylabel = y, axis lines=center, ymin = -1,  yticklabel=\empty, xticklabel = \empty, clip = false]  \addplot[color=blue,samples=100,smooth,ultra thick] {e^-x };
+           \addplot[color=red,samples=100,smooth,ultra thick] {1 - x + 0.5*x^2 };
+           \addplot[color = white] coordinates {(2,0.1)} node[above] (A) {$e^{-x}$};
+           \addplot[color = white] coordinates {(3.2,3)} node[above, rotate = 50] (B) {$1 - x + \frac{x^2}{2}$};
+          
+            \end{axis}
+\end{tikzpicture}
+\end{center}
+
+\noindent
+quindi 
+$$ \leq \sum_{i \in V} p_t(i) (1 - \eta \hat l_t(i) + \frac{\eta^2}{2} \hat l_t(i)^2) = 1 - \sum_{i \in V} p_t(i) \eta \hat l_t(i) + \sum_{i \in V} p_t(i) \frac{\eta^2}{2} \hat l_t(i)^2 $$
+Lasciamo questo risultato da parte per ora. Ora consideriamo prima di tutto la nota disuguaglianza $\ln(1-x) \leq x \; \forall x > 0$
+
+\begin{center}
+\begin{tikzpicture}[domain=0:4]
+           \begin{axis} [xlabel = x, ylabel = y, axis lines=center, ymin = -1,  yticklabel=\empty, xticklabel = \empty, clip = false]  \addplot[color=blue,samples=100,smooth,ultra thick] {ln(x) };
+           \addplot[color=red,samples=100,smooth,ultra thick] {x };
+           \addplot[color = white] coordinates {(2,0.1)} node[above] (A) {$\ln{x}$};
+           \addplot[color = white] coordinates {(3.2,3.2)} node[above, rotate = 45] (B) {$x$};
+            \end{axis}
+\end{tikzpicture}
+\end{center}
+
+\noindent
+Prendiamo lo stesso rapporto di prima e mettiamolo in logaritmo
+$$\ln{\frac{W_{t+1}}{W_1}} = \sum_{t=1}^T  \ln{\frac{W_{t+1}}{W_t}}$$
+questo vale perché la somma è telescopica, svolgendola ci restano solo il primo e l'ultimo elemento. Usiamo ora la disuguaglianza $\ln{(1-x)} \leq x$
+$$\leq \sum_{t = 1}^T \ln{(1 - 1 - \sum_{i \in V} p_t(i) \eta \hat l_t(i) + \sum_{i \in V} p_t(i) \frac{\eta^2}{2} \hat l_t(i)^2})$$
+$$= - \sum_{t = 1}^T \sum_i p_t(i) \hat l_t(i) + \frac{\eta^2}{2} \sum_t \sum_i p_t(i) \hat l_t(i)^2$$
+Abbiamo trovato un maggiorante per $ln{\frac{W_{t+1}}{W_1}}$, troviamo un minorante.
+$$\ln{\frac{W_{t+1}}{W_1}} \geq \ln{\frac{e^{-\eta \sum_{t = 1}^T \hat l_t(k)}}{\sum e^{-\eta \cdot 0}}}$$
+dove abbiamo scelto un termine qualsiasi della somma. E' ovvio che $\sum_{i = 1}^n x$ $\geq x_i$, dato che tutti gli elementi della sommatoria sono positivi. Inoltre il denominatore è $e^0$ poiché al tempo $1$ le stime sono $= 0$. Concludiamo scrivendo
+
+$$= - \eta \sum_{t = 1}^T \hat l_t(k) - \ln{k}$$
+Abbiamo quindi ottenuto un minorante e un maggiorante. Li mettiamo insieme (minorante $<$ maggiorante), spostiamo i termini a sinistra e a destra in modo che tutti siano positivi e dividiamo per $\eta$. In questo modo otteniamo $\forall I_1,\dots,I_t \in V$
+$$
+\sum_t \sum_i p_t(i) \hat l_t(i) \leq \sum_t \hat l_t(k) + \frac{\ln{k}}{\eta} + \frac{\eta}{2} \sum_t \sum_i p_t(i) \hat l_t(i)^2
+$$
+Ci interessa  guardare il valore atteso rispetto all'estrazione di $I_1,\dots,I_n$. Prima però ricordiamo che 
+$$\va[x] = \va[ \va[x|y]]$$
+che ci tornerà utile più avanti. Prendiamo il valore atteso della disequazione di prima
+
+$$
+\va[\sum_t \sum_i p_t(i) \hat l_t(i)] \leq \va[\sum_t \hat l_t(k) ]+ \frac{\ln{k}}{\eta} + \frac{\eta}{2} \va[\sum_t \sum_i p_t(i) \hat l_t(i)^2]
+$$
+Usiamo il fatto sul valore atteso che abbiamo presentato prima e scriviamo (formula un po' lunga)
+\begin{multline*}
+\va[\sum_t \sum_i p_t(i) \va[\hat l_t(i) | I_1,\dots, I_{t-1}]] \leq  \va[\sum_t \va[\hat l_t(k) |I_1,\dots,I_{t-1} ]] + \frac{\ln{k}}{\eta} \\ + \frac{\eta}{2} \va[\sum_t \sum_i p_t(i) \va[\hat l_t(i)^2 | I_1,\dots,I_{t-1}]] 
+\end{multline*}
+Notiamo due fatti
+
+$$
+\va[\hat l_t(i) | I_1,\dots,I_n] = \frac{l_t(i)}{q_t(i)} \probP(\text{osservo} \; l_t(i))\\ +  0 \cdot \probP(\text{non osservo} \; l_t(i))
+$$
+dove le probabilità sono condizionate a $I_1,\dots, I_{t_1}$.  Siccome la probabilità di osservare $l_t(i)$ è $q_t(i)$ scriviamo
+$$= l_t(i)$$
+Questo vuol dire che $\hat l_t(i)$ è uno stimatore non distorto.
+Consideriamo ora il valore atteso di $\hat l_t(i)^2$
+
+$$\va[\hat l_t(i)^2 | I_1,\dots,I_{t-1}] = \frac{l_t(i)^2}{q_t(i)} q_t(i) + 0(1-q_t(i)) \leq \frac{1}{q_t(i)}$$
+dove la disuguaglianza vale perché $l_t(i)^2$ al massimo vale $1$.
+Possiamo usare queste informazioni nella disuguaglianza di prima, e inoltre portiamo a primo membro $\sum_t l_t(k)$
+$$\va[\sum_t \sum_i p_t(i) l_t(i)] - \sum_t l_t(k) \leq \frac{\ln{k}}{\eta} + \frac{\eta}{2}\va[\sum_t \sum_i \frac{p_t(i)}{q_t(i)}]$$
+Analizziamo il lato sinistro, possiamo dire che
+$$\va[\sum_t \sum_i p_t(i) l_t(i)] = \va[l_t(I_t)]$$
+Inoltre, siccome $k$ è un elemento qualsiasi possiamo sceglierlo tale che
+$$k = argmin_{i \in V} \sum_{t=1}^T l_t(i)$$
+La parte sinistra della disequazione è $R_T$, il regret. Concentriamoci sulla parte destra, in particolare su
+
+$$\sum_i \frac{p_t(i)}{q_t(i)}$$
+Sappiamo che il teorema di Turàn ci dice
+
+$$Q(G) = \sum_{i \in V} \frac{1}{1 + d(i)} \leq \alpha(G)$$
+moltiplicando e dividendo sopra e sotto per $\frac{1}{k}$, dove $k = |V|$, otteniamo
+$$Q(G) = \sum_{i \in V} \frac{\frac{1}{k}}{\frac{1}{k} + \frac{d(i)}{k}}$$
+e scegliendo $p(i) = \frac{1}{k}$
+
+$$= \sum_{i \in V} \frac{p(i)}{p(i) + \sum_{j \in N_i}p(j)}$$
+Questo risultato è molto interessante, il problema è che non possiamo applicarlo al nostro caso perché la probabilità non è uniforme. In realtà il teorema di Turàn si può estendere per qualunque $p(i)$ e la dimostrazione è uguale a quella che abbiamo fatto. Quindi, per il teorema di Turàn, scriviamo
+
+$$\sum_{i \in V} \frac{p_t(i)}{q_t(i)} = \sum_{i \in v} \frac{p_t(i)}{p_t(i) + \sum_{j \in N_i} p_t(j)} \leq \alpha(G)$$
+Concludiamo mettendo tutto assieme
+$$\va[R_T] \leq \frac{\ln{k}}{\eta} + \frac{\eta}{2} \alpha(G) T$$
+scegliamo $\eta$ in modo che i due addendi siano bilanciati, quindi vogliamo che
+$$\frac{\ln{k}}{\eta} = \frac{\eta}{2} \alpha(G) T$$
+risolviamo per $\eta$
+$$\eta = \sqrt{2 \frac{\ln{k}}{\alpha T}}$$
+quindi
+$$\va[R_T] \leq \frac{3}{2} \sqrt{\alpha T \ln{k}}$$
+e questo risultato non è migliorabile. Notiamo che il risultato ottenuto dipende dal grado dei nodi. Infatti la varianza dello stimatore dipende dal grado e quindi l'algoritmo, che usa gli stimatori, ne dipende in modo indiretto.
+
 
 \end{document}

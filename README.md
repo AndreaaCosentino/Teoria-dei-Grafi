@@ -14,7 +14,7 @@ Il professore già mette a disposizione degli appunti esaustivi, con molta proba
 
 ### Programma completato
 
-Sono fruibili le lezioni dalla **prima** alla **ventesima**. Il programma compreso da queste lezioni è il seguente:
+Sono fruibili le lezioni dalla **prima** alla **ventunesima**. Il programma compreso da queste lezioni è il seguente:
 
 - Definizioni di base sui grafi
 - Proprietà dei grafi (numero cromatico, numero d'indipendenza, numero di dominazione)
@@ -23,8 +23,9 @@ Sono fruibili le lezioni dalla **prima** alla **ventesima**. Il programma compre
 - Correlation clustering
 - Clique piantate
 - Cammini casuali su grafi
+- Algoritmo di decisione sequenziale
 
-Le lezioni totali sono **24**.
+Le lezioni totali sono **24**. Mancano ancora le lezioni relative ai minori sui grafi tenute dal prof. Marco Bressan, che però non sono oggetto di esame.
 
 La data prevista per il completamento, con colpevole ritardo, (della prima versione) è per agosto.
 
